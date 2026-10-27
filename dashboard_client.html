@@ -1,0 +1,2459 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Espace – Secours Abalo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root {
+  --g:#6bff6b; --gd:#3a9e3a; --gg:rgba(107,255,107,.12); --gr:rgba(107,255,107,.06);
+  --glow:0 0 28px rgba(107,255,107,.3);
+  --bg:#060d06; --bg2:#0a130a; --sf:#0f1c0f; --sf2:#141f14;
+  --tx:#d8ecd8; --mu:#6a8e6a; --wh:#f0fff0;
+  --red:#ff4d4d; --orange:#ff9900; --yellow:#ffd700; --blue:#4db8ff;
+  --border:rgba(107,255,107,.1); --border2:rgba(107,255,107,.22);
+  --r8:8px; --r12:12px; --r16:16px; --r20:20px; --r50:50px;
+  --font:'DM Sans',sans-serif; --fontd:'Syne',sans-serif; --fontm:'DM Mono',monospace;
+  --sidebar:260px; --header:62px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--font);overflow-x:hidden;font-size:14px;line-height:1.6}
+h1,h2,h3,h4,h5{font-family:var(--fontd);font-weight:700}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");opacity:.25}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:var(--font)}
+input,select,textarea{font-family:var(--font)}
+
+/* ── LAYOUT ── */
+.app{display:flex;min-height:100vh;position:relative;z-index:1}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;background:rgba(9,18,9,.97);
+  border-right:1px solid var(--border);display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;height:100vh;z-index:200;
+  transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;overflow-x:hidden;
+}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(107,255,107,.15);border-radius:2px}
+.sb-brand{padding:18px 20px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.sb-logo{width:36px;height:36px;flex-shrink:0;animation:logoGlow 3s ease-in-out infinite}
+@keyframes logoGlow{0%,100%{filter:drop-shadow(0 0 4px rgba(107,255,107,.2))}50%{filter:drop-shadow(0 0 14px rgba(107,255,107,.6))}}
+.sb-brand-text span:first-child{display:block;font-family:var(--fontd);font-weight:800;font-size:.88rem;color:var(--wh);line-height:1.1}
+.sb-brand-text span:last-child{display:block;font-size:.58rem;color:var(--mu);letter-spacing:.1em;text-transform:uppercase}
+.sb-user{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px}
+.sb-avatar{width:42px;height:42px;border-radius:50%;background:var(--gg);border:2px solid rgba(107,255,107,.3);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--g);flex-shrink:0;font-family:var(--fontd);font-weight:800}
+.sb-user-info h4{font-size:.82rem;font-weight:700;color:var(--wh);margin-bottom:2px;font-family:var(--fontd)}
+.sb-user-info .sb-badge{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:var(--r50);background:rgba(107,255,107,.15);color:var(--g);border:1px solid rgba(107,255,107,.25)}
+.sb-nav{flex:1;padding:12px 0}
+.sb-section{padding:7px 18px 4px;font-size:.58rem;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.12em;font-family:var(--fontm)}
+.sb-item{display:flex;align-items:center;gap:11px;padding:10px 20px;color:var(--mu);font-size:.82rem;font-weight:500;transition:all .2s;cursor:pointer;position:relative;border:none;background:none;width:100%;text-align:left}
+.sb-item i{width:18px;text-align:center;font-size:.88rem;flex-shrink:0}
+.sb-item:hover{color:var(--tx);background:var(--gr)}
+.sb-item.active{color:var(--g);background:var(--gg);border-right:2px solid var(--g)}
+.sb-item .sb-notif{margin-left:auto;min-width:18px;height:18px;border-radius:9px;background:var(--red);color:#fff;font-size:.58rem;font-weight:800;display:flex;align-items:center;justify-content:center;padding:0 5px}
+.sb-footer{padding:14px 18px;border-top:1px solid var(--border);flex-shrink:0}
+.sb-footer p{font-size:.68rem;color:var(--mu);line-height:1.7}
+.sb-footer a{color:var(--g);font-weight:700}
+.sb-close{display:none;position:absolute;top:14px;right:14px;background:rgba(255,255,255,.08);border:none;color:var(--mu);width:28px;height:28px;border-radius:50%;align-items:center;justify-content:center;font-size:.85rem;z-index:1}
+
+/* ── HEADER ── */
+.header{
+  position:fixed;top:0;left:var(--sidebar);right:0;height:var(--header);z-index:100;
+  background:rgba(6,13,6,.95);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 22px;gap:14px;
+}
+.header-left{display:flex;align-items:center;gap:12px}
+.ham-btn{display:none;background:none;border:none;color:var(--g);font-size:1.1rem;padding:4px;flex-shrink:0}
+.page-title{font-family:var(--fontd);font-size:.92rem;font-weight:700;color:var(--wh)}
+.page-breadcrumb{font-size:.68rem;color:var(--mu);font-family:var(--fontm)}
+.header-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.live-pill{display:flex;align-items:center;gap:6px;background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.25);border-radius:var(--r50);padding:5px 11px;font-size:.68rem;font-weight:700;color:var(--red)}
+.live-dot-h{width:6px;height:6px;border-radius:50%;background:var(--red);animation:livePulse 1.2s infinite}
+@keyframes livePulse{0%,100%{box-shadow:0 0 0 0 rgba(255,77,77,.5)}50%{box-shadow:0 0 0 5px rgba(255,77,77,0)}}
+.hbtn{background:none;border:1px solid var(--border);color:var(--mu);width:34px;height:34px;border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:.84rem;transition:all .2s;position:relative}
+.hbtn:hover{border-color:var(--border2);color:var(--g);background:var(--gg)}
+.hbtn .notif-dot{position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:var(--red);border:2px solid var(--bg)}
+.sos-header-btn{background:var(--red);color:#fff;border:none;border-radius:var(--r8);padding:7px 14px;font-size:.75rem;font-weight:700;display:flex;align-items:center;gap:6px;transition:all .25s;font-family:var(--fontd)}
+.sos-header-btn:hover{background:#e03030;transform:scale(1.04);box-shadow:0 0 18px rgba(255,77,77,.5)}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar);padding-top:var(--header);min-height:100vh;flex:1}
+.page{display:none;padding:24px 22px;max-width:1200px}
+.page.active{display:block;animation:pageIn .35s ease}
+@keyframes pageIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CARDS & GRIDS ── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.card{background:var(--sf);border:1px solid var(--border);border-radius:var(--r16);overflow:hidden;transition:border-color .25s}
+.card:hover{border-color:var(--border2)}
+.card-body{padding:18px}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 0}
+.card-title{font-family:var(--fontd);font-size:.88rem;font-weight:700;color:var(--wh);display:flex;align-items:center;gap:8px}
+.card-title i{color:var(--g);font-size:.82rem}
+
+/* ── STAT MINI ── */
+.stat-mini{background:var(--sf);border:1px solid var(--border);border-radius:var(--r16);padding:16px 18px;display:flex;align-items:center;gap:14px;transition:all .25s;position:relative;overflow:hidden}
+.stat-mini::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--g);opacity:.4}
+.stat-mini:hover{border-color:var(--border2);transform:translateY(-2px)}
+.stat-ico{width:44px;height:44px;border-radius:var(--r12);background:var(--gg);border:1px solid rgba(107,255,107,.18);display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:var(--g);flex-shrink:0}
+.stat-info .sv{font-family:var(--fontm);font-size:1.5rem;font-weight:500;color:var(--g);display:block;line-height:1}
+.stat-info .sl{font-size:.68rem;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;margin-top:3px}
+.stat-mini .stat-trend{margin-left:auto;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:var(--r50)}
+.stat-mini .up{background:rgba(107,255,107,.12);color:var(--g)}
+.stat-mini .neutral{background:rgba(107,255,107,.06);color:var(--mu)}
+
+/* ── SECTIONS ── */
+.sec-title{margin-bottom:16px}
+.sec-title h2{font-family:var(--fontd);font-size:1.1rem;font-weight:800;color:var(--wh);margin-bottom:3px}
+.sec-title p{font-size:.78rem;color:var(--mu)}
+.sec-tag{display:inline-block;font-size:.6rem;font-weight:700;color:var(--g);letter-spacing:.12em;text-transform:uppercase;font-family:var(--fontm);margin-bottom:5px}
+
+/* ── SOS BUTTON ── */
+.sos-zone{background:linear-gradient(135deg,rgba(255,77,77,.1),rgba(255,30,30,.05));border:1px solid rgba(255,77,77,.25);border-radius:var(--r20);padding:22px;text-align:center;position:relative;overflow:hidden}
+.sos-zone::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 120%,rgba(255,77,77,.08),transparent);pointer-events:none}
+.sos-main-btn{background:linear-gradient(135deg,#e03030,#ff4d4d);color:#fff;border:none;border-radius:50%;width:100px;height:100px;font-size:1.8rem;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;transition:all .3s;box-shadow:0 0 0 0 rgba(255,77,77,.4);animation:sosPulse 2.5s ease infinite}
+@keyframes sosPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,77,77,.4)}50%{box-shadow:0 0 0 18px rgba(255,77,77,0)}}
+.sos-main-btn:hover{transform:scale(1.08);box-shadow:0 8px 30px rgba(255,77,77,.6)!important;animation:none}
+.sos-main-btn:active{transform:scale(.96)}
+.sos-zone h3{font-family:var(--fontd);font-size:1rem;font-weight:800;color:#fff;margin-bottom:5px}
+.sos-zone p{font-size:.75rem;color:rgba(255,200,200,.75);margin-bottom:16px}
+.sos-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.sos-act-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.8);padding:7px 14px;border-radius:var(--r8);font-size:.73rem;font-weight:600;transition:all .2s;display:flex;align-items:center;gap:6px}
+.sos-act-btn:hover{background:rgba(255,255,255,.15);color:#fff}
+
+/* ── LOCATION ── */
+.loc-btn{background:var(--g);color:#000;border:none;border-radius:var(--r12);padding:13px 20px;font-weight:700;font-size:.85rem;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--fontd);transition:all .25s}
+.loc-btn:hover{background:#8fffaa;transform:translateY(-2px);box-shadow:var(--glow)}
+.loc-btn:active{transform:translateY(0)}
+.loc-btn.sending{background:var(--orange);animation:none}
+.loc-result{background:var(--sf2);border:1px solid var(--border);border-radius:var(--r12);padding:12px 14px;margin-top:12px;font-size:.78rem;display:none}
+.loc-result.show{display:block}
+.loc-result .coord{font-family:var(--fontm);color:var(--g);font-size:.75rem;word-break:break-all}
+.loc-sent-badge{background:rgba(107,255,107,.15);border:1px solid rgba(107,255,107,.3);color:var(--g);font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:var(--r50);display:none}
+.loc-sent-badge.show{display:inline-flex;align-items:center;gap:5px}
+
+/* ── ACTIVITY TIMELINE ── */
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:14px;padding:12px 0;position:relative}
+.tl-item:not(:last-child)::after{content:'';position:absolute;left:17px;top:36px;bottom:-12px;width:1px;background:var(--border)}
+.tl-dot{width:34px;height:34px;border-radius:50%;background:var(--sf2);border:2px solid;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0;z-index:1}
+.tl-dot.evac{border-color:rgba(107,255,107,.4);color:var(--g);background:var(--gg)}
+.tl-dot.call{border-color:rgba(255,153,0,.4);color:var(--orange);background:rgba(255,153,0,.08)}
+.tl-dot.sub{border-color:rgba(77,184,255,.4);color:var(--blue);background:rgba(77,184,255,.08)}
+.tl-dot.alert{border-color:rgba(255,77,77,.4);color:var(--red);background:rgba(255,77,77,.08)}
+.tl-content{flex:1}
+.tl-title{font-size:.83rem;font-weight:600;color:var(--wh);margin-bottom:2px;font-family:var(--fontd)}
+.tl-desc{font-size:.75rem;color:var(--tx);line-height:1.55;margin-bottom:4px}
+.tl-time{font-size:.65rem;color:var(--mu);font-family:var(--fontm)}
+
+/* ── HEALTH PROFILE ── */
+.profile-section{background:var(--sf);border:1px solid var(--border);border-radius:var(--r16);overflow:hidden;margin-bottom:16px}
+.profile-section-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background .2s}
+.profile-section-header:hover{background:var(--gr)}
+.profile-section-header h3{font-family:var(--fontd);font-size:.88rem;font-weight:700;color:var(--wh);display:flex;align-items:center;gap:9px}
+.profile-section-header h3 i{color:var(--g);font-size:.82rem}
+.psh-arrow{color:var(--mu);font-size:.82rem;transition:transform .3s}
+.profile-section.open .psh-arrow{transform:rotate(180deg)}
+.profile-section-body{display:none;padding:18px}
+.profile-section.open .profile-section-body{display:block}
+
+/* ── FORM ELEMENTS ── */
+.fg{display:flex;flex-direction:column;gap:12px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.fg label{font-size:.72rem;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px}
+.fg input,.fg select,.fg textarea{background:var(--sf2);border:1px solid rgba(107,255,107,.1);border-radius:var(--r8);padding:10px 13px;color:var(--tx);font-family:var(--font);font-size:.84rem;outline:none;transition:border-color .25s,box-shadow .25s;width:100%;resize:vertical}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:rgba(107,255,107,.4);box-shadow:0 0 0 3px rgba(107,255,107,.07)}
+.fg input::placeholder,.fg textarea::placeholder{color:var(--mu)}
+.fg select option{background:var(--bg2)}
+.radio-group{display:flex;gap:8px;flex-wrap:wrap}
+.radio-opt{background:var(--sf2);border:1px solid rgba(107,255,107,.1);border-radius:var(--r8);padding:8px 14px;font-size:.8rem;color:var(--mu);cursor:pointer;transition:all .2s;user-select:none}
+.radio-opt:hover{border-color:var(--border2);color:var(--tx)}
+.radio-opt.sel{border-color:var(--g);background:var(--gg);color:var(--g);font-weight:600}
+.radio-opt.sel-red{border-color:var(--red);background:rgba(255,77,77,.1);color:var(--red);font-weight:600}
+.save-btn{background:var(--g);color:#000;border:none;border-radius:var(--r8);padding:11px 22px;font-weight:700;font-size:.85rem;display:flex;align-items:center;gap:7px;font-family:var(--fontd);transition:all .25s;margin-top:4px}
+.save-btn:hover{background:#a0ffa0;transform:translateY(-2px);box-shadow:var(--glow)}
+.section-save{display:flex;justify-content:flex-end;padding-top:12px;border-top:1px solid var(--border);margin-top:16px}
+
+/* ── ALLERGY / MED TAGS ── */
+.tag-input-area{background:var(--sf2);border:1px solid rgba(107,255,107,.1);border-radius:var(--r8);padding:8px 12px;min-height:46px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;transition:border-color .25s}
+.tag-input-area:focus-within{border-color:rgba(107,255,107,.4)}
+.tag{background:var(--gg);border:1px solid var(--border2);color:var(--g);font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:var(--r50);display:flex;align-items:center;gap:5px}
+.tag .tag-del{color:var(--mu);background:none;border:none;cursor:pointer;font-size:.72rem;padding:0;transition:color .2s;line-height:1}
+.tag .tag-del:hover{color:var(--red)}
+.tag.red{background:rgba(255,77,77,.1);border-color:rgba(255,77,77,.25);color:var(--red)}
+.tag.orange{background:rgba(255,153,0,.1);border-color:rgba(255,153,0,.25);color:var(--orange)}
+.tag-text-input{background:none;border:none;outline:none;color:var(--tx);font-size:.82rem;min-width:80px;flex:1}
+.tag-text-input::placeholder{color:var(--mu)}
+
+/* ── EVAC HISTORY ── */
+.evac-card{background:var(--sf2);border:1px solid var(--border);border-radius:var(--r12);padding:15px;margin-bottom:10px;transition:border-color .25s}
+.evac-card:hover{border-color:var(--border2)}
+.evac-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+.evac-card-header h4{font-family:var(--fontd);font-size:.86rem;font-weight:700;color:var(--wh)}
+.evac-status{font-size:.62rem;font-weight:700;padding:3px 9px;border-radius:var(--r50);text-transform:uppercase;letter-spacing:.06em}
+.evac-status.done{background:rgba(107,255,107,.12);color:var(--g);border:1px solid rgba(107,255,107,.2)}
+.evac-status.progress{background:rgba(255,153,0,.12);color:var(--orange);border:1px solid rgba(255,153,0,.2)}
+.evac-meta{display:flex;flex-wrap:wrap;gap:10px;font-size:.73rem;color:var(--mu)}
+.evac-meta span{display:flex;align-items:center;gap:4px}
+.evac-meta i{color:var(--g);font-size:.68rem}
+
+/* ── SUBSCRIPTION CARD ── */
+.sub-card{background:linear-gradient(135deg,rgba(107,255,107,.08),rgba(107,255,107,.03));border:1px solid rgba(107,255,107,.22);border-radius:var(--r16);padding:18px;position:relative;overflow:hidden}
+.sub-card::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:rgba(107,255,107,.06);pointer-events:none}
+.sub-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.sub-plan{font-family:var(--fontd);font-size:1.2rem;font-weight:800;color:var(--g)}
+.sub-price{text-align:right}
+.sub-price .amount{font-family:var(--fontm);font-size:1.4rem;color:var(--g);display:block;line-height:1}
+.sub-price .period{font-size:.65rem;color:var(--mu);text-transform:uppercase;letter-spacing:.06em}
+.sub-members{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.sub-member{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.2);border-radius:var(--r8);padding:7px 10px}
+.sub-member-av{width:28px;height:28px;border-radius:50%;background:var(--gg);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--g);font-weight:700;font-family:var(--fontd)}
+.sub-member-name{font-size:.78rem;color:var(--tx);font-weight:500}
+.sub-member-rel{font-size:.65rem;color:var(--mu)}
+.sub-renew{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:var(--r8);padding:8px 12px;display:flex;align-items:center;justify-content:space-between;font-size:.73rem}
+.sub-renew .label{color:var(--mu)}
+.sub-renew .date{color:var(--orange);font-weight:700;font-family:var(--fontm)}
+.add-member-btn{background:var(--gg);border:1px dashed var(--border2);color:var(--g);border-radius:var(--r8);padding:8px 14px;font-size:.75rem;font-weight:600;display:flex;align-items:center;gap:6px;width:100%;justify-content:center;transition:all .2s;margin-top:10px}
+.add-member-btn:hover{background:rgba(107,255,107,.2)}
+
+/* ── CONTACT URGENCE ── */
+.contact-urgence-card{background:var(--sf2);border:1px solid var(--border);border-radius:var(--r12);padding:14px;display:flex;align-items:center;gap:12px;transition:border-color .25s;margin-bottom:10px}
+.contact-urgence-card:hover{border-color:var(--border2)}
+.cu-avatar{width:40px;height:40px;border-radius:50%;background:rgba(255,77,77,.1);border:2px solid rgba(255,77,77,.25);display:flex;align-items:center;justify-content:center;font-size:.9rem;color:var(--red);flex-shrink:0}
+.cu-info h4{font-family:var(--fontd);font-size:.83rem;font-weight:700;color:var(--wh);margin-bottom:1px}
+.cu-info p{font-size:.72rem;color:var(--mu)}
+.cu-info .cu-phone{color:var(--g);font-family:var(--fontm);font-size:.75rem}
+.cu-actions{margin-left:auto;display:flex;gap:6px}
+.cu-btn{width:30px;height:30px;border-radius:var(--r8);background:var(--gg);border:1px solid var(--border);color:var(--g);display:flex;align-items:center;justify-content:center;font-size:.75rem;transition:all .2s}
+.cu-btn:hover{background:rgba(107,255,107,.25);border-color:var(--border2)}
+
+/* ── NOTIFS ── */
+.notif-item{padding:13px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:flex-start}
+.notif-item:last-child{border:none}
+.notif-ico{width:34px;height:34px;border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:.82rem;flex-shrink:0}
+.notif-ico.green{background:var(--gg);color:var(--g)}
+.notif-ico.red{background:rgba(255,77,77,.1);color:var(--red)}
+.notif-ico.orange{background:rgba(255,153,0,.1);color:var(--orange)}
+.notif-ico.blue{background:rgba(77,184,255,.1);color:var(--blue)}
+.notif-text h4{font-size:.82rem;font-weight:600;color:var(--wh);margin-bottom:2px;font-family:var(--fontd)}
+.notif-text p{font-size:.75rem;color:var(--tx)}
+.notif-time{font-size:.63rem;color:var(--mu);font-family:var(--fontm);white-space:nowrap;margin-left:auto;padding-top:2px}
+.notif-unread{width:7px;height:7px;border-radius:50%;background:var(--g);flex-shrink:0;margin-top:6px}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--sf2);border:1px solid var(--border2);border-radius:var(--r12);padding:13px 18px;display:flex;align-items:center;gap:11px;max-width:320px;box-shadow:0 16px 48px rgba(0,0,0,.6);transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(.4,0,.2,1)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast i{font-size:1.1rem;flex-shrink:0}
+.toast.success{border-color:rgba(107,255,107,.35)}
+.toast.success i{color:var(--g)}
+.toast.error{border-color:rgba(255,77,77,.35)}
+.toast.error i{color:var(--red)}
+.toast.warn{border-color:rgba(255,153,0,.35)}
+.toast.warn i{color:var(--orange)}
+.toast-text h4{font-size:.82rem;font-weight:700;color:var(--wh);font-family:var(--fontd)}
+.toast-text p{font-size:.73rem;color:var(--tx)}
+
+/* ── OVERLAY (mobile) ── */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:190;backdrop-filter:blur(4px)}
+.sidebar-overlay.on{display:block}
+
+/* ── PROGRESS / STATUS ── */
+.status-bar{display:flex;align-items:center;gap:8px;margin:12px 0}
+.sbar-track{flex:1;height:6px;background:rgba(107,255,107,.08);border-radius:3px;overflow:hidden;border:1px solid var(--border)}
+.sbar-fill{height:100%;background:linear-gradient(90deg,var(--gd),var(--g));border-radius:3px;transition:width 1s ease}
+.sbar-label{font-family:var(--fontm);font-size:.7rem;color:var(--g);min-width:34px;text-align:right}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:36px 20px;color:var(--mu)}
+.empty-state i{font-size:2.2rem;display:block;margin-bottom:12px;opacity:.5}
+.empty-state h4{font-family:var(--fontd);color:var(--tx);margin-bottom:6px;font-size:.9rem}
+.empty-state p{font-size:.78rem;margin-bottom:16px}
+.empty-state .btng{display:inline-flex;align-items:center;gap:6px;background:var(--g);color:#000;padding:9px 18px;border-radius:var(--r8);font-family:var(--fontd);font-weight:700;font-size:.8rem;transition:all .25s;border:none}
+.empty-state .btng:hover{background:#a0ffa0}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:rgba(107,255,107,.15);border-radius:3px}
+
+/* ── UTIL ── */
+.mb8{margin-bottom:8px}
+.mb12{margin-bottom:12px}
+.mb16{margin-bottom:16px}
+.mb20{margin-bottom:20px}
+.flex-between{display:flex;align-items:center;justify-content:space-between}
+.btn-outline{background:none;border:1px solid var(--border2);color:var(--g);padding:7px 14px;border-radius:var(--r8);font-size:.75rem;font-weight:600;display:flex;align-items:center;gap:6px;transition:all .2s;font-family:var(--fontd)}
+.btn-outline:hover{background:var(--gg)}
+.badge-green{background:rgba(107,255,107,.12);color:var(--g);border:1px solid rgba(107,255,107,.2);font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:var(--r50);text-transform:uppercase;letter-spacing:.05em}
+.badge-red{background:rgba(255,77,77,.12);color:var(--red);border:1px solid rgba(255,77,77,.2);font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:var(--r50)}
+.badge-orange{background:rgba(255,153,0,.12);color:var(--orange);border:1px solid rgba(255,153,0,.2);font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:var(--r50)}
+.divider{height:1px;background:var(--border);margin:14px 0}
+.info-label{font-size:.65rem;color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-family:var(--fontm);margin-bottom:3px}
+.info-value{font-size:.85rem;color:var(--wh);font-weight:500}
+.info-pair{margin-bottom:12px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sb-close{display:flex}
+  .header{left:0}
+  .main{margin-left:0}
+  .ham-btn{display:flex}
+  .grid4{grid-template-columns:1fr 1fr}
+  .grid3{grid-template-columns:1fr 1fr}
+  .grid2{grid-template-columns:1fr}
+  .frow3{grid-template-columns:1fr 1fr}
+  .live-pill span{display:none}
+}
+@media(max-width:600px){
+  .page{padding:16px 14px}
+  .grid4,.grid3{grid-template-columns:1fr 1fr}
+  .grid2{grid-template-columns:1fr}
+  .frow{grid-template-columns:1fr}
+  .frow3{grid-template-columns:1fr}
+  .sos-main-btn{width:80px;height:80px;font-size:1.5rem}
+  .toast{bottom:14px;right:14px;left:14px;max-width:none}
+  .header-right .live-pill,.header-right .hbtn:not(:last-child){display:none}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+
+/* ══ SOS IA PRO ══ */
+.sos-ia-fab{position:fixed;bottom:28px;right:28px;z-index:500;
+  background:linear-gradient(135deg,var(--orange),#e67e00);color:#000;
+  border:none;border-radius:var(--r50);padding:11px 18px;
+  display:flex;align-items:center;gap:8px;cursor:pointer;
+  font-family:var(--fontd);font-weight:800;font-size:.8rem;
+  box-shadow:0 8px 24px rgba(255,153,0,.4);transition:all .3s;
+  animation:iaFabGlow 3s ease-in-out infinite}
+@keyframes iaFabGlow{0%,100%{box-shadow:0 8px 24px rgba(255,153,0,.4)}50%{box-shadow:0 8px 36px rgba(255,153,0,.7)}}
+.sos-ia-fab:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 14px 40px rgba(255,153,0,.6)}
+.sos-ia-fab.ia-on{background:linear-gradient(135deg,var(--g),#2ecc2e);
+  animation:iaFabActive 2s ease-in-out infinite}
+@keyframes iaFabActive{0%,100%{box-shadow:0 8px 24px rgba(107,255,107,.4)}50%{box-shadow:0 8px 36px rgba(107,255,107,.7)}}
+.sos-ia-fab .ia-dot{width:8px;height:8px;border-radius:50%;background:#000;
+  animation:livePulse 1.2s infinite}
+
+/* Notification popup */
+#sos-ia-notif-wrap{position:fixed;inset:0;z-index:9998;
+  background:rgba(0,0,0,.88);backdrop-filter:blur(14px);
+  display:none;align-items:center;justify-content:center;padding:16px}
+#sos-ia-notif-wrap.ia-show{display:flex;animation:iaNotifIn .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes iaNotifIn{from{opacity:0;transform:scale(.85) translateY(24px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.ia-notif-box{background:var(--bg2);border:2px solid rgba(255,153,0,.5);
+  border-radius:22px;width:min(440px,95vw);
+  box-shadow:0 30px 80px rgba(255,153,0,.25)}
+.ia-notif-head{background:linear-gradient(135deg,rgba(255,153,0,.18),rgba(200,80,0,.12));
+  padding:22px 24px 18px;text-align:center;border-bottom:1px solid rgba(255,153,0,.25)}
+.ia-notif-ico{width:60px;height:60px;border-radius:50%;
+  background:rgba(255,153,0,.18);border:2px solid rgba(255,153,0,.4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.6rem;color:var(--orange);margin:0 auto 12px;
+  animation:sosPulse 1.5s infinite}
+.ia-notif-title{font-family:var(--fontd);font-weight:800;font-size:1.05rem;color:var(--wh);margin-bottom:5px}
+.ia-notif-sub{font-size:.78rem;color:rgba(255,200,150,.8)}
+.ia-countdown{font-family:var(--fontm);font-size:1.3rem;font-weight:700;
+  color:var(--orange);margin-top:10px}
+.ia-notif-body{padding:20px 24px;display:flex;flex-direction:column;gap:10px}
+.ia-btn{border:none;border-radius:var(--r12);padding:14px 18px;
+  font-family:var(--fontd);font-weight:700;font-size:.88rem;
+  cursor:pointer;transition:all .25s;display:flex;
+  align-items:center;justify-content:center;gap:10px;width:100%}
+.ia-btn.ia-ok{background:rgba(107,255,107,.15);border:1px solid rgba(107,255,107,.3);color:var(--g)}
+.ia-btn.ia-ok:hover{background:rgba(107,255,107,.28);transform:translateY(-2px)}
+.ia-btn.ia-warn{background:rgba(255,153,0,.15);border:1px solid rgba(255,153,0,.3);color:var(--orange)}
+.ia-btn.ia-warn:hover{background:rgba(255,153,0,.28);transform:translateY(-2px)}
+.ia-btn.ia-danger{background:linear-gradient(135deg,#c0392b,var(--red));color:#fff;
+  box-shadow:0 6px 20px rgba(255,77,77,.35)}
+.ia-btn.ia-danger:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(255,77,77,.5)}
+
+/* Page SOS IA Pro */
+.ia-status-pill{display:inline-flex;align-items:center;gap:7px;
+  padding:6px 14px;border-radius:var(--r50);font-size:.72rem;
+  font-weight:700;font-family:var(--fontd);text-transform:uppercase;letter-spacing:.06em}
+.ia-status-pill.ia-off{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--mu)}
+.ia-status-pill.ia-on{background:rgba(107,255,107,.15);border:1px solid rgba(107,255,107,.3);color:var(--g)}
+.ia-interval-row{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.ia-int-opt{background:var(--sf2);border:1px solid rgba(255,153,0,.15);
+  color:var(--mu);border-radius:var(--r8);padding:8px 16px;
+  font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;user-select:none}
+.ia-int-opt:hover{border-color:rgba(255,153,0,.4);color:var(--orange)}
+.ia-int-opt.ia-sel{border-color:var(--orange);background:rgba(255,153,0,.15);color:var(--orange);font-weight:700}
+.ia-history-row{display:flex;align-items:center;gap:12px;
+  padding:10px 0;border-bottom:1px solid var(--border)}
+.ia-history-row:last-child{border:none}
+.ia-rdot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.ia-rdot.ok{background:var(--g)}.ia-rdot.warn{background:var(--orange)}
+.ia-rdot.danger{background:var(--red)}.ia-rdot.none{background:var(--mu)}
+
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
+
+<div class="app">
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar" id="sidebar">
+  <button class="sb-close" id="sbClose" onclick="closeSidebar()"><i class="fa-solid fa-xmark"></i></button>
+
+  <div class="sb-brand">
+    <svg class="sb-logo" viewBox="0 0 42 42" fill="none">
+      <circle cx="21" cy="21" r="20" stroke="#6bff6b" stroke-width="1.5" fill="rgba(107,255,107,.06)"/>
+      <rect x="17" y="11" width="8" height="20" rx="2.5" fill="#6bff6b"/>
+      <rect x="11" y="17" width="20" height="8" rx="2.5" fill="#6bff6b"/>
+      <circle cx="33" cy="10" r="4" fill="#6bff6b" opacity=".4"/>
+    </svg>
+    <div class="sb-brand-text">
+      <span>SECOURS ABALO</span>
+      <span>Mon Espace Client</span>
+    </div>
+  </div>
+
+  <div class="sb-user">
+    <div class="sb-avatar" id="sbAvatarLetter">KA</div>
+    <div class="sb-user-info">
+      <h4 id="sbUserName">Koffi Amédé</h4>
+      <span class="sb-badge"><i class="fa-solid fa-star" style="font-size:.55rem"></i> Famille+</span>
+    </div>
+  </div>
+
+  <nav class="sb-nav">
+    <div class="sb-section">Principal</div>
+    <button class="sb-item active" onclick="nav('dashboard')"><i class="fa-solid fa-house-medical"></i> Tableau de Bord</button>
+    <button class="sb-item" onclick="nav('urgence')"><i class="fa-solid fa-triangle-exclamation" style="color:var(--red)"></i> Urgence & SOS <span class="sb-notif">!</span></button>
+    <button class="sb-item" onclick="nav('profile')"><i class="fa-solid fa-user-heart"></i> Profil Médical</button>
+    <button class="sb-item" onclick="nav('sos-ia-pro')" id="sb-sos-ia-pro-btn">
+      <i class="fa-solid fa-brain" style="color:var(--orange)"></i>
+      SOS IA Pro
+      <span id="sos-ia-pro-badge" style="display:none;margin-left:auto;
+        background:var(--orange);color:#000;font-size:.6rem;font-weight:800;
+        padding:2px 8px;border-radius:20px;min-width:20px;text-align:center">●</span>
+    </button>
+    <button class="sb-item" onclick="nav('abonnement')"><i class="fa-solid fa-file-contract"></i> Mon Abonnement</button>
+
+    <div class="sb-section">Suivi</div>
+    <button class="sb-item" onclick="nav('evacuations')"><i class="fa-solid fa-ambulance"></i> Historique Évacuations</button>
+    <button class="sb-item" onclick="nav('activites')"><i class="fa-solid fa-chart-line"></i> Mes Activités</button>
+    <button class="sb-item" onclick="nav('contacts')"><i class="fa-solid fa-address-book"></i> Contacts d'Urgence</button>
+
+    <div class="sb-section">Paramètres</div>
+    <button class="sb-item" onclick="nav('notifications')"><i class="fa-solid fa-bell"></i> Notifications <span class="sb-notif">3</span></button>
+    <button class="sb-item" onclick="nav('parametres')"><i class="fa-solid fa-gear"></i> Paramètres</button>
+  </nav>
+
+  <div class="sb-footer">
+    <p>Urgence : <a href="tel:8880">8880</a> (Gratuit 24h/24)<br><span style="font-size:.62rem;color:var(--mu)">© 2026 Secours Abalo · Lomé, Togo</span></p>
+  </div>
+</aside>
+
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="header-left">
+    <button class="ham-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+    <div>
+      <div class="page-title" id="pageTitle">Tableau de Bord</div>
+      <div class="page-breadcrumb" id="pageBreadcrumb">Mon Espace · Accueil</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="live-pill"><div class="live-dot-h"></div><span>6 actives</span></div>
+    <button class="hbtn" title="Notifications" onclick="nav('notifications')">
+      <i class="fa-solid fa-bell"></i>
+      <div class="notif-dot"></div>
+    </button>
+    <button class="sos-header-btn" onclick="nav('urgence')"><i class="fa-solid fa-phone-volume"></i> SOS 8880</button>
+  </div>
+</div>
+
+<!-- ══ MAIN CONTENT ══ -->
+<main class="main">
+<button class="sos-ia-fab" id="sos-ia-fab" onclick="nav('sos-ia-pro')" title="SOS IA Pro">
+  <i class="fa-solid fa-brain"></i>
+  <span id="sos-ia-fab-label">SOS IA Pro</span>
+  <span class="ia-dot" id="sos-ia-fab-dot" style="display:none"></span>
+</button>
+<!-- ─── PAGE : DASHBOARD ─── -->
+<div id="page-dashboard" class="page active">
+  <div class="sec-title mb20">
+    <span class="sec-tag">Vue d'ensemble</span>
+    <h2>Bonjour, <span style="color:var(--g)" id="greetName">Koffi</span> 👋</h2>
+    <p>Votre espace santé · Dernière connexion : aujourd'hui à 09:14</p>
+  </div>
+
+  <!-- STAT ROW -->
+  <div class="grid4 mb20">
+    <div class="stat-mini">
+      <div class="stat-ico"><i class="fa-solid fa-ambulance"></i></div>
+      <div class="stat-info"><span class="sv">3</span><span class="sl">Évacuations</span></div>
+      <span class="stat-trend up"><i class="fa-solid fa-arrow-up"></i> 2024</span>
+    </div>
+    <div class="stat-mini" style="--g:var(--orange)">
+      <div class="stat-ico" style="color:var(--orange);background:rgba(255,153,0,.1)"><i class="fa-solid fa-users"></i></div>
+      <div class="stat-info"><span class="sv" style="color:var(--orange)">5</span><span class="sl">Personnes couvertes</span></div>
+      <span class="stat-trend neutral">Famille+</span>
+    </div>
+    <div class="stat-mini">
+      <div class="stat-ico"><i class="fa-solid fa-calendar-check"></i></div>
+      <div class="stat-info"><span class="sv">18</span><span class="sl">Jours restants</span></div>
+      <span class="stat-trend neutral" style="color:var(--orange)">Renouveler</span>
+    </div>
+    <div class="stat-mini">
+      <div class="stat-ico"><i class="fa-solid fa-shield-halved"></i></div>
+      <div class="stat-info"><span class="sv">97%</span><span class="sl">Profil complété</span></div>
+      <span class="stat-trend up">Excellent</span>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px" class="dash-main-grid">
+    <!-- SOS Zone -->
+    <div class="sos-zone">
+      <button class="sos-main-btn" onclick="triggerSOS()" title="Appeler le 8880 et signaler"><i class="fa-solid fa-phone-volume"></i></button>
+      <h3>Appel d'Urgence</h3>
+      <p>Appuyez pour signaler votre urgence à nos équipes et appeler le 8880</p>
+      <div class="sos-actions">
+        <button class="sos-act-btn" onclick="sendLocation()"><i class="fa-solid fa-location-arrow"></i> Ma Position</button>
+        <button class="sos-act-btn" onclick="nav('urgence')"><i class="fa-solid fa-triangle-exclamation"></i> SOS Complet</button>
+      </div>
+    </div>
+
+    <!-- Localisation -->
+    <div class="card">
+      <div class="card-header mb12"><div class="card-title"><i class="fa-solid fa-location-dot"></i> Ma Localisation</div></div>
+      <div class="card-body" style="padding-top:0">
+        <p style="font-size:.78rem;color:var(--mu);margin-bottom:12px">Envoyez votre position GPS en temps réel aux administrateurs.</p>
+        <button class="loc-btn" id="locBtn" onclick="sendLocation()"><i class="fa-solid fa-satellite-dish"></i> Envoyer Ma Position</button>
+        <div class="loc-result" id="locResult">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <span style="font-size:.72rem;color:var(--mu)">Position détectée</span>
+            <span class="loc-sent-badge" id="locSentBadge"><i class="fa-solid fa-check"></i> Envoyée</span>
+          </div>
+          <div class="coord" id="locCoord">–</div>
+          <div style="font-size:.68rem;color:var(--mu);margin-top:6px" id="locTime"></div>
+        </div>
+        <div class="divider"></div>
+        <div style="font-size:.72rem;color:var(--mu)">Position domicile enregistrée : <span style="color:var(--g)">Lomé, Adidogomé</span></div>
+      </div>
+    </div>
+
+    <!-- Profil santé résumé -->
+    <div class="card">
+      <div class="card-header mb12"><div class="card-title"><i class="fa-solid fa-heart-pulse"></i> Profil Médical</div><button class="btn-outline" onclick="nav('profile')" style="font-size:.65rem;padding:4px 10px">Modifier</button></div>
+      <div class="card-body" style="padding-top:0">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="flex-between"><span style="font-size:.75rem;color:var(--mu)">Groupe sanguin</span><span style="font-size:.78rem;color:var(--wh);font-weight:700;font-family:var(--fontm)">A+</span></div>
+          <div class="flex-between"><span style="font-size:.75rem;color:var(--mu)">Allergies</span><div style="display:flex;gap:4px"><span class="tag red">Pénicilline</span></div></div>
+          <div class="flex-between"><span style="font-size:.75rem;color:var(--mu)">Maladies</span><span class="badge-orange">Hypertension</span></div>
+          <div class="flex-between"><span style="font-size:.75rem;color:var(--mu)">Traitement</span><span style="font-size:.75rem;color:var(--orange)">Amlodipine 5mg</span></div>
+          <div class="flex-between"><span style="font-size:.75rem;color:var(--mu)">Fumeur</span><span class="badge-green">Non</span></div>
+        </div>
+        <div class="divider"></div>
+        <div style="font-size:.72rem;color:var(--mu);margin-bottom:6px">Complétude du profil</div>
+        <div class="status-bar">
+          <div class="sbar-track"><div class="sbar-fill" style="width:97%"></div></div>
+          <div class="sbar-label">97%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIVITÉ RÉCENTE -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-header mb12"><div class="card-title"><i class="fa-solid fa-clock-rotate-left"></i> Activité Récente</div><button class="btn-outline" onclick="nav('activites')" style="font-size:.65rem;padding:4px 10px">Tout voir</button></div>
+      <div class="card-body" style="padding-top:0">
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot evac"><i class="fa-solid fa-ambulance"></i></div>
+            <div class="tl-content">
+              <div class="tl-title">Évacuation réalisée</div>
+              <div class="tl-desc">Transfert Clinique El Rapha · Admis avec succès</div>
+              <div class="tl-time">12 mars 2025 · 22h14</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot call"><i class="fa-solid fa-phone"></i></div>
+            <div class="tl-content">
+              <div class="tl-title">Appel signalé au 8880</div>
+              <div class="tl-desc">Malaise signalé · Équipe mobilisée en 4 min</div>
+              <div class="tl-time">12 mars 2025 · 21h58</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot sub"><i class="fa-solid fa-file-contract"></i></div>
+            <div class="tl-content">
+              <div class="tl-title">Renouvellement abonnement</div>
+              <div class="tl-desc">Formule Famille+ reconduite · 5 personnes</div>
+              <div class="tl-time">1 mars 2025</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot alert"><i class="fa-solid fa-location-dot"></i></div>
+            <div class="tl-content">
+              <div class="tl-title">Position envoyée</div>
+              <div class="tl-desc">Coordonnées transmises aux administrateurs</div>
+              <div class="tl-time">12 mars 2025 · 21h55</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header mb12"><div class="card-title"><i class="fa-solid fa-users"></i> Personnes Couvertes</div><button class="btn-outline" onclick="nav('abonnement')" style="font-size:.65rem;padding:4px 10px">Gérer</button></div>
+      <div class="card-body" style="padding-top:0">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="sub-member"><div class="sub-member-av">KA</div><div><div class="sub-member-name">Koffi Amédé <span class="badge-green" style="font-size:.58rem">Vous</span></div><div class="sub-member-rel">Souscripteur principal</div></div></div>
+          <div class="sub-member"><div class="sub-member-av" style="background:rgba(255,153,0,.1);color:var(--orange);border-color:rgba(255,153,0,.25)">AK</div><div><div class="sub-member-name">Afiwa Koffi</div><div class="sub-member-rel">Épouse</div></div></div>
+          <div class="sub-member"><div class="sub-member-av" style="background:rgba(77,184,255,.1);color:var(--blue);border-color:rgba(77,184,255,.25)">JK</div><div><div class="sub-member-name">Jonas Koffi</div><div class="sub-member-rel">Fils · 8 ans</div></div></div>
+          <div class="sub-member"><div class="sub-member-av" style="background:rgba(77,184,255,.1);color:var(--blue);border-color:rgba(77,184,255,.25)">EK</div><div><div class="sub-member-name">Elinam Koffi</div><div class="sub-member-rel">Fille · 5 ans</div></div></div>
+          <div class="sub-member"><div class="sub-member-av" style="background:rgba(255,215,0,.1);color:var(--yellow);border-color:rgba(255,215,0,.25)">MK</div><div><div class="sub-member-name">Mama Koffi</div><div class="sub-member-rel">Mère · 68 ans</div></div></div>
+        </div>
+        <div class="divider"></div>
+        <div class="flex-between" style="font-size:.75rem">
+          <span style="color:var(--mu)">Renouvellement abonnement</span>
+          <span style="color:var(--orange);font-family:var(--fontm);font-weight:700">12 Avr 2025</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── PAGE : URGENCE ─── -->
+<div id="page-urgence" class="page">
+  <div class="sec-title mb20">
+    <span class="sec-tag" style="color:var(--red)">Assistance d'Urgence</span>
+    <h2>Centre <span style="color:var(--red)">SOS</span></h2>
+    <p>Signalez votre urgence, envoyez votre position et alertez les secours</p>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <!-- SOS -->
+      <div class="sos-zone">
+        <button class="sos-main-btn" onclick="triggerSOS()" style="width:120px;height:120px;font-size:2.2rem"><i class="fa-solid fa-phone-volume"></i></button>
+        <h3 style="font-size:1.2rem">Appel d'Urgence – 8880</h3>
+        <p>Ce bouton signale votre appel aux administrateurs Secours Abalo ET initie l'appel au 8880 automatiquement</p>
+        <div class="sos-actions" style="justify-content:center">
+          <button class="sos-act-btn" style="background:rgba(255,77,77,.2);border-color:rgba(255,77,77,.35);color:#fff" onclick="triggerSOS()"><i class="fa-solid fa-siren-on"></i> Activer le SOS</button>
+        </div>
+        <div id="sosStatus" style="margin-top:14px;font-size:.75rem;color:rgba(255,200,200,.7);display:none"></div>
+      </div>
+      <!-- Location urgence -->
+      <div class="card">
+        <div class="card-header mb12"><div class="card-title"><i class="fa-solid fa-location-arrow"></i> Envoyer Ma Position</div></div>
+        <div class="card-body" style="padding-top:0">
+          <p style="font-size:.78rem;color:var(--mu);margin-bottom:12px">Transmettez votre localisation GPS instantanée aux équipes de secours.</p>
+          <button class="loc-btn" onclick="sendLocation()"><i class="fa-solid fa-satellite-dish"></i> Envoyer Ma Position GPS Maintenant</button>
+          <div class="loc-result" id="locResult2">
+            <div class="coord" id="locCoord2">–</div>
+            <div style="font-size:.68rem;color:var(--mu);margin-top:5px" id="locTime2"></div>
+            <div style="margin-top:8px"><span class="loc-sent-badge show" style="display:inline-flex"><i class="fa-solid fa-check"></i> Position transmise aux secours</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contacts & Infos -->
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card">
+        <div class="card-header mb12"><div class="card-title"><i class="fa-solid fa-address-book"></i> Contacts d'Urgence</div></div>
+        <div class="card-body" style="padding-top:0">
+          <div class="contact-urgence-card">
+            <div class="cu-avatar"><i class="fa-solid fa-user"></i></div>
+            <div class="cu-info"><h4>Afi Mensah</h4><p>Sœur</p><div class="cu-phone">+228 90 11 22 33</div></div>
+            <div class="cu-actions"><a href="tel:+22890112233" class="cu-btn"><i class="fa-solid fa-phone"></i></a></div>
+          </div>
+          <div class="contact-urgence-card">
+            <div class="cu-avatar"><i class="fa-solid fa-user"></i></div>
+            <div class="cu-info"><h4>Kofi Dogbé</h4><p>Ami proche</p><div class="cu-phone">+228 92 44 55 66</div></div>
+            <div class="cu-actions"><a href="tel:+22892445566" class="cu-btn"><i class="fa-solid fa-phone"></i></a></div>
+          </div>
+          <button class="btn-outline" style="width:100%;justify-content:center;margin-top:8px" onclick="nav('contacts')"><i class="fa-solid fa-plus"></i> Gérer les contacts</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header mb12"><div class="card-title"><i class="fa-solid fa-notes-medical"></i> Infos Médicales Rapides</div></div>
+        <div class="card-body" style="padding-top:0;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="info-pair"><div class="info-label">Groupe sanguin</div><div class="info-value" style="color:var(--red);font-weight:700">A+</div></div>
+          <div class="info-pair"><div class="info-label">Âge</div><div class="info-value">38 ans</div></div>
+          <div class="info-pair"><div class="info-label">Allergie principale</div><div class="info-value" style="color:var(--orange)">Pénicilline</div></div>
+          <div class="info-pair"><div class="info-label">Condition</div><div class="info-value" style="color:var(--orange)">Hypertension</div></div>
+          <div class="info-pair"><div class="info-label">Traitement actuel</div><div class="info-value" style="font-size:.78rem">Amlodipine 5mg</div></div>
+          <div class="info-pair"><div class="info-label">Médecin référent</div><div class="info-value" style="font-size:.78rem">Dr. Agbodjan</div></div>
+        </div>
+      </div>
+
+      <div style="background:rgba(107,255,107,.06);border:1px solid var(--border);border-radius:var(--r12);padding:14px">
+        <div style="font-size:.75rem;color:var(--mu);margin-bottom:8px"><i class="fa-solid fa-circle-info" style="color:var(--g)"></i> Numéros utiles</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <a href="tel:8880" style="display:flex;justify-content:space-between;font-size:.82rem;padding:6px 0;border-bottom:1px solid var(--border);color:var(--wh)"><span><i class="fa-solid fa-ambulance" style="color:var(--g);width:18px"></i> Secours Abalo</span><span style="color:var(--g);font-family:var(--fontm);font-weight:700">8880</span></a>
+          <a href="tel:8888" style="display:flex;justify-content:space-between;font-size:.82rem;padding:6px 0;border-bottom:1px solid var(--border);color:var(--tx)"><span><i class="fa-solid fa-hospital" style="color:var(--orange);width:18px"></i> SAMU Togo</span><span style="color:var(--orange);font-family:var(--fontm)">8888</span></a>
+          <a href="tel:117" style="display:flex;justify-content:space-between;font-size:.82rem;padding:6px 0;color:var(--tx)"><span><i class="fa-solid fa-shield" style="color:var(--blue);width:18px"></i> Police Nationale</span><span style="color:var(--blue);font-family:var(--fontm)">117</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── PAGE : PROFIL MÉDICAL ─── -->
+<div id="page-profile" class="page">
+  <div class="sec-title mb20">
+    <span class="sec-tag">Santé & Données Personnelles</span>
+    <h2>Mon Profil <span style="color:var(--g)">Médical</span></h2>
+    <p>Ces informations permettent à nos infirmières de vous prodiguer les premiers soins adaptés</p>
+  </div>
+
+  <!-- Complétude -->
+  <div style="background:var(--sf);border:1px solid var(--border);border-radius:var(--r12);padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px">
+    <div style="flex:1"><div style="font-size:.78rem;color:var(--mu);margin-bottom:6px">Profil médical complété à <span style="color:var(--g);font-weight:700">97%</span></div><div class="status-bar" style="margin:0"><div class="sbar-track"><div class="sbar-fill" style="width:97%"></div></div><div class="sbar-label">97%</div></div></div>
+    <div style="font-size:.72rem;color:var(--mu);max-width:180px;line-height:1.6">Un profil complet améliore la qualité des soins en situation d'urgence.</div>
+  </div>
+
+  <!-- SECTION 1 : Identité -->
+  <div class="profile-section open mb16">
+    <div class="profile-section-header" onclick="toggleSection(this)">
+      <h3><i class="fa-solid fa-id-card"></i> Identité & Coordonnées</h3>
+      <i class="fa-solid fa-chevron-down psh-arrow"></i>
+    </div>
+    <div class="profile-section-body">
+      <div class="fg">
+        <div class="frow"><div><label>Prénom</label><input type="text" value="Koffi" placeholder="Prénom"></div><div><label>Nom de famille</label><input type="text" value="Amédé" placeholder="Nom"></div></div>
+        <div class="frow3"><div><label>Date de naissance</label><input type="date" value="1987-03-15"></div><div><label>Âge</label><input type="number" value="38" placeholder="Âge" readonly style="color:var(--g)"></div><div><label>Sexe</label><select><option>Masculin</option><option>Féminin</option><option>Non précisé</option></select></div></div>
+        <div class="frow"><div><label>Nationalité</label><input type="text" value="Togolaise" placeholder="Nationalité"></div><div><label>Profession</label><input type="text" value="Enseignant" placeholder="Profession"></div></div>
+        <div class="frow3"><div><label>Région</label><select><option>Maritime (Lomé)</option><option>Plateaux</option><option>Centrale</option><option>Kara</option><option>Savanes</option></select></div><div><label>Ville / Quartier</label><input type="text" value="Adidogomé" placeholder="Quartier"></div><div><label>Téléphone principal</label><input type="tel" value="+228 90 00 11 22" placeholder="+228 …"></div></div>
+        <div class="section-save"><button class="save-btn" onclick="saveSection(this)"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 : Localisation -->
+  <div class="profile-section open mb16">
+    <div class="profile-section-header" onclick="toggleSection(this)">
+      <h3><i class="fa-solid fa-map-location-dot"></i> Localisation GPS</h3>
+      <i class="fa-solid fa-chevron-down psh-arrow"></i>
+    </div>
+    <div class="profile-section-body">
+      <div class="fg">
+        <div class="frow"><div><label>Latitude domicile</label><input type="text" value="6.1375" placeholder="Ex: 6.1375" id="homeLat"></div><div><label>Longitude domicile</label><input type="text" value="1.2123" placeholder="Ex: 1.2123" id="homeLng"></div></div>
+        <div class="frow"><div><label>Latitude lieu de travail</label><input type="text" value="6.1421" placeholder="Ex: 6.1421"></div><div><label>Longitude lieu de travail</label><input type="text" value="1.2201" placeholder="Ex: 1.2201"></div></div>
+        <div><label>Adresse complète domicile</label><input type="text" value="Adidogomé, derrière l'école primaire, 2ème rue à droite" placeholder="Adresse précise"></div>
+        <div><label>Adresse lieu de travail</label><input type="text" value="Lycée de Tokoin, Lomé" placeholder="Adresse lieu de travail"></div>
+        <button class="loc-btn" style="margin-top:4px" onclick="detectHome()"><i class="fa-solid fa-crosshairs"></i> Détecter ma position actuelle</button>
+        <div class="section-save"><button class="save-btn" onclick="saveSection(this)"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 : Santé -->
+  <div class="profile-section open mb16">
+    <div class="profile-section-header" onclick="toggleSection(this)">
+      <h3><i class="fa-solid fa-heart-pulse"></i> Informations Médicales</h3>
+      <i class="fa-solid fa-chevron-down psh-arrow"></i>
+    </div>
+    <div class="profile-section-body">
+      <div class="fg">
+        <div class="frow3">
+          <div><label>Groupe sanguin</label><select><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option><option>Inconnu</option></select></div>
+          <div><label>Taille (cm)</label><input type="number" value="172" placeholder="ex: 172"></div>
+          <div><label>Poids (kg)</label><input type="number" value="74" placeholder="ex: 74"></div>
+        </div>
+        <div>
+          <label>Maladies chroniques / Conditions existantes</label>
+          <div class="tag-input-area" id="maladiesInput">
+            <span class="tag orange">Hypertension<button class="tag-del" onclick="removeTag(this)">×</button></span>
+            <input class="tag-text-input" placeholder="+ Ajouter une maladie…" onkeydown="addTag(event,'maladiesInput','orange')">
+          </div>
+        </div>
+        <div>
+          <label>Allergies médicamenteuses / alimentaires</label>
+          <div class="tag-input-area" id="allergiesInput">
+            <span class="tag red">Pénicilline<button class="tag-del" onclick="removeTag(this)">×</button></span>
+            <span class="tag red">Arachides<button class="tag-del" onclick="removeTag(this)">×</button></span>
+            <input class="tag-text-input" placeholder="+ Ajouter une allergie…" onkeydown="addTag(event,'allergiesInput','red')">
+          </div>
+        </div>
+        <div>
+          <label>Antécédents médicaux familiaux</label>
+          <textarea rows="2" placeholder="Ex: Diabète côté paternel, cancer du sein côté maternel…">Diabète (père) · Maladies cardiaques (grands-parents)</textarea>
+        </div>
+        <div>
+          <label>Médicaments / Traitements en cours</label>
+          <div class="tag-input-area" id="medsInput">
+            <span class="tag" style="border-color:rgba(77,184,255,.3);color:var(--blue);background:rgba(77,184,255,.1)">Amlodipine 5mg<button class="tag-del" onclick="removeTag(this)">×</button></span>
+            <input class="tag-text-input" placeholder="+ Ajouter un médicament…" onkeydown="addTag(event,'medsInput','blue')">
+          </div>
+        </div>
+        <div><label>Médecin traitant / Référent</label><input type="text" value="Dr. Agbodjan Komi – Clinique El Rapha, +228 90 88 77 66" placeholder="Nom et contact médecin"></div>
+        <div class="section-save"><button class="save-btn" onclick="saveSection(this)"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 : Mode de vie -->
+  <div class="profile-section mb16">
+    <div class="profile-section-header" onclick="toggleSection(this)">
+      <h3><i class="fa-solid fa-person-running"></i> Mode de Vie</h3>
+      <i class="fa-solid fa-chevron-down psh-arrow"></i>
+    </div>
+    <div class="profile-section-body">
+      <div class="fg">
+        <div class="frow">
+          <div><label>Fumeur ?</label><div class="radio-group"><span class="radio-opt" onclick="selectRadio(this,'fumeur')">Jamais</span><span class="radio-opt sel" onclick="selectRadio(this,'fumeur')">Non</span><span class="radio-opt" onclick="selectRadio(this,'fumeur')">Oui</span><span class="radio-opt" onclick="selectRadio(this,'fumeur')">Ancien fumeur</span></div></div>
+          <div><label>Consommation d'alcool ?</label><div class="radio-group"><span class="radio-opt sel" onclick="selectRadio(this,'alcool')">Non</span><span class="radio-opt" onclick="selectRadio(this,'alcool')">Occasionnel</span><span class="radio-opt sel-red" onclick="selectRadio(this,'alcool')">Régulier</span></div></div>
+        </div>
+        <div class="frow">
+          <div><label>Activité physique</label><select><option>Sédentaire</option><option selected>Modérée (marche, vélo)</option><option>Intensive (sport régulier)</option></select></div>
+          <div><label>Régime alimentaire particulier</label><select><option selected>Aucun</option><option>Végétarien</option><option>Diabétique</option><option>Sans gluten</option><option>Halal</option></select></div>
+        </div>
+        <div><label>Informations complémentaires (visible pour l'équipe médicale)</label><textarea rows="3" placeholder="Tout détail utile pour les soins d'urgence…">Patient suit un suivi cardiologique mensuel. Tension artérielle habituellement autour de 140/90. Tolérance moyenne à la douleur.</textarea></div>
+        <div class="section-save"><button class="save-btn" onclick="saveSection(this)"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 : Antécédents évacuations -->
+  <div class="profile-section mb16">
+    <div class="profile-section-header" onclick="toggleSection(this)">
+      <h3><i class="fa-solid fa-ambulance"></i> Antécédents d'Évacuations</h3>
+      <i class="fa-solid fa-chevron-down psh-arrow"></i>
+    </div>
+    <div class="profile-section-body">
+      <div class="evac-card">
+        <div class="evac-card-header"><h4>Malaise hypertendu</h4><span class="evac-status done">Complétée</span></div>
+        <div class="evac-meta"><span><i class="fa-regular fa-calendar"></i> 12 mars 2025</span><span><i class="fa-solid fa-location-dot"></i> Domicile → Clinique El Rapha</span><span><i class="fa-solid fa-user-doctor"></i> Dr. Mensah</span></div>
+      </div>
+      <div class="evac-card">
+        <div class="evac-card-header"><h4>Accident de moto</h4><span class="evac-status done">Complétée</span></div>
+        <div class="evac-meta"><span><i class="fa-regular fa-calendar"></i> 5 août 2024</span><span><i class="fa-solid fa-location-dot"></i> Rue de Kégué → CHU Sylvanus</span><span><i class="fa-solid fa-user-doctor"></i> Dr. Koffi</span></div>
+      </div>
+      <div><label style="font-size:.72rem;color:var(--mu);font-weight:600;text-transform:uppercase;letter-spacing:.06em">Ajouter un antécédent</label><textarea rows="2" placeholder="Décrivez une évacuation passée (date, lieu, motif, hôpital…)" style="background:var(--sf2);border:1px solid rgba(107,255,107,.1);border-radius:var(--r8);padding:10px;color:var(--tx);font-family:var(--font);font-size:.82rem;width:100%;outline:none;margin-top:6px;resize:vertical"></textarea></div>
+      <div class="section-save"><button class="save-btn" onclick="saveSection(this)"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── PAGE : ABONNEMENT ─── -->
+<div id="page-abonnement" class="page">
+  <div class="sec-title mb20">
+    <span class="sec-tag">Votre Protection</span>
+    <h2>Mon <span style="color:var(--g)">Abonnement</span></h2>
+    <p>Gérez votre formule et les personnes couvertes</p>
+  </div>
+  <div class="grid2">
+    <div>
+      <div class="sub-card mb16">
+        <div class="sub-card-top">
+          <div><div style="font-size:.65rem;color:var(--mu);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Formule active</div><div class="sub-plan">Famille+ ⭐</div></div>
+          <div class="sub-price"><span class="amount">1 000</span><span class="period">FCFA / semaine</span></div>
+        </div>
+        <div class="sub-renew mb16"><span class="label"><i class="fa-regular fa-calendar"></i> Prochain renouvellement</span><span class="date">12 Avr 2025</span></div>
+        <div style="font-size:.72rem;color:var(--mu);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">Membres couverts (5/5)</div>
+        <div class="sub-members">
+          <div class="sub-member"><div class="sub-member-av">KA</div><div><div class="sub-member-name">Koffi Amédé <span class="badge-green" style="font-size:.55rem">Principal</span></div><div class="sub-member-rel">Souscripteur</div></div></div>
+          <div class="sub-member"><div class="sub-member-av" style="background:rgba(255,153,0,.1);color:var(--orange);border-color:rgba(255,153,0,.25)">AK</div><div><div class="sub-member-name">Afiwa Koffi</div><div class="sub-member-rel">Épouse · +228 91 00 11 22</div></div></div>
+          <div class="sub-member"><div class="sub-member-av" style="background:rgba(77,184,255,.1);color:var(--blue);border-color:rgba(77,184,255,.25)">JK</div><div><div class="sub-member-name">Jonas Koffi</div><div class="sub-member-rel">Fils · 8 ans</div></div></div>
+          <div class="sub-member"><div class="sub-member-av" style="background:rgba(77,184,255,.1);color:var(--blue);border-color:rgba(77,184,255,.25)">EK</div><div><div class="sub-member-name">Elinam Koffi</div><div class="sub-member-rel">Fille · 5 ans</div></div></div>
+          <div class="sub-member"><div class="sub-member-av" style="background:rgba(255,215,0,.1);color:var(--yellow);border-color:rgba(255,215,0,.25)">MK</div><div><div class="sub-member-name">Mama Koffi</div><div class="sub-member-rel">Mère · 68 ans</div></div></div>
+        </div>
+        <button class="add-member-btn" onclick="showToast('success','Limite atteinte','La formule Famille+ couvre jusqu\'à 5 personnes.')"><i class="fa-solid fa-plus"></i> Limite de 5 atteinte</button>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="save-btn" onclick="showToast('success','Paiement','Redirection vers Mobile Money…')"><i class="fa-solid fa-rotate"></i> Renouveler maintenant</button>
+        <button class="btn-outline" onclick="showToast('warn','Mise à niveau','Contactez le 8880 pour changer de formule.')"><i class="fa-solid fa-arrow-up"></i> Changer de formule</button>
+      </div>
+    </div>
+    <div>
+      <div class="card mb16">
+        <div class="card-header mb12"><div class="card-title"><i class="fa-solid fa-check-double"></i> Avantages inclus</div></div>
+        <div class="card-body" style="padding-top:0;display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:center;gap:9px;font-size:.82rem"><i class="fa-solid fa-check" style="color:var(--g);width:14px"></i>Évacuation d'urgence illimitée</div>
+          <div style="display:flex;align-items:center;gap:9px;font-size:.82rem"><i class="fa-solid fa-check" style="color:var(--g);width:14px"></i>Transport vers hôpital de votre choix</div>
+          <div style="display:flex;align-items:center;gap:9px;font-size:.82rem"><i class="fa-solid fa-check" style="color:var(--g);width:14px"></i>Accès prioritaire au 8880</div>
+          <div style="display:flex;align-items:center;gap:9px;font-size:.82rem"><i class="fa-solid fa-check" style="color:var(--g);width:14px"></i>5 personnes couvertes</div>
+          <div style="display:flex;align-items:center;gap:9px;font-size:.82rem"><i class="fa-solid fa-check" style="color:var(--g);width:14px"></i>Assistance à domicile incluse</div>
+          <div style="display:flex;align-items:center;gap:9px;font-size:.82rem"><i class="fa-solid fa-check" style="color:var(--g);width:14px"></i>Soins médicaux en transit</div>
+          <div style="display:flex;align-items:center;gap:9px;font-size:.82rem;color:var(--mu)"><i class="fa-solid fa-xmark" style="color:var(--mu);width:14px"></i>Évacuation internationale</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header mb12"><div class="card-title"><i class="fa-solid fa-receipt"></i> Historique paiements</div></div>
+        <div class="card-body" style="padding-top:0;display:flex;flex-direction:column;gap:8px">
+          <div class="flex-between" style="padding:8px 0;border-bottom:1px solid var(--border)"><span style="font-size:.78rem">01 Mars 2025</span><span style="color:var(--g);font-family:var(--fontm);font-size:.78rem">1 000 FCFA <span class="badge-green" style="font-size:.55rem">Payé</span></span></div>
+          <div class="flex-between" style="padding:8px 0;border-bottom:1px solid var(--border)"><span style="font-size:.78rem">01 Fév 2025</span><span style="color:var(--g);font-family:var(--fontm);font-size:.78rem">1 000 FCFA <span class="badge-green" style="font-size:.55rem">Payé</span></span></div>
+          <div class="flex-between" style="padding:8px 0"><span style="font-size:.78rem">01 Jan 2025</span><span style="color:var(--g);font-family:var(--fontm);font-size:.78rem">1 000 FCFA <span class="badge-green" style="font-size:.55rem">Payé</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── PAGE : ÉVACUATIONS ─── -->
+<div id="page-evacuations" class="page">
+  <div class="sec-title mb20">
+    <span class="sec-tag">Suivi Médical</span>
+    <h2>Historique des <span style="color:var(--g)">Évacuations</span></h2>
+    <p>Toutes les interventions médicales de Secours Abalo vous concernant</p>
+  </div>
+  <div class="grid4 mb20">
+    <div class="stat-mini"><div class="stat-ico"><i class="fa-solid fa-ambulance"></i></div><div class="stat-info"><span class="sv">3</span><span class="sl">Total interventions</span></div></div>
+    <div class="stat-mini"><div class="stat-ico" style="color:var(--g);background:var(--gg)"><i class="fa-solid fa-check-circle"></i></div><div class="stat-info"><span class="sv" style="color:var(--g)">3</span><span class="sl">Réussies</span></div></div>
+    <div class="stat-mini"><div class="stat-ico" style="color:var(--yellow);background:rgba(255,215,0,.1)"><i class="fa-solid fa-clock"></i></div><div class="stat-info"><span class="sv" style="color:var(--yellow)">6 min</span><span class="sl">Délai moyen</span></div></div>
+    <div class="stat-mini"><div class="stat-ico" style="color:var(--blue);background:rgba(77,184,255,.1)"><i class="fa-solid fa-star"></i></div><div class="stat-info"><span class="sv" style="color:var(--blue)">5/5</span><span class="sl">Satisfaction</span></div></div>
+  </div>
+  <div>
+    <div class="evac-card" style="border-left:3px solid var(--g)">
+      <div class="evac-card-header"><h4><i class="fa-solid fa-heart-pulse" style="color:var(--red);margin-right:6px"></i>Malaise hypertendu</h4><span class="evac-status done">Complétée</span></div>
+      <div class="evac-meta mb8"><span><i class="fa-regular fa-calendar"></i> 12 Mars 2025</span><span><i class="fa-regular fa-clock"></i> 21h58 → 22h38</span><span><i class="fa-solid fa-stopwatch" style="color:var(--g)"></i> 4 min d'intervention</span></div>
+      <div class="evac-meta mb8"><span><i class="fa-solid fa-location-dot"></i> Adidogomé (domicile)</span><span><i class="fa-solid fa-hospital"></i> Clinique El Rapha</span></div>
+      <div style="background:rgba(0,0,0,.2);border-radius:var(--r8);padding:10px 12px;font-size:.75rem;color:var(--tx);margin-bottom:8px">Prise en charge : Amlodipine IV · Oxygène médical · Tension stabilisée à 130/85 à l'arrivée</div>
+      <div class="evac-meta"><span><i class="fa-solid fa-user-doctor"></i> Infirmier Kofi M. · Ambulance MA-02</span><span><i class="fa-solid fa-star" style="color:var(--yellow)"></i> Note : 5/5</span></div>
+    </div>
+    <div class="evac-card" style="border-left:3px solid var(--g)">
+      <div class="evac-card-header"><h4><i class="fa-solid fa-car-burst" style="color:var(--orange);margin-right:6px"></i>Accident de moto</h4><span class="evac-status done">Complétée</span></div>
+      <div class="evac-meta mb8"><span><i class="fa-regular fa-calendar"></i> 5 Août 2024</span><span><i class="fa-regular fa-clock"></i> 15h22 → 16h45</span><span><i class="fa-solid fa-stopwatch" style="color:var(--g)"></i> 8 min</span></div>
+      <div class="evac-meta mb8"><span><i class="fa-solid fa-location-dot"></i> Rue de Kégué</span><span><i class="fa-solid fa-hospital"></i> CHU Sylvanus Olympio</span></div>
+      <div style="background:rgba(0,0,0,.2);border-radius:var(--r8);padding:10px 12px;font-size:.75rem;color:var(--tx);margin-bottom:8px">Fracture tibia gauche · Immobilisation · Perfusion Ringer Lactate</div>
+      <div class="evac-meta"><span><i class="fa-solid fa-user-doctor"></i> Infirmière Ama T. · Ambulance MA-01</span><span><i class="fa-solid fa-star" style="color:var(--yellow)"></i> Note : 5/5</span></div>
+    </div>
+    <div class="evac-card" style="border-left:3px solid var(--g)">
+      <div class="evac-card-header"><h4><i class="fa-solid fa-person-falling" style="color:var(--yellow);margin-right:6px"></i>Chute – Vertiges</h4><span class="evac-status done">Complétée</span></div>
+      <div class="evac-meta mb8"><span><i class="fa-regular fa-calendar"></i> 14 Jan 2024</span><span><i class="fa-regular fa-clock"></i> 08h11 → 09h02</span><span><i class="fa-solid fa-stopwatch" style="color:var(--g)"></i> 6 min</span></div>
+      <div class="evac-meta mb8"><span><i class="fa-solid fa-location-dot"></i> Lycée de Tokoin</span><span><i class="fa-solid fa-hospital"></i> Centre Médical CNSS</span></div>
+      <div class="evac-meta"><span><i class="fa-solid fa-user-doctor"></i> Infirmier Sénamé K. · Ambulance MA-03</span><span><i class="fa-solid fa-star" style="color:var(--yellow)"></i> Note : 5/5</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── PAGE : ACTIVITÉS ─── -->
+<div id="page-activites" class="page">
+  <div class="sec-title mb20">
+    <span class="sec-tag">Journal</span>
+    <h2>Mes <span style="color:var(--g)">Activités</span></h2>
+    <p>Historique complet de vos interactions avec Secours Abalo</p>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot evac"><i class="fa-solid fa-ambulance"></i></div><div class="tl-content"><div class="tl-title">Évacuation réalisée – Malaise</div><div class="tl-desc">Admis à la Clinique El Rapha · Durée 40 min · Note 5/5</div><div class="tl-time">12 Mars 2025 à 22h14</div></div></div>
+        <div class="tl-item"><div class="tl-dot alert"><i class="fa-solid fa-location-dot"></i></div><div class="tl-content"><div class="tl-title">Position GPS transmise</div><div class="tl-desc">Coordonnées envoyées aux administrateurs · 6.1375, 1.2123</div><div class="tl-time">12 Mars 2025 à 21h55</div></div></div>
+        <div class="tl-item"><div class="tl-dot call"><i class="fa-solid fa-phone"></i></div><div class="tl-content"><div class="tl-title">Appel signalé au 8880</div><div class="tl-desc">Signalement envoyé – équipe mobilisée en 4 min</div><div class="tl-time">12 Mars 2025 à 21h52</div></div></div>
+        <div class="tl-item"><div class="tl-dot sub"><i class="fa-solid fa-file-contract"></i></div><div class="tl-content"><div class="tl-title">Profil médical mis à jour</div><div class="tl-desc">Médicaments et allergies actualisés</div><div class="tl-time">5 Mars 2025</div></div></div>
+        <div class="tl-item"><div class="tl-dot sub"><i class="fa-solid fa-rotate"></i></div><div class="tl-content"><div class="tl-title">Renouvellement abonnement</div><div class="tl-desc">Formule Famille+ · 1 000 FCFA · Mobile Money Flooz</div><div class="tl-time">1 Mars 2025</div></div></div>
+        <div class="tl-item"><div class="tl-dot evac"><i class="fa-solid fa-ambulance"></i></div><div class="tl-content"><div class="tl-title">Évacuation réalisée – Accident moto</div><div class="tl-desc">CHU Sylvanus Olympio · Fracture tibia</div><div class="tl-time">5 Août 2024</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── PAGE : CONTACTS ─── -->
+<div id="page-contacts" class="page">
+  <div class="sec-title mb20">
+    <span class="sec-tag">Personnes à Prévenir</span>
+    <h2>Contacts <span style="color:var(--g)">d'Urgence</span></h2>
+    <p>Ces contacts seront alertés automatiquement lors d'une intervention</p>
+  </div>
+  <div class="grid2">
+    <div>
+      <div class="mb16">
+        <div class="contact-urgence-card">
+          <div class="cu-avatar"><i class="fa-solid fa-user-nurse"></i></div>
+          <div class="cu-info"><h4>Afi Mensah</h4><p>Sœur aînée · Contact principal</p><div class="cu-phone">+228 90 11 22 33</div></div>
+          <div class="cu-actions"><a href="tel:+22890112233" class="cu-btn"><i class="fa-solid fa-phone"></i></a><button class="cu-btn" style="color:var(--red)" onclick="showToast('warn','Supprimer','Fonctionnalité à confirmer.')"><i class="fa-solid fa-trash"></i></button></div>
+        </div>
+        <div class="contact-urgence-card">
+          <div class="cu-avatar"><i class="fa-solid fa-user"></i></div>
+          <div class="cu-info"><h4>Kofi Dogbé</h4><p>Ami proche · Contact secondaire</p><div class="cu-phone">+228 92 44 55 66</div></div>
+          <div class="cu-actions"><a href="tel:+22892445566" class="cu-btn"><i class="fa-solid fa-phone"></i></a><button class="cu-btn" style="color:var(--red)" onclick="showToast('warn','Supprimer','Fonctionnalité à confirmer.')"><i class="fa-solid fa-trash"></i></button></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header mb12"><div class="card-title"><i class="fa-solid fa-plus"></i> Ajouter un Contact</div></div>
+        <div class="card-body" style="padding-top:0">
+          <div class="fg">
+            <div class="frow"><div><label>Prénom et Nom</label><input type="text" placeholder="Ex: Marie Dupont"></div><div><label>Lien de parenté</label><input type="text" placeholder="Sœur, ami, collègue…"></div></div>
+            <div class="frow"><div><label>Numéro de téléphone</label><input type="tel" placeholder="+228 …"></div><div><label>Numéro alternatif</label><input type="tel" placeholder="+228 … (optionnel)"></div></div>
+            <button class="save-btn" onclick="saveSection(this)"><i class="fa-solid fa-user-plus"></i> Ajouter ce contact</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header mb12"><div class="card-title"><i class="fa-solid fa-circle-info"></i> Comment ça fonctionne ?</div></div>
+      <div class="card-body" style="padding-top:0;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;gap:11px;align-items:flex-start"><div style="width:32px;height:32px;border-radius:50%;background:var(--gg);border:1px solid var(--border2);color:var(--g);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;font-family:var(--fontd);flex-shrink:0">1</div><div><div style="font-size:.82rem;font-weight:600;color:var(--wh);margin-bottom:3px;font-family:var(--fontd)">Alerte automatique</div><div style="font-size:.75rem;color:var(--tx)">Dès qu'une évacuation vous concerne, vos contacts sont prévenus par SMS.</div></div></div>
+        <div style="display:flex;gap:11px;align-items:flex-start"><div style="width:32px;height:32px;border-radius:50%;background:var(--gg);border:1px solid var(--border2);color:var(--g);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;font-family:var(--fontd);flex-shrink:0">2</div><div><div style="font-size:.82rem;font-weight:600;color:var(--wh);margin-bottom:3px;font-family:var(--fontd)">Suivi en temps réel</div><div style="font-size:.75rem;color:var(--tx)">Vos proches peuvent suivre votre prise en charge.</div></div></div>
+        <div style="display:flex;gap:11px;align-items:flex-start"><div style="width:32px;height:32px;border-radius:50%;background:var(--gg);border:1px solid var(--border2);color:var(--g);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;font-family:var(--fontd);flex-shrink:0">3</div><div><div style="font-size:.82rem;font-weight:600;color:var(--wh);margin-bottom:3px;font-family:var(--fontd)">Priorité d'appel</div><div style="font-size:.75rem;color:var(--tx)">Le 1er contact est appelé en priorité par notre équipe.</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── PAGE : NOTIFICATIONS ─── -->
+<div id="page-notifications" class="page">
+  <div class="sec-title mb20">
+    <span class="sec-tag">Alertes & Messages</span>
+    <h2>Mes <span style="color:var(--g)">Notifications</span></h2>
+    <p>Messages et alertes de Secours Abalo</p>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <div class="notif-item">
+        <div class="notif-unread"></div>
+        <div class="notif-ico green"><i class="fa-solid fa-check-circle"></i></div>
+        <div class="notif-text"><h4>Évacuation réussie</h4><p>Votre évacuation du 12 mars a été complétée. Bilan : stabilisation réussie à la Clinique El Rapha.</p></div>
+        <div class="notif-time">12 Mar</div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-unread"></div>
+        <div class="notif-ico orange"><i class="fa-solid fa-rotate"></i></div>
+        <div class="notif-text"><h4>Renouvellement dans 18 jours</h4><p>Votre abonnement Famille+ expire le 12 Avril 2025. Pensez à renouveler via Mobile Money.</p></div>
+        <div class="notif-time">Auj.</div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-unread"></div>
+        <div class="notif-ico blue"><i class="fa-solid fa-bell"></i></div>
+        <div class="notif-text"><h4>Mise à jour du profil recommandée</h4><p>Ajoutez votre médecin traitant et vos antécédents pour un profil à 100%.</p></div>
+        <div class="notif-time">Hier</div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-ico green"><i class="fa-solid fa-users"></i></div>
+        <div class="notif-text"><h4>Formule Famille+ activée</h4><p>5 personnes sont désormais couvertes par votre abonnement.</p></div>
+        <div class="notif-time">1 Mar</div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-ico red"><i class="fa-solid fa-ambulance"></i></div>
+        <div class="notif-text"><h4>Intervention en cours – Zone Tokoin</h4><p>Information : une intervention Secours Abalo est en cours dans votre quartier.</p></div>
+        <div class="notif-time">12 Mar</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── PAGE : PARAMÈTRES ─── -->
+<div id="page-parametres" class="page">
+  <div class="sec-title mb20">
+    <span class="sec-tag">Compte & Préférences</span>
+    <h2>Paramètres <span style="color:var(--g)">du Compte</span></h2>
+  </div>
+  <div class="grid2">
+    <div>
+      <div class="profile-section open mb16">
+        <div class="profile-section-header" onclick="toggleSection(this)"><h3><i class="fa-solid fa-user-shield"></i> Sécurité du Compte</h3><i class="fa-solid fa-chevron-down psh-arrow"></i></div>
+        <div class="profile-section-body">
+          <div class="fg">
+            <div><label>Email</label><input type="email" value="koffi.amede@gmail.com"></div>
+            <div><label>Nouveau mot de passe</label><input type="password" placeholder="Laisser vide pour ne pas changer"></div>
+            <div><label>Confirmer le mot de passe</label><input type="password" placeholder="Confirmer…"></div>
+            <div class="section-save"><button class="save-btn" onclick="saveSection(this)"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="profile-section mb16">
+        <div class="profile-section-header" onclick="toggleSection(this)"><h3><i class="fa-solid fa-bell"></i> Préférences Notifications</h3><i class="fa-solid fa-chevron-down psh-arrow"></i></div>
+        <div class="profile-section-body">
+          <div class="fg">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div class="flex-between"><span style="font-size:.82rem">Alertes d'urgence</span><input type="checkbox" checked style="accent-color:var(--g);width:16px;height:16px"></div>
+              <div class="flex-between"><span style="font-size:.82rem">Rappels renouvellement</span><input type="checkbox" checked style="accent-color:var(--g);width:16px;height:16px"></div>
+              <div class="flex-between"><span style="font-size:.82rem">Mises à jour interventions</span><input type="checkbox" checked style="accent-color:var(--g);width:16px;height:16px"></div>
+              <div class="flex-between"><span style="font-size:.82rem">Newsletters Secours Abalo</span><input type="checkbox" style="accent-color:var(--g);width:16px;height:16px"></div>
+            </div>
+            <div class="section-save"><button class="save-btn" onclick="saveSection(this)"><i class="fa-solid fa-floppy-disk"></i> Sauvegarder</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card mb16">
+        <div class="card-header mb12"><div class="card-title"><i class="fa-solid fa-right-from-bracket" style="color:var(--red)"></i> Déconnexion</div></div>
+        <div class="card-body" style="padding-top:0">
+          <p style="font-size:.78rem;color:var(--mu);margin-bottom:14px">Vous serez déconnecté de votre espace Secours Abalo.</p>
+          <button style="background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.25);color:var(--red);border-radius:var(--r8);padding:10px 18px;font-weight:700;font-size:.82rem;display:flex;align-items:center;gap:7px;font-family:var(--fontd);transition:all .2s" onmouseenter="this.style.background='rgba(255,77,77,.2)'" onmouseleave="this.style.background='rgba(255,77,77,.1)'" onclick="showToast('warn','Déconnexion','Vous avez été déconnecté.')"><i class="fa-solid fa-right-from-bracket"></i> Se déconnecter</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header mb12"><div class="card-title"><i class="fa-solid fa-headset"></i> Support</div></div>
+        <div class="card-body" style="padding-top:0;display:flex;flex-direction:column;gap:10px">
+          <a href="tel:8880" style="display:flex;align-items:center;gap:9px;padding:10px 12px;background:var(--sf2);border:1px solid var(--border);border-radius:var(--r8);font-size:.82rem;color:var(--tx);transition:border-color .2s" onmouseenter="this.style.borderColor='rgba(107,255,107,.3)'" onmouseleave="this.style.borderColor='rgba(107,255,107,.1)'"><i class="fa-solid fa-phone" style="color:var(--g)"></i> Appeler le 8880 (Gratuit)</a>
+          <a href="mailto:contact@secours-abalo.org" style="display:flex;align-items:center;gap:9px;padding:10px 12px;background:var(--sf2);border:1px solid var(--border);border-radius:var(--r8);font-size:.82rem;color:var(--tx);transition:border-color .2s" onmouseenter="this.style.borderColor='rgba(107,255,107,.3)'" onmouseleave="this.style.borderColor='rgba(107,255,107,.1)'"><i class="fa-solid fa-envelope" style="color:var(--g)"></i> contact@secours-abalo.org</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ─── PAGE : SOS IA PRO ─── -->
+<div id="page-sos-ia-pro" class="page">
+  <div class="sec-title mb20">
+    <span class="sec-tag" style="color:var(--orange)">Protection Intelligente</span>
+    <h2>SOS <span style="color:var(--orange)">IA Pro</span></h2>
+    <p>Surveillance automatique · Alertes intelligentes · Intervention rapide</p>
+  </div>
+
+  <!-- Carte principale activation -->
+  <div style="background:linear-gradient(135deg,rgba(255,153,0,.1),rgba(255,80,0,.05));
+    border:1px solid rgba(255,153,0,.3);border-radius:var(--r16);padding:22px;margin-bottom:16px">
+    <div class="flex-between mb16">
+      <div>
+        <div style="font-family:var(--fontd);font-weight:800;font-size:1.1rem;color:var(--wh);margin-bottom:6px">
+          Vérification automatique de bien-être
+        </div>
+        <div style="font-size:.78rem;color:rgba(255,200,150,.8)">
+          La plateforme vous envoie une notification à intervalle régulier.<br>
+          Sans réponse, vos contacts et les secours sont alertés automatiquement.
+        </div>
+      </div>
+      <span class="ia-status-pill ia-off" id="ia-status-pill">
+        <i class="fa-solid fa-circle" style="font-size:.5rem"></i> Inactif
+      </span>
+    </div>
+
+    <!-- Sélection intervalle -->
+    <div style="font-size:.78rem;color:var(--mu);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">
+      Intervalle de vérification
+    </div>
+    <div class="ia-interval-row" id="ia-interval-row">
+      <span class="ia-int-opt" data-val="5"   onclick="selectIAInterval(5)">5 min</span>
+      <span class="ia-int-opt ia-sel" data-val="10"  onclick="selectIAInterval(10)">10 min</span>
+      <span class="ia-int-opt" data-val="20"  onclick="selectIAInterval(20)">20 min</span>
+      <span class="ia-int-opt" data-val="30"  onclick="selectIAInterval(30)">30 min</span>
+      <span class="ia-int-opt" data-val="60"  onclick="selectIAInterval(60)">1 heure</span>
+      <span class="ia-int-opt" data-val="120" onclick="selectIAInterval(120)">2 heures</span>
+    </div>
+
+    <!-- Bouton activation -->
+    <button class="save-btn" id="ia-toggle-btn" onclick="toggleSOSIA()"
+      style="background:var(--orange);color:#000;font-family:var(--fontd);font-weight:800;
+        border:none;border-radius:var(--r8);padding:12px 22px;font-size:.88rem;
+        display:flex;align-items:center;gap:8px;cursor:pointer;transition:all .25s">
+      <i class="fa-solid fa-play"></i> Activer SOS IA Pro
+    </button>
+
+    <!-- Prochain check (visible si actif) -->
+    <div id="ia-next-check-block" style="display:none;margin-top:14px;
+      background:rgba(107,255,107,.06);border:1px solid rgba(107,255,107,.15);
+      border-radius:var(--r8);padding:12px 16px;
+      display:none;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <span style="font-size:.78rem;color:var(--mu)"><i class="fa-solid fa-clock" style="color:var(--g);margin-right:5px"></i>Prochain check</span>
+      <span id="ia-next-time" style="font-family:var(--fontm);color:var(--g);font-weight:700">—</span>
+    </div>
+  </div>
+
+  <!-- Comment ça marche -->
+  <div class="card mb16">
+    <div class="card-header mb12"><div class="card-title"><i class="fa-solid fa-circle-info"></i> Comment ça fonctionne ?</div></div>
+    <div class="card-body" style="padding-top:0">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="width:30px;height:30px;border-radius:50%;background:rgba(255,153,0,.15);border:1px solid rgba(255,153,0,.3);
+            color:var(--orange);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;font-family:var(--fontd);flex-shrink:0">1</div>
+          <div><div style="font-size:.83rem;font-weight:600;color:var(--wh);margin-bottom:2px;font-family:var(--fontd)">Notification automatique</div>
+          <div style="font-size:.76rem;color:var(--tx)">Toutes les X minutes, vous recevez une notification : "Comment allez-vous ?"</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="width:30px;height:30px;border-radius:50%;background:rgba(107,255,107,.15);border:1px solid rgba(107,255,107,.3);
+            color:var(--g);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;font-family:var(--fontd);flex-shrink:0">2</div>
+          <div><div style="font-size:.83rem;font-weight:600;color:var(--wh);margin-bottom:2px;font-family:var(--fontd)">3 niveaux de réponse</div>
+          <div style="font-size:.76rem;color:var(--tx)">Bien → cycle normal · Pas bien mais je gère → check dans 10 min · Urgence → SOS déclenché</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="width:30px;height:30px;border-radius:50%;background:rgba(255,77,77,.12);border:1px solid rgba(255,77,77,.25);
+            color:var(--red);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;font-family:var(--fontd);flex-shrink:0">3</div>
+          <div><div style="font-size:.83rem;font-weight:600;color:var(--wh);margin-bottom:2px;font-family:var(--fontd)">Escalade automatique si silence</div>
+          <div style="font-size:.76rem;color:var(--tx)">1 min sans réponse → rappel · 2 min → contacts alertés + admin · 3 min → SOS automatique</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Historique checks -->
+  <div class="card">
+    <div class="card-header mb12">
+      <div class="card-title"><i class="fa-solid fa-clock-rotate-left"></i> Historique des vérifications</div>
+      <button class="btn-outline" onclick="loadIAHistorique()" style="font-size:.65rem;padding:4px 10px">
+        <i class="fa-solid fa-rotate"></i> Actualiser
+      </button>
+    </div>
+    <div class="card-body" style="padding-top:0" id="ia-history-body">
+      <div style="text-align:center;padding:24px;color:var(--mu);font-size:.78rem">
+        <i class="fa-solid fa-brain" style="font-size:1.8rem;display:block;margin-bottom:10px;opacity:.4"></i>
+        Activez SOS IA Pro pour commencer les vérifications
+      </div>
+    </div>
+  </div>
+</div>
+
+</main><!-- /main -->
+</div><!-- /app -->
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <i class="fa-solid fa-circle-check" id="toastIcon"></i>
+  <div class="toast-text"><h4 id="toastTitle"></h4><p id="toastMsg"></p></div>
+</div>
+
+
+<!-- SOS IA PRO – Popup notification -->
+<div id="sos-ia-notif-wrap">
+  <div class="ia-notif-box">
+    <div class="ia-notif-head">
+      <div class="ia-notif-ico"><i class="fa-solid fa-brain"></i></div>
+      <div class="ia-notif-title" id="ia-notif-title">🤖 SOS IA Pro — Vérification</div>
+      <div class="ia-notif-sub" id="ia-notif-sub">Comment vous sentez-vous en ce moment ?</div>
+      <div class="ia-countdown" id="ia-countdown"></div>
+    </div>
+    <div class="ia-notif-body">
+      <button class="ia-btn ia-ok" onclick="repondreIA('ok')">
+        <i class="fa-solid fa-face-smile"></i> Oui, je vais bien
+      </button>
+      <button class="ia-btn ia-warn" onclick="repondreIA('not_ok_self')">
+        <i class="fa-solid fa-face-meh"></i> Non, pas très bien — je m'en charge
+      </button>
+      <button class="ia-btn ia-danger" onclick="repondreIA('emergency')">
+        <i class="fa-solid fa-siren-on"></i> Non, j'ai besoin d'aide d'urgence
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Responsive CSS override for dash-main-grid -->
+<style>
+@media(max-width:960px){.dash-main-grid{grid-template-columns:1fr 1fr!important}}
+@media(max-width:600px){.dash-main-grid{grid-template-columns:1fr!important}}
+</style>
+
+<script>
+
+  // ─── CONFIGURATION ────────────────────────────────────────────
+const API_URL = "http://localhost:8026"; // Remplacez par votre domaine en production
+
+/* ── NAV ── */
+const pages = {
+  dashboard:  {title:'Tableau de Bord',      bread:'Mon Espace · Accueil'},
+  urgence:    {title:'Urgence & SOS',         bread:'Mon Espace · SOS'},
+  profile:    {title:'Profil Médical',        bread:'Mon Espace · Santé'},
+  abonnement: {title:'Mon Abonnement',        bread:'Mon Espace · Formule'},
+  evacuations:{title:'Historique Évacuations',bread:'Mon Espace · Interventions'},
+  activites:  {title:'Mes Activités',         bread:'Mon Espace · Journal'},
+  contacts:   {title:"Contacts d'Urgence",    bread:'Mon Espace · Personnes'},
+  notifications:{title:'Notifications',       bread:'Mon Espace · Alertes'},
+  parametres: {title:'Paramètres',            bread:'Mon Espace · Compte'},
+  sos_ia_pro: { title:'SOS IA Pro',           bread:'Mon Espace · Surveillance IA' },
+};
+function nav(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
+  const pg=document.getElementById('page-'+id);
+  if(pg) pg.classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(b=>{
+    if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'")) b.classList.add('active');
+  });
+  const info=pages[id]||{title:id,bread:'Mon Espace'};
+  document.getElementById('pageTitle').textContent=info.title;
+  document.getElementById('pageBreadcrumb').textContent=info.bread;
+  closeSidebar();
+  window.scrollTo({top:0,behavior:'smooth'});
+
+}
+/* ── SIDEBAR ── */
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sbOverlay').classList.toggle('on');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sbOverlay').classList.remove('on');
+}
+
+/* ── TOAST ── */
+let toastTimer;
+function showToast(type,title,msg){
+  const t=document.getElementById('toast'),ti=document.getElementById('toastIcon');
+  document.getElementById('toastTitle').textContent=title;
+  document.getElementById('toastMsg').textContent=msg;
+  t.className='toast '+type;
+  ti.className='fa-solid '+(type==='success'?'fa-circle-check':type==='error'?'fa-circle-xmark':'fa-triangle-exclamation');
+  setTimeout(()=>t.classList.add('show'),10);
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),4000);
+}
+
+/* ── LOCATION ── */
+function sendLocation(){
+  const btn=document.getElementById('locBtn');
+  if(btn){btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Localisation en cours…';btn.classList.add('sending')}
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      const lat=pos.coords.latitude.toFixed(6), lng=pos.coords.longitude.toFixed(6), now=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+      ['locCoord','locCoord2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=`Lat: ${lat} · Lng: ${lng}`});
+      ['locTime','locTime2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=`Envoyée à ${now}`});
+      ['locResult','locResult2'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('show')});
+      const b=document.getElementById('locSentBadge');if(b)b.classList.add('show');
+      if(btn){btn.innerHTML='<i class="fa-solid fa-check"></i> Position envoyée !';btn.classList.remove('sending');setTimeout(()=>{btn.innerHTML='<i class="fa-solid fa-satellite-dish"></i> Envoyer Ma Position';},3000)}
+      showToast('success','Position transmise',`Coordonnées envoyées aux équipes (${lat}, ${lng})`);
+    },
+    err=>{
+      if(btn){btn.innerHTML='<i class="fa-solid fa-satellite-dish"></i> Envoyer Ma Position';btn.classList.remove('sending')}
+      showToast('warn','Localisation','Activez la géolocalisation dans votre navigateur.');
+    }
+  );
+}
+
+function detectHome(){
+  navigator.geolocation.getCurrentPosition(
+    pos=>{
+      document.getElementById('homeLat').value=pos.coords.latitude.toFixed(6);
+      document.getElementById('homeLng').value=pos.coords.longitude.toFixed(6);
+      showToast('success','Position détectée','Coordonnées domicile mises à jour.');
+    },
+    ()=>showToast('warn','Géolocalisation','Activez la géolocalisation.')
+  );
+}
+
+/* ── SOS ── */
+function triggerSOS(){
+  const s=document.getElementById('sosStatus');
+  if(s){s.style.display='block';s.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Signalement en cours aux équipes Secours Abalo…'}
+  showToast('error','🚨 SOS Activé','Signalement envoyé. Appel du 8880 en cours…');
+  setTimeout(()=>{
+    if(s) s.innerHTML='<i class="fa-solid fa-check" style="color:var(--g)"></i> Signalement reçu par les équipes. Ambulance mobilisée.';
+    sendLocation();
+    window.location.href='tel:8880';
+  },1500);
+}
+
+/* ── PROFILE SECTIONS ── */
+function toggleSection(header){
+  header.closest('.profile-section').classList.toggle('open');
+}
+
+/* ── SAVE ── */
+function saveSection(btn){
+  const orig=btn.innerHTML;
+  btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Enregistrement…';
+  setTimeout(()=>{
+    btn.innerHTML='<i class="fa-solid fa-check"></i> Sauvegardé !';
+    btn.style.background='#2ecc2e';
+    showToast('success','Profil mis à jour','Vos informations ont été sauvegardées.');
+    setTimeout(()=>{btn.innerHTML=orig;btn.style.background='';},3000);
+  },1200);
+}
+
+/* ── TAGS ── */
+function addTag(e,containerId,color){
+  if(e.key!=='Enter'&&e.key!==',') return;
+  e.preventDefault();
+  const input=e.target, val=input.value.trim();
+  if(!val) return;
+  const container=document.getElementById(containerId);
+  const tag=document.createElement('span');
+  tag.className=`tag${color?' '+color:''}`;
+  tag.innerHTML=`${val}<button class="tag-del" onclick="removeTag(this)">×</button>`;
+  container.insertBefore(tag,input);
+  input.value='';
+}
+function removeTag(btn){ btn.closest('.tag').remove(); }
+
+/* ── RADIO ── */
+function selectRadio(el,group){
+  el.closest('.radio-group').querySelectorAll('.radio-opt').forEach(o=>o.classList.remove('sel','sel-red'));
+  el.classList.add('sel');
+}
+
+/* ── BARS ANIMATE ── */
+const barObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){const b=e.target;b.style.transform='scaleX(1)';barObs.unobserve(b)}})},{threshold:.3});
+document.querySelectorAll('.sbar-fill').forEach(b=>{b.style.transform='scaleX(0)';b.style.transformOrigin='left';b.style.transition='transform 1.2s cubic-bezier(.4,0,.2,1)';barObs.observe(b)});
+
+/* ── INIT ── */
+nav('dashboard');
+
+
+// ─── HELPERS SESSION ──────────────────────────────────────────
+function getToken()  { return localStorage.getItem("sa_token"); }
+function getUser()   { return JSON.parse(
+  // localStorage.getItem("sa_user") || "null"); 
+  localStorage.getItem("sa_user") || sessionStorage.getItem("sa_user") || "null");
+}
+function setSession(data) {
+  localStorage.setItem("sa_token",  data.access_token);
+  localStorage.setItem("sa_user",   JSON.stringify(data));
+}
+function clearSession() {
+  localStorage.removeItem("sa_token");
+  localStorage.removeItem("sa_user");
+}
+
+// ─── FETCH HELPER ─────────────────────────────────────────────
+async function apiFetch(path, options = {}) {
+  const token = getToken();
+  const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  const res = await fetch(API_URL + path, { ...options, headers });
+  if (res.status === 401) { clearSession(); window.location.href = "/login.html"; return null; }
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || `Erreur ${res.status}`);
+  }
+  return res.status === 204 ? null : res.json();
+}
+
+// ─── INITIALISATION AU CHARGEMENT ─────────────────────────────
+document.addEventListener("DOMContentLoaded", async () => {
+  const user = getUser();
+  if (!user || !getToken()) {
+    window.location.href = "/login.html";
+    return;
+  }
+  await initClientDashboard();
+  initSOSButton();
+});
+
+// ─── CHARGEMENT DASHBOARD ─────────────────────────────────────
+async function initClientDashboard() {
+  try {
+    const data = await apiFetch("/client/dashboard");
+    if (!data) return;
+
+    // Mise à jour du nom affiché
+    if (data.utilisateur) {
+      const prenom = data.utilisateur.prenom || "";
+      document.querySelectorAll("#greetName, #sbUserName").forEach(el => {
+        if (el) el.textContent = el.id === "greetName" ? prenom : `${prenom} ${data.utilisateur.nom || ""}`.trim();
+      });
+      const letters = (prenom[0] || "") + (data.utilisateur.nom?.[0] || "");
+      const av = document.getElementById("sbAvatarLetter");
+      if (av) av.textContent = letters.toUpperCase();
+    }
+
+    // Statistiques
+    if (data.activite) {
+      updateStatCard(0, data.activite.nb_evacuations);
+      updateStatCard(2, data.abonnement?.jours_restants ?? "—");
+    }
+
+    // Profil médical complétude
+    if (data.profil_medical) {
+      const pct = data.profil_medical.completude_pct || 0;
+      document.querySelectorAll(".sbar-fill").forEach(el => {
+        el.style.width = pct + "%";
+        const label = el.closest(".status-bar")?.querySelector(".sbar-label");
+        if (label) label.textContent = pct + "%";
+      });
+    }
+
+    // Notifications badge
+    if (data.activite?.nb_notifs_non_lues > 0) {
+      document.querySelectorAll(".sb-notif").forEach(badge => {
+        if (badge.closest("[onclick*='notifications']")) {
+          badge.textContent = data.activite.nb_notifs_non_lues;
+        }
+      });
+    }
+
+    // Charger les autres sections
+    await Promise.allSettled([
+      loadProfilMedical(),
+      loadContactsUrgence(),
+      loadNotifications(),
+      loadAbonnement(),
+    
+    ]);
+
+    await loadSOSIAConfig();
+    await loadIAHistorique();
+  } catch (e) {
+    console.error("Erreur initClientDashboard:", e);
+  }
+}
+
+function updateStatCard(index, value) {
+  const cards = document.querySelectorAll(".stat-mini .sv");
+  if (cards[index]) cards[index].textContent = value;
+}
+
+// ─── PROFIL MÉDICAL ────────────────────────────────────────────
+let _profilData = null;
+
+async function loadProfilMedical() {
+  try {
+    _profilData = await apiFetch("/client/profil-medical");
+    if (!_profilData) return;
+    fillProfilForm(_profilData);
+    updateDashboardMedical(_profilData);
+  } catch (e) {
+    // Profil non encore créé, c'est normal
+    _profilData = null;
+  }
+}
+
+function fillProfilForm(profil) {
+  const setVal = (id, val) => {
+    const el = document.getElementById(id) || document.querySelector(`[data-field="${id}"]`);
+    if (el && val != null) el.value = val;
+  };
+  // Identité
+  if (profil.date_naissance) setVal("date_naissance_input", profil.date_naissance);
+  if (profil.adresse_domicile) setVal("adresse_domicile_input", profil.adresse_domicile);
+  if (profil.adresse_travail)  setVal("adresse_travail_input",  profil.adresse_travail);
+  // GPS
+  if (profil.lat_domicile)  document.getElementById("homeLat") && (document.getElementById("homeLat").value = profil.lat_domicile);
+  if (profil.lng_domicile)  document.getElementById("homeLng") && (document.getElementById("homeLng").value = profil.lng_domicile);
+  // Médical : tags
+  if (profil.maladies)  fillTagArea("maladiesInput",  JSON.parse(profil.maladies  || "[]"), "orange");
+  if (profil.allergies) fillTagArea("allergiesInput", JSON.parse(profil.allergies || "[]"), "red");
+  if (profil.medicaments) fillTagArea("medsInput",    JSON.parse(profil.medicaments || "[]"), "blue");
+}
+
+function fillTagArea(containerId, items, color) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  // Supprimer les tags existants (sauf l'input)
+  container.querySelectorAll(".tag").forEach(t => t.remove());
+  const input = container.querySelector(".tag-text-input");
+  items.forEach(item => {
+    const tag = document.createElement("span");
+    tag.className = `tag${color ? " " + color : ""}`;
+    tag.innerHTML = `${item}<button class="tag-del" onclick="removeTag(this)">×</button>`;
+    container.insertBefore(tag, input);
+  });
+}
+
+function updateDashboardMedical(profil) {
+  // Met à jour les infos médicales dans le résumé du dashboard
+  const selectors = {
+    "[data-dash='groupe_sanguin']": profil.groupe_sanguin,
+    "[data-dash='allergies']":      profil.allergies,
+    "[data-dash='maladies']":       profil.maladies,
+    "[data-dash='medicaments']":    profil.medicaments,
+  };
+  Object.entries(selectors).forEach(([sel, val]) => {
+    document.querySelectorAll(sel).forEach(el => {
+      if (val) el.textContent = typeof val === "string" && val.startsWith("[")
+        ? JSON.parse(val).join(", ")
+        : val;
+    });
+  });
+}
+
+function getTagValues(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return "[]";
+  const tags = [...container.querySelectorAll(".tag")].map(t =>
+    t.textContent.replace("×", "").trim()
+  );
+  return JSON.stringify(tags);
+}
+
+// Sauvegarde section Identité
+async function saveSectionIdentite(btn) {
+  await _saveSection(btn, "/client/profil-medical/identite", {
+    date_naissance:   document.querySelector("input[type='date']")?.value,
+    adresse_domicile: document.getElementById("adresse_domicile_input")?.value,
+    profession:       document.querySelector("[placeholder='Profession']")?.value,
+    quartier:         document.querySelector("[placeholder='Quartier']")?.value,
+    region:           document.querySelector("select")?.value,
+  });
+}
+
+// Sauvegarde section Localisation GPS
+async function saveSectionLocalisation(btn) {
+  const lat = parseFloat(document.getElementById("homeLat")?.value);
+  const lng = parseFloat(document.getElementById("homeLng")?.value);
+  await _saveSection(btn, "/client/profil-medical/localisation", {
+    lat_domicile: isNaN(lat) ? undefined : lat,
+    lng_domicile: isNaN(lng) ? undefined : lng,
+    adresse_domicile: document.querySelector("[placeholder*='Adidogomé']")?.value,
+    adresse_travail:  document.querySelector("[placeholder*='lieu de travail']")?.value,
+  });
+}
+
+// Sauvegarde section Informations Médicales
+async function saveSectionMedical(btn) {
+  await _saveSection(btn, "/client/profil-medical/medical", {
+    groupe_sanguin:    document.querySelector("select[data-field='groupe_sanguin']")?.value
+                    || document.querySelectorAll("select")?.[0]?.value,
+    taille_cm:         parseInt(document.querySelector("[placeholder='ex: 172']")?.value) || undefined,
+    poids_kg:          parseFloat(document.querySelector("[placeholder='ex: 74']")?.value) || undefined,
+    maladies:          getTagValues("maladiesInput"),
+    allergies:         getTagValues("allergiesInput"),
+    medicaments:       getTagValues("medsInput"),
+    antecedents_familiaux: document.querySelector("[placeholder*='Diabète côté']")?.value,
+    medecin_referent:  document.querySelector("[placeholder*='médecin']")?.value,
+  });
+}
+
+// Sauvegarde section Mode de Vie
+async function saveSectionModeDeVie(btn) {
+  const fumeur  = document.querySelector("[data-group='fumeur'].sel")?.textContent;
+  const alcool  = document.querySelector("[data-group='alcool'].sel")?.textContent;
+  await _saveSection(btn, "/client/profil-medical/mode-de-vie", {
+    fumeur:               fumeur || undefined,
+    alcool:               alcool || undefined,
+    activite_physique:    document.querySelector("select[data-field='activite']")?.value,
+    regime_alimentaire:   document.querySelector("select[data-field='regime']")?.value,
+    infos_complementaires: document.querySelector("textarea[placeholder*='Tout détail']")?.value,
+  });
+}
+
+async function _saveSection(btn, endpoint, payload) {
+  const orig = btn.innerHTML;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enregistrement…';
+  btn.disabled = true;
+  try {
+    await apiFetch(endpoint, {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    });
+    btn.innerHTML = '<i class="fa-solid fa-check"></i> Sauvegardé !';
+    btn.style.background = "#2ecc2e";
+    showToast("success", "Profil mis à jour", "Vos informations ont été sauvegardées.");
+    setTimeout(() => { btn.innerHTML = orig; btn.style.background = ""; btn.disabled = false; }, 3000);
+  } catch (e) {
+    btn.innerHTML = orig;
+    btn.disabled = false;
+    showToast("error", "Erreur", e.message || "Une erreur est survenue.");
+  }
+}
+
+// Override de la fonction saveSection existante pour appeler l'API
+window.saveSection = async function(btn) {
+  // Déterminer quelle section est sauvegardée selon le parent
+  const section = btn.closest(".profile-section");
+  if (!section) { await _saveSection(btn, "/client/profil-medical", {}); return; }
+  const header = section.querySelector(".profile-section-header h3")?.textContent || "";
+
+  if (header.includes("Identité"))         await saveSectionIdentite(btn);
+  else if (header.includes("Localisation")) await saveSectionLocalisation(btn);
+  else if (header.includes("Médicale"))     await saveSectionMedical(btn);
+  else if (header.includes("Mode de Vie"))  await saveSectionModeDeVie(btn);
+  else {
+    // Fallback : sauvegarde générique
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enregistrement…';
+    setTimeout(() => {
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Sauvegardé !';
+      showToast("success", "Profil mis à jour", "Informations sauvegardées.");
+      setTimeout(() => btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Sauvegarder', 2500);
+    }, 1000);
+  }
+};
+
+// ─── CONTACTS D'URGENCE ───────────────────────────────────────
+let _contactsUrgence = [];
+
+async function loadContactsUrgence() {
+  try {
+    _contactsUrgence = await apiFetch("/client/contacts-urgence") || [];
+    renderContactsUrgence();
+  } catch (e) { console.error("Contacts urgence:", e); }
+}
+
+function renderContactsUrgence() {
+  const containers = document.querySelectorAll(".contact-urgence-card-wrapper, #contacts-list");
+  // Si le conteneur est dans la page contacts, on re-render
+  const contactsBody = document.querySelector("#page-contacts .card-body");
+  if (!contactsBody || _contactsUrgence.length === 0) return;
+
+  const existingCards = contactsBody.querySelectorAll(".contact-urgence-card");
+  existingCards.forEach(c => c.remove());
+
+  const insertBefore = contactsBody.querySelector("button.btn-outline");
+  _contactsUrgence.forEach(c => {
+    const div = document.createElement("div");
+    div.className = "contact-urgence-card";
+    div.setAttribute("data-id", c.id);
+    div.innerHTML = `
+      <div class="cu-avatar"><i class="fa-solid fa-user"></i></div>
+      <div class="cu-info">
+        <h4>${c.prenom_nom}</h4>
+        <p>${c.lien || "Contact"}</p>
+        <div class="cu-phone">${c.telephone}</div>
+      </div>
+      <div class="cu-actions">
+        <a href="tel:${c.telephone}" class="cu-btn"><i class="fa-solid fa-phone"></i></a>
+        <button class="cu-btn" style="color:var(--red)" onclick="supprimerContact('${c.id}')">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>`;
+    if (insertBefore) contactsBody.insertBefore(div, insertBefore);
+    else contactsBody.appendChild(div);
+  });
+}
+
+async function ajouterContactUrgence() {
+  const nom = document.querySelector("[placeholder='Ex: Marie Dupont']")?.value?.trim();
+  const lien = document.querySelector("[placeholder='Sœur, ami, collègue…']")?.value?.trim();
+  const tel  = document.querySelector("[placeholder='+228 …']")?.value?.trim();
+  if (!nom || !tel) { showToast("warn", "Champs requis", "Prénom/nom et téléphone sont obligatoires."); return; }
+  try {
+    const contact = await apiFetch("/client/contacts-urgence", {
+      method: "POST",
+      body: JSON.stringify({ prenom_nom: nom, lien, telephone: tel }),
+    });
+    _contactsUrgence.push(contact);
+    renderContactsUrgence();
+    showToast("success", "Contact ajouté", `${nom} a été ajouté à vos contacts d'urgence.`);
+    // Vider les champs
+    document.querySelector("[placeholder='Ex: Marie Dupont']").value = "";
+    document.querySelector("[placeholder='Sœur, ami, collègue…']").value = "";
+    document.querySelector("[placeholder='+228 …']").value = "";
+  } catch (e) {
+    showToast("error", "Erreur", e.message);
+  }
+}
+
+async function supprimerContact(id) {
+  try {
+    await apiFetch(`/client/contacts-urgence/${id}`, { method: "DELETE" });
+    _contactsUrgence = _contactsUrgence.filter(c => c.id !== id);
+    document.querySelector(`[data-id="${id}"]`)?.remove();
+    showToast("warn", "Contact supprimé", "Le contact a été retiré.");
+  } catch (e) {
+    showToast("error", "Erreur", e.message);
+  }
+}
+
+// ─── NOTIFICATIONS ─────────────────────────────────────────────
+let _notifications = [];
+
+async function loadNotifications() {
+  try {
+    _notifications = await apiFetch("/client/notifications") || [];
+    renderNotifications();
+  } catch (e) { console.error("Notifications:", e); }
+}
+
+function renderNotifications() {
+  const container = document.querySelector("#page-notifications .card-body");
+  if (!container || _notifications.length === 0) return;
+  container.innerHTML = "";
+
+  const iconMap = {
+    success: "circle-check", info: "bell", warning: "rotate", danger: "ambulance"
+  };
+  const colorMap = {
+    success: "green", info: "blue", warning: "orange", danger: "red"
+  };
+
+  _notifications.forEach(n => {
+    const div = document.createElement("div");
+    div.className = "notif-item";
+    div.setAttribute("data-id", n.id);
+    div.innerHTML = `
+      ${!n.lue ? '<div class="notif-unread"></div>' : ""}
+      <div class="notif-ico ${colorMap[n.type] || 'blue'}">
+        <i class="fa-solid fa-${iconMap[n.type] || 'bell'}"></i>
+      </div>
+      <div class="notif-text">
+        <h4>${n.titre}</h4>
+        <p>${n.message}</p>
+      </div>
+      <div class="notif-time">${formatDate(n.created_at)}</div>`;
+    div.addEventListener("click", () => marquerLue(n.id));
+    container.appendChild(div);
+  });
+}
+
+async function marquerLue(id) {
+  try {
+    await apiFetch(`/client/notifications/${id}/lue`, { method: "PATCH" });
+    const item = document.querySelector(`[data-id="${id}"] .notif-unread`);
+    if (item) item.remove();
+  } catch (e) { /* silencieux */ }
+}
+
+function formatDate(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  const now = new Date();
+  const diff = Math.floor((now - d) / 1000 / 60);
+  if (diff < 1)   return "À l'instant";
+  if (diff < 60)  return `${diff} min`;
+  if (diff < 1440) return `${Math.floor(diff/60)}h`;
+  return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "short" });
+}
+
+// ─── ABONNEMENT ────────────────────────────────────────────────
+async function loadAbonnement() {
+  try {
+    const abos = await apiFetch("/abonnements/mes");
+    if (!abos || abos.length === 0) return;
+    const abo = abos.find(a => a.statut === "actif") || abos[0];
+    // Mettre à jour les infos abonnement dans l'UI
+    document.querySelectorAll("[data-abo='plan']").forEach(el => el.textContent = abo.plan);
+    document.querySelectorAll("[data-abo='prix']").forEach(el =>
+      el.textContent = abo.prix_semaine ? abo.prix_semaine.toLocaleString("fr-FR") : "—"
+    );
+    if (abo.date_expiration) {
+      const exp = new Date(abo.date_expiration);
+      const days = Math.max(0, Math.floor((exp - new Date()) / 86400000));
+      document.querySelectorAll("[data-abo='jours']").forEach(el => el.textContent = days);
+      document.querySelectorAll("[data-abo='expiration']").forEach(el =>
+        el.textContent = exp.toLocaleDateString("fr-FR")
+      );
+      // Mettre à jour la stat card jours restants
+      const statCards = document.querySelectorAll(".stat-mini .sv");
+      if (statCards[2]) statCards[2].textContent = days;
+    }
+  } catch (e) { console.error("Abonnement:", e); }
+}
+
+// ─── LOCALISATION GPS ──────────────────────────────────────────
+// Override de la fonction sendLocation pour appeler l'API
+window.sendLocation = function(estSOS = false) {
+  const btn = document.getElementById("locBtn");
+  if (btn) { btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Localisation…'; btn.classList.add("sending"); }
+
+  navigator.geolocation.getCurrentPosition(
+    async pos => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      const now = new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+
+      // Mise à jour UI
+      ["locCoord", "locCoord2"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = `Lat: ${lat.toFixed(6)} · Lng: ${lng.toFixed(6)}`;
+      });
+      ["locTime", "locTime2"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = `Envoyée à ${now}`;
+      });
+      ["locResult", "locResult2"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add("show");
+      });
+      const badge = document.getElementById("locSentBadge");
+      if (badge) badge.classList.add("show");
+
+      if (btn) {
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Position envoyée !';
+        btn.classList.remove("sending");
+        setTimeout(() => {
+          btn.innerHTML = '<i class="fa-solid fa-satellite-dish"></i> Envoyer Ma Position';
+        }, 3000);
+      }
+
+      // Appel API
+      try {
+        await apiFetch("/client/localisation", {
+          method: "POST",
+          body: JSON.stringify({ latitude: lat, longitude: lng, est_sos: estSOS }),
+        });
+        showToast("success", "Position transmise", `Coordonnées envoyées aux équipes (${lat.toFixed(5)}, ${lng.toFixed(5)})`);
+      } catch (e) {
+        showToast("warn", "Position", "Position affichée localement mais non envoyée au serveur.");
+      }
+    },
+    err => {
+      if (btn) { btn.innerHTML = '<i class="fa-solid fa-satellite-dish"></i> Envoyer Ma Position'; btn.classList.remove("sending"); }
+      showToast("warn", "Localisation", "Activez la géolocalisation dans votre navigateur.");
+    }
+  );
+};
+
+// ─── FONCTION detectHome mise à jour ──────────────────────────
+window.detectHome = function() {
+  navigator.geolocation.getCurrentPosition(
+    async pos => {
+      const lat = pos.coords.latitude.toFixed(6);
+      const lng = pos.coords.longitude.toFixed(6);
+      const latEl = document.getElementById("homeLat");
+      const lngEl = document.getElementById("homeLng");
+      if (latEl) latEl.value = lat;
+      if (lngEl) lngEl.value = lng;
+      showToast("success", "Position détectée", "Coordonnées domicile mises à jour.");
+      // Sauvegarde automatique en base
+      try {
+        await apiFetch("/client/profil-medical/localisation", {
+          method: "PATCH",
+          body: JSON.stringify({ lat_domicile: parseFloat(lat), lng_domicile: parseFloat(lng) }),
+        });
+      } catch (e) { /* silencieux, l'utilisateur peut sauvegarder manuellement */ }
+    },
+    () => showToast("warn", "Géolocalisation", "Activez la géolocalisation.")
+  );
+};
+
+// ─── BOUTON SOS – VERSION API ──────────────────────────────────
+// Override de triggerSOS pour appeler l'API et afficher le popup
+window.triggerSOS = async function() {
+  const s = document.getElementById("sosStatus");
+  if (s) { s.style.display = "block"; s.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Signalement en cours…'; }
+  showToast("error", "🚨 SOS Activé", "Signalement envoyé. Appel du 8880 en cours…");
+
+  // Démarrer l'animation SOS sur le bouton
+  const sosBtn = document.querySelector(".sos-main-btn");
+  if (sosBtn) {
+    sosBtn.classList.add("sos-dancing");
+    sosBtn.style.animation = "sosDanse 0.4s ease-in-out infinite, sosPulse 2.5s ease infinite";
+  }
+
+  // Obtenir la position
+  let lat = null, lng = null;
+  try {
+    const pos = await new Promise((res, rej) =>
+      navigator.geolocation.getCurrentPosition(res, rej, { timeout: 5000 })
+    );
+    lat = pos.coords.latitude;
+    lng = pos.coords.longitude;
+  } catch (e) { /* géoloc non disponible */ }
+
+  // Appel API SOS
+  try {
+    const alerte = await apiFetch("/client/sos", {
+      method: "POST",
+      body: JSON.stringify({ latitude: lat, longitude: lng }),
+    });
+
+    if (s) s.innerHTML = '<i class="fa-solid fa-check" style="color:var(--g)"></i> Signalement reçu par les équipes. Ambulance mobilisée.';
+
+    // Charger et afficher le popup avec les infos du client
+    await afficherPopupSOSClient(alerte);
+
+  } catch (e) {
+    if (s) s.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:var(--orange)"></i> ${e.message}`;
+    showToast("warn", "SOS", "Erreur API. Appelez directement le 8880.");
+  }
+
+  // Appel téléphonique
+  setTimeout(() => { window.location.href = "tel:8880"; }, 1500);
+
+  // Localisation UI
+  if (lat && lng) sendLocation(true);
+};
+
+// ─── POPUP SOS CLIENT ──────────────────────────────────────────
+async function afficherPopupSOSClient(alerteData) {
+  // Supprimer popup existant
+  document.getElementById("sos-popup-overlay")?.remove();
+
+  // Données pour afficher : utiliser le dashboard ou le snapshot de l'alerte
+  let dashData = null;
+  try {
+    dashData = await apiFetch("/client/dashboard");
+  } catch (e) { /* fallback sur alerteData */ }
+
+  const u   = dashData?.utilisateur    || {};
+  const pm  = dashData?.profil_medical || {};
+  const abo = dashData?.abonnement     || {};
+
+  const allergies = alerteData?.allergies  || pm.allergies  || "Non renseignées";
+  const maladies  = alerteData?.maladies   || pm.maladies   || "Non renseignées";
+  const medics    = alerteData?.medicaments || pm.medicaments || "Non renseignés";
+  const grpSang   = alerteData?.groupe_sanguin || pm.groupe_sanguin || "—";
+  const medecin   = alerteData?.medecin_referent || "Non renseigné";
+  const lat       = alerteData?.latitude;
+  const lng       = alerteData?.longitude;
+
+  function parseList(str) {
+    try {
+      const arr = JSON.parse(str || "[]");
+      return arr.length ? arr.join(", ") : "Aucun(e)";
+    } catch { return str || "Non renseigné(e)"; }
+  }
+
+  const overlay = document.createElement("div");
+  overlay.id = "sos-popup-overlay";
+  overlay.style.cssText = `
+    position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.88);
+    display:flex;align-items:center;justify-content:center;padding:16px;
+    backdrop-filter:blur(12px);animation:fadeInPop .3s ease;
+  `;
+
+  overlay.innerHTML = `
+    <style>
+      @keyframes fadeInPop{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+      @keyframes sosDanse{0%,100%{transform:scale(1) rotate(-2deg)}25%{transform:scale(1.08) rotate(2deg)}75%{transform:scale(.95) rotate(-1deg)}}
+      #sos-popup{background:#0a130a;border:2px solid rgba(255,77,77,.5);border-radius:20px;
+        width:min(540px,95vw);max-height:90vh;overflow-y:auto;box-shadow:0 30px 80px rgba(255,77,77,.25),0 0 0 1px rgba(255,77,77,.1);}
+      #sos-popup::-webkit-scrollbar{width:4px}
+      #sos-popup::-webkit-scrollbar-thumb{background:rgba(255,77,77,.3);border-radius:2px}
+      .sos-pop-header{background:linear-gradient(135deg,rgba(255,30,30,.2),rgba(180,0,0,.15));
+        padding:20px 24px;border-bottom:1px solid rgba(255,77,77,.25);position:relative;}
+      .sos-pop-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:#fff;
+        display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+      .sos-pop-sub{font-size:.75rem;color:rgba(255,200,200,.7);}
+      .sos-pop-close{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.08);
+        border:none;color:rgba(255,255,255,.6);width:28px;height:28px;border-radius:50%;
+        cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .2s;}
+      .sos-pop-close:hover{background:rgba(255,77,77,.3);color:#fff;}
+      .sos-pop-body{padding:20px 24px;}
+      .sos-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+      .sos-info-block{background:rgba(255,255,255,.04);border:1px solid rgba(255,77,77,.12);
+        border-radius:10px;padding:12px 14px;}
+      .sos-info-label{font-size:.62rem;font-weight:700;color:rgba(255,150,150,.7);
+        text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;font-family:'DM Mono',monospace;}
+      .sos-info-value{font-size:.84rem;color:#f0fff0;font-weight:500;}
+      .sos-info-value.critical{color:#ff6b6b;font-weight:700;}
+      .sos-info-full{background:rgba(255,255,255,.04);border:1px solid rgba(255,77,77,.12);
+        border-radius:10px;padding:12px 14px;margin-bottom:12px;}
+      .sos-divider{height:1px;background:rgba(255,77,77,.15);margin:16px 0;}
+      .sos-badge-actif{display:inline-flex;align-items:center;gap:6px;background:rgba(255,77,77,.2);
+        border:1px solid rgba(255,77,77,.4);color:#ff8888;font-size:.65rem;font-weight:700;
+        padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.06em;}
+      .sos-pulse-dot{width:7px;height:7px;border-radius:50%;background:#ff4d4d;
+        animation:sosPulse 1s infinite;}
+      .sos-pop-actions{display:flex;gap:10px;flex-wrap:wrap;padding-top:8px;}
+      .sos-pop-btn{flex:1;border:none;border-radius:10px;padding:11px 14px;
+        font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;
+        transition:all .25s;display:flex;align-items:center;justify-content:center;gap:7px;}
+      .sos-pop-btn.primary{background:#ff4d4d;color:#fff;}
+      .sos-pop-btn.primary:hover{background:#ff6b6b;transform:translateY(-2px);}
+      .sos-pop-btn.secondary{background:rgba(107,255,107,.15);border:1px solid rgba(107,255,107,.25);color:#6bff6b;}
+      .sos-pop-btn.secondary:hover{background:rgba(107,255,107,.25);}
+      .sos-gps-row{display:flex;align-items:center;gap:8px;font-size:.75rem;
+        color:rgba(255,200,200,.7);font-family:'DM Mono',monospace;margin-top:8px;}
+    </style>
+    <div id="sos-popup">
+      <div class="sos-pop-header">
+        <div class="sos-pop-title">
+          <i class="fa-solid fa-triangle-exclamation" style="color:#ff4d4d;font-size:1.2rem"></i>
+          🚨 SOS DÉCLENCHÉ
+          <span class="sos-badge-actif"><span class="sos-pulse-dot"></span>ACTIF</span>
+        </div>
+        <div class="sos-pop-sub">Alerte transmise aux équipes Secours Abalo · Appel 8880 en cours</div>
+        <button class="sos-pop-close" onclick="fermerPopupSOS()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="sos-pop-body">
+
+        <!-- Identité -->
+        <div class="sos-info-grid">
+          <div class="sos-info-block">
+            <div class="sos-info-label">Nom complet</div>
+            <div class="sos-info-value">${alerteData?.nom_complet || `${u.prenom || ""} ${u.nom || ""}`.trim() || "—"}</div>
+          </div>
+          <div class="sos-info-block">
+            <div class="sos-info-label">Téléphone</div>
+            <div class="sos-info-value">${alerteData?.telephone || u.telephone || "—"}</div>
+          </div>
+          <div class="sos-info-block">
+            <div class="sos-info-label">Groupe sanguin</div>
+            <div class="sos-info-value critical">${grpSang}</div>
+          </div>
+          <div class="sos-info-block">
+            <div class="sos-info-label">Abonnement</div>
+            <div class="sos-info-value">${abo.plan || "—"} · ${abo.statut || "—"}</div>
+          </div>
+        </div>
+
+        <!-- Médical -->
+        <div class="sos-info-full">
+          <div class="sos-info-label" style="margin-bottom:6px">⚠️ Allergies médicamenteuses</div>
+          <div class="sos-info-value critical">${parseList(allergies)}</div>
+        </div>
+        <div class="sos-info-full">
+          <div class="sos-info-label" style="margin-bottom:6px">Maladies / Conditions chroniques</div>
+          <div class="sos-info-value">${parseList(maladies)}</div>
+        </div>
+        <div class="sos-info-full">
+          <div class="sos-info-label" style="margin-bottom:6px">Médicaments en cours</div>
+          <div class="sos-info-value">${parseList(medics)}</div>
+        </div>
+        <div class="sos-info-full">
+          <div class="sos-info-label" style="margin-bottom:6px">Médecin référent</div>
+          <div class="sos-info-value">${medecin}</div>
+        </div>
+
+        ${lat && lng ? `
+        <div class="sos-gps-row">
+          <i class="fa-solid fa-location-dot" style="color:#6bff6b"></i>
+          GPS : ${lat.toFixed(6)}, ${lng.toFixed(6)}
+          <a href="https://maps.google.com/?q=${lat},${lng}" target="_blank"
+             style="color:#6bff6b;font-size:.7rem;margin-left:4px">
+            Voir sur Maps →
+          </a>
+        </div>` : ""}
+
+        <div class="sos-divider"></div>
+
+        <div class="sos-pop-actions">
+          <button class="sos-pop-btn primary" onclick="window.location.href='tel:8880'">
+            <i class="fa-solid fa-phone-volume"></i> Appeler le 8880
+          </button>
+          <button class="sos-pop-btn secondary" onclick="fermerPopupSOS()">
+            <i class="fa-solid fa-check"></i> Compris, fermer
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+  overlay.addEventListener("click", e => { if (e.target === overlay) fermerPopupSOS(); });
+}
+
+function fermerPopupSOS() {
+  const overlay = document.getElementById("sos-popup-overlay");
+  if (overlay) {
+    overlay.style.animation = "none";
+    overlay.style.opacity = "0";
+    overlay.style.transform = "scale(.95)";
+    overlay.style.transition = "all .25s";
+    setTimeout(() => overlay.remove(), 250);
+  }
+  // Stopper l'animation dansante sur le bouton
+  document.querySelectorAll(".sos-main-btn").forEach(btn => {
+    btn.style.animation = "";
+    btn.classList.remove("sos-dancing");
+  });
+}
+
+// ─── ANIMATION DANSANTE SUR LE BOUTON SOS ──────────────────────
+// Ajouter l'animation CSS dynamiquement
+(function injectSOSStyle() {
+  const style = document.createElement("style");
+  style.textContent = `
+    @keyframes sosDanse {
+      0%   { transform: scale(1)    rotate(-3deg); }
+      20%  { transform: scale(1.12) rotate(3deg);  }
+      40%  { transform: scale(0.95) rotate(-2deg); }
+      60%  { transform: scale(1.1)  rotate(2deg);  }
+      80%  { transform: scale(0.97) rotate(-1deg); }
+      100% { transform: scale(1)    rotate(0deg);  }
+    }
+    @keyframes sosDanseColors {
+      0%,100% { box-shadow: 0 0 0 0 rgba(255,77,77,.6), 0 8px 30px rgba(255,77,77,.5); }
+      50%     { box-shadow: 0 0 0 22px rgba(255,77,77,0), 0 8px 40px rgba(255,77,77,.8); }
+    }
+    .sos-dancing {
+      animation: sosDanse .35s ease-in-out infinite, sosDanseColors .7s ease-in-out infinite !important;
+    }
+    .sos-dancing:hover {
+      transform: scale(1.12) !important;
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
+// ─── CONNEXION / DÉCONNEXION ────────────────────────────────────
+async function connexionClient(email, password) {
+  const body = new URLSearchParams({ username: email, password });
+  const res  = await fetch(`${API_URL}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body,
+  });
+  if (!res.ok) throw new Error("Identifiants incorrects");
+  const data = await res.json();
+  setSession(data);
+  return data;
+}
+
+// Bouton déconnexion dans Paramètres
+document.addEventListener("click", e => {
+  if (e.target.closest("[onclick*='Déconnexion']") || e.target.textContent.includes("Se déconnecter")) {
+    e.preventDefault();
+    clearSession();
+    showToast("warn", "Déconnexion", "Vous avez été déconnecté.");
+    setTimeout(() => window.location.href = "/login.html", 1500);
+  }
+});
+
+// ─── AJOUT DU BOUTON "AJOUTER CONTACT" dans la page contacts ───
+// Wrappage du bouton de sauvegarde contact
+document.addEventListener("DOMContentLoaded", () => {
+  const saveBtns = document.querySelectorAll(".save-btn");
+  saveBtns.forEach(btn => {
+    if (btn.textContent.includes("Ajouter ce contact")) {
+      btn.addEventListener("click", e => {
+        e.preventDefault();
+        ajouterContactUrgence();
+      });
+    }
+  });
+});
+
+
+
+/* ══════════════════════════════════════
+   SOS IA PRO – JavaScript
+══════════════════════════════════════ */
+
+let _iaInterval      = 10;   // intervalle sélectionné
+let _iaActive        = false;
+let _iaCurrentCheck  = null; // ID du check en cours
+let _iaPollingTimer  = null;
+let _iaCountdownTmr  = null;
+
+/* ── Chargement initial de la config ── */
+async function loadSOSIAConfig() {
+  try {
+    const cfg = await apiFetch("/client/sos-ia-pro/config");
+    _iaActive   = cfg.is_active;
+    _iaInterval = cfg.interval_minutes;
+    selectIAInterval(cfg.interval_minutes, false);
+    updateIAPageStatus(cfg);
+    if (cfg.is_active) {
+      updateIAFab(true);
+      demarrerIAPolling();
+    }
+  } catch(e) { /* pas encore configuré, c'est normal */ }
+}
+
+/* ── Sélection de l'intervalle ── */
+function selectIAInterval(val, save = true) {
+  _iaInterval = val;
+  document.querySelectorAll('.ia-int-opt').forEach(el => {
+    el.classList.toggle('ia-sel', parseInt(el.dataset.val) === val);
+  });
+}
+
+/* ── Toggle Activer / Désactiver ── */
+async function toggleSOSIA() {
+  if (_iaActive) {
+    if (!confirm(`Désactiver le SOS IA Pro ? Les vérifications automatiques s'arrêteront.`)) return;
+    try {
+      await apiFetch("/client/sos-ia-pro/desactiver", { method: "DELETE" });
+      _iaActive = false;
+      arreterIAPolling();
+      fermerIANotif();
+      updateIAFab(false);
+      updateIAPageStatus({ is_active: false, interval_minutes: _iaInterval });
+      showToast("warn", "SOS IA Pro désactivé", "Les vérifications automatiques sont arrêtées.");
+    } catch(e) { showToast("error", "Erreur", e.message); }
+  } else {
+    try {
+      const cfg = await apiFetch("/client/sos-ia-pro/activer", {
+        method: "POST",
+        body: JSON.stringify({ interval_minutes: _iaInterval })
+      });
+      _iaActive = true;
+      updateIAFab(true);
+      updateIAPageStatus(cfg);
+      demarrerIAPolling();
+      showToast("success", "SOS IA Pro activé", `Vérification toutes les ${_iaInterval} min.`);
+    } catch(e) { showToast("error", "Erreur", e.message); }
+  }
+}
+
+/* ── Mise à jour de l'interface ── */
+function updateIAFab(active) {
+  const fab   = document.getElementById("sos-ia-fab");
+  const dot   = document.getElementById("sos-ia-fab-dot");
+  const lbl   = document.getElementById("sos-ia-fab-label");
+  const badge = document.getElementById("sos-ia-pro-badge");
+  if (!fab) return;
+  fab.classList.toggle("ia-on", active);
+  if (dot)  dot.style.display  = active ? "block" : "none";
+  if (lbl)  lbl.textContent    = active ? "IA Actif" : "SOS IA Pro";
+  if (badge)badge.style.display= active ? "inline-block" : "none";
+}
+
+function updateIAPageStatus(cfg) {
+  const pill = document.getElementById("ia-status-pill");
+  const btn  = document.getElementById("ia-toggle-btn");
+  const blk  = document.getElementById("ia-next-check-block");
+  const nxt  = document.getElementById("ia-next-time");
+  if (pill) {
+    pill.className = `ia-status-pill ${cfg.is_active ? 'ia-on' : 'ia-off'}`;
+    pill.innerHTML = cfg.is_active
+      ? `<i class="fa-solid fa-circle" style="font-size:.5rem"></i> Actif · ${cfg.interval_minutes} min`
+      : `<i class="fa-solid fa-circle" style="font-size:.5rem;opacity:.5"></i> Inactif`;
+  }
+  if (btn) {
+    btn.innerHTML = cfg.is_active
+      ? '<i class="fa-solid fa-stop"></i> Désactiver SOS IA Pro'
+      : '<i class="fa-solid fa-play"></i> Activer SOS IA Pro';
+    btn.style.background = cfg.is_active ? "rgba(255,77,77,.15)" : "var(--orange)";
+    btn.style.color      = cfg.is_active ? "var(--red)" : "#000";
+    btn.style.border     = cfg.is_active ? "1px solid rgba(255,77,77,.25)" : "none";
+  }
+  if (blk) {
+    blk.style.display = cfg.is_active ? "flex" : "none";
+    if (cfg.is_active && cfg.next_check_at && nxt) {
+      nxt.textContent = new Date(cfg.next_check_at).toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'});
+    }
+  }
+}
+
+/* ── Polling (toutes les 30 secondes) ── */
+function demarrerIAPolling() {
+  if (_iaPollingTimer) return;
+  verifierIAPending(); // vérification immédiate
+  _iaPollingTimer = setInterval(verifierIAPending, 30000);
+}
+
+function arreterIAPolling() {
+  if (_iaPollingTimer) { clearInterval(_iaPollingTimer); _iaPollingTimer = null; }
+}
+
+async function verifierIAPending() {
+  if (!_iaActive) return;
+  try {
+    const r = await apiFetch("/client/sos-ia-pro/pending");
+    if (!r.has_pending) return;
+    _iaCurrentCheck = r.check_id;
+
+    switch(r.action) {
+      case "new_check":
+        afficherIANotif(
+          "🤖 SOS IA Pro — Vérification",
+          "Comment vous sentez-vous en ce moment ?",
+          false
+        );
+        break;
+
+      case "remind":
+        afficherIANotif(
+          "⏰ Rappel — Comment allez-vous ?",
+          "Vous n'avez pas répondu. Confirmez votre état avant l'alerte.",
+          true
+        );
+        break;
+
+      case "notify_contacts":
+        afficherIANotif(
+          "⚠️ Pas de réponse — contacts alertés",
+          "Vos contacts d'urgence et les secours ont été informés. Confirmez si vous pouvez.",
+          true
+        );
+        showToast("warn", "Contacts alertés",
+          "Vos contacts d'urgence ont été prévenus. Répondez si vous le pouvez.");
+        break;
+
+      case "auto_sos":
+        fermerIANotif();
+        arreterIAPolling();
+        _iaActive = false;
+        updateIAFab(false);
+        showToast("error", "🤖 SOS automatique déclenché",
+          "Aucune réponse détectée. Les secours ont été alertés.");
+        // Afficher le popup SOS client
+        if (r.sos_data) {
+          try { await afficherPopupSOSClient(r.sos_data); } catch(e) {}
+        }
+        setTimeout(() => { window.location.href = "tel:8880"; }, 2000);
+        loadSOSIAConfig(); // reset UI
+        break;
+    }
+  } catch(e) {
+    console.error("[SOS IA Pro] Polling:", e);
+  }
+}
+
+/* ── Afficher / Fermer le popup ── */
+function afficherIANotif(title, sub, urgent) {
+  document.getElementById("ia-notif-title").textContent = title;
+  document.getElementById("ia-notif-sub").textContent   = sub;
+  document.getElementById("sos-ia-notif-wrap").classList.add("ia-show");
+  lancerCountdownIA(urgent ? 50 : 55); // countdown avant prochaine escalade
+}
+
+function fermerIANotif() {
+  document.getElementById("sos-ia-notif-wrap").classList.remove("ia-show");
+  if (_iaCountdownTmr) { clearInterval(_iaCountdownTmr); _iaCountdownTmr = null; }
+  document.getElementById("ia-countdown").textContent = "";
+}
+
+function lancerCountdownIA(sec) {
+  if (_iaCountdownTmr) clearInterval(_iaCountdownTmr);
+  let r = sec;
+  const el = document.getElementById("ia-countdown");
+  function tick() {
+    if (!el) return;
+    el.textContent = r > 0 ? `Escalade dans ${r}s` : "";
+    if (r <= 0) clearInterval(_iaCountdownTmr);
+    r--;
+  }
+  tick();
+  _iaCountdownTmr = setInterval(tick, 1000);
+}
+
+/* ── Répondre à la notification ── */
+async function repondreIA(response) {
+  if (!_iaCurrentCheck) return;
+  let lat = null, lng = null;
+
+  if (response === "emergency" || response === "not_ok_self") {
+    try {
+      const pos = await new Promise((res, rej) =>
+        navigator.geolocation.getCurrentPosition(res, rej, { timeout: 4000 })
+      );
+      lat = pos.coords.latitude;
+      lng = pos.coords.longitude;
+    } catch(e) { /* position non dispo */ }
+  }
+
+  try {
+    const result = await apiFetch("/client/sos-ia-pro/repondre", {
+      method: "POST",
+      body: JSON.stringify({ check_id: _iaCurrentCheck, response, latitude: lat, longitude: lng })
+    });
+
+    fermerIANotif();
+    _iaCurrentCheck = null;
+
+    if (response === "ok") {
+      showToast("success", "Parfait !", result.message);
+    } else if (response === "not_ok_self") {
+      showToast("warn", "Compris", result.message);
+    } else if (response === "emergency") {
+      _iaActive = false;
+      arreterIAPolling();
+      updateIAFab(false);
+      showToast("error", "🚨 SOS déclenché", result.message);
+      if (result.sos_alerte) {
+        try { await afficherPopupSOSClient(result.sos_alerte); } catch(e) {}
+      }
+      setTimeout(() => { window.location.href = "tel:8880"; }, 1500);
+    }
+
+    loadSOSIAConfig();
+    loadIAHistorique();
+
+  } catch(e) { showToast("error", "Erreur", e.message); }
+}
+
+/* ── Historique ── */
+async function loadIAHistorique() {
+  const el = document.getElementById("ia-history-body");
+  if (!el) return;
+  try {
+    const hist = await apiFetch("/client/sos-ia-pro/historique?limit=15");
+    if (!hist.length) {
+      el.innerHTML = `<div style="text-align:center;padding:20px;color:var(--mu);font-size:.78rem">
+        Aucune vérification pour l'instant.</div>`;
+      return;
+    }
+    const icons  = { ok:'ok', not_ok_self:'warn', emergency:'danger' };
+    const labels = { ok:'Bien', not_ok_self:'Pas bien · géré', emergency:'Urgence déclenchée' };
+    el.innerHTML = hist.map(h => `
+      <div class="ia-history-row">
+        <div class="ia-rdot ${icons[h.response_type]||'none'}"></div>
+        <div style="flex:1">
+          <div style="font-size:.8rem;color:var(--wh);font-weight:600">
+            ${labels[h.response_type]||'Sans réponse'}
+            ${h.sos_triggered?'<span class="badge-red" style="font-size:.58rem;margin-left:5px">SOS</span>':''}
+            ${h.contacts_notified?'<span style="font-size:.58rem;color:var(--orange);margin-left:4px">contacts alertés</span>':''}
+          </div>
+          <div style="font-size:.68rem;color:var(--mu);font-family:var(--fontm)">
+            ${h.sent_at ? new Date(h.sent_at).toLocaleString('fr-FR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : '—'}
+            ${h.reminder_count > 0 ? ` · ${h.reminder_count} rappel(s)` : ''}
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    el.innerHTML = `<div style="text-align:center;padding:20px;color:var(--mu)">Erreur chargement.</div>`;
+  }
+}
+
+</script>
+</body>
+</html>

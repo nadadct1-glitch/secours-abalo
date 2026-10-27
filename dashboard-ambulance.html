@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secours Abalo – Ambulance</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root {
+  --g:#6bff6b; --red:#ff4d4d; --orange:#ff9900; --bg:#060d06;
+  --sf:#0f1c0f; --tx:#e0f0e0; --mu:#7a9e7a; --wh:#f5fff5;
+  --border:rgba(107,255,107,.12); --border2:rgba(107,255,107,.3);
+  --font:'DM Sans',sans-serif; --fontd:'Syne',sans-serif; --fontm:'DM Mono',monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--tx); font-family:var(--font); min-height:100vh; }
+
+/* ── LOGIN ── */
+#login-screen {
+  display:flex; align-items:center; justify-content:center;
+  min-height:100vh; padding:20px;
+}
+.login-box {
+  background:var(--sf); border:1px solid var(--border2); border-radius:20px;
+  padding:32px; width:min(380px,95vw);
+}
+.login-logo {
+  text-align:center; margin-bottom:24px;
+}
+.login-logo svg { margin-bottom:8px; }
+.login-logo h2 { font-family:var(--fontd); font-size:1.2rem; color:var(--wh); }
+.login-logo p  { font-size:.78rem; color:var(--mu); }
+.form-control {
+  background:rgba(107,255,107,.04); border:1px solid var(--border);
+  border-radius:8px; padding:11px 14px; color:var(--tx);
+  font-family:var(--font); font-size:.88rem; width:100%; outline:none;
+  transition:border-color .2s; margin-bottom:10px;
+}
+.form-control:focus { border-color:var(--border2); }
+.form-control::placeholder { color:var(--mu); }
+.btn-login {
+  background:var(--g); color:#000; border:none; border-radius:8px;
+  padding:13px; width:100%; font-family:var(--fontd); font-weight:800;
+  font-size:.92rem; cursor:pointer; transition:all .2s; margin-top:6px;
+}
+.btn-login:hover { background:#a0ffa0; }
+
+/* ── DASHBOARD AMBULANCE ── */
+#dashboard-screen { display:none; }
+
+.amb-header {
+  background:rgba(6,13,6,.95); border-bottom:1px solid var(--border);
+  padding:14px 20px; display:flex; align-items:center; gap:12px;
+  position:sticky; top:0; z-index:100; backdrop-filter:blur(20px);
+}
+.amb-plate {
+  background:var(--g); color:#000; font-family:var(--fontm);
+  font-weight:700; font-size:.88rem; padding:5px 12px; border-radius:6px;
+}
+.amb-driver { flex:1; font-size:.82rem; color:var(--mu); }
+.amb-status-pill {
+  padding:5px 12px; border-radius:20px; font-size:.72rem; font-weight:700;
+  font-family:var(--fontd);
+}
+.amb-status-pill.dispo  { background:rgba(107,255,107,.15); color:var(--g); border:1px solid var(--border2); }
+.amb-status-pill.mission { background:rgba(255,153,0,.15); color:var(--orange); border:1px solid rgba(255,153,0,.3); animation:blink 1.5s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.6} }
+.amb-logout {
+  background:none; border:1px solid var(--border); color:var(--mu);
+  padding:6px 10px; border-radius:6px; cursor:pointer; font-size:.75rem;
+}
+
+.content { padding:16px; max-width:600px; margin:0 auto; }
+
+/* ── CARTE MISSION EN COURS ── */
+.mission-card {
+  background:linear-gradient(135deg,rgba(255,153,0,.12),rgba(255,153,0,.06));
+  border:2px solid rgba(255,153,0,.35); border-radius:16px; padding:20px;
+  margin-bottom:16px; display:none;
+}
+.mission-card.visible { display:block; }
+.mc-title {
+  font-family:var(--fontd); font-size:.95rem; font-weight:800;
+  color:var(--orange); margin-bottom:14px;
+  display:flex; align-items:center; gap:8px;
+}
+.mc-dest {
+  font-size:1.1rem; font-weight:700; color:var(--wh);
+  font-family:var(--fontd); margin-bottom:6px;
+}
+.mc-meta { font-size:.75rem; color:var(--mu); font-family:var(--fontm); margin-bottom:16px; }
+.mc-timer {
+  font-family:var(--fontm); font-size:1.6rem; font-weight:700;
+  color:var(--orange); margin-bottom:16px;
+}
+
+/* ── BOUTONS D'ACTION PRINCIPAUX ── */
+.action-btns { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+.action-btn {
+  border:none; border-radius:12px; padding:18px;
+  font-family:var(--fontd); font-weight:800; font-size:1rem;
+  cursor:pointer; transition:all .25s; display:flex; align-items:center;
+  justify-content:center; gap:10px;
+}
+.action-btn.start  { background:var(--g); color:#000; }
+.action-btn.start:hover  { background:#a0ffa0; transform:scale(1.02); }
+.action-btn.arrive { background:rgba(255,153,0,.2); color:var(--orange); border:2px solid rgba(255,153,0,.4); }
+.action-btn.arrive:hover { background:rgba(255,153,0,.3); }
+.action-btn.garage { background:rgba(77,159,255,.15); color:#4d9fff; border:2px solid rgba(77,159,255,.3); }
+.action-btn.garage:hover { background:rgba(77,159,255,.25); }
+.action-btn:disabled { opacity:.4; cursor:not-allowed; transform:none !important; }
+
+/* ── FORMULAIRE NOUVELLE MISSION ── */
+.new-mission-form {
+  background:var(--sf); border:1px solid var(--border);
+  border-radius:14px; padding:18px; margin-bottom:16px; display:none;
+}
+.new-mission-form.visible { display:block; }
+.form-label { font-size:.8rem; font-weight:600; color:var(--tx); display:block; margin-bottom:5px; font-family:var(--fontd); }
+.form-group  { margin-bottom:12px; }
+.btn-sm {
+  padding:9px 18px; border-radius:8px; font-size:.82rem; font-weight:700;
+  cursor:pointer; font-family:var(--fontd); border:none; transition:all .2s;
+}
+.btn-sm.green { background:var(--g); color:#000; }
+.btn-sm.green:hover { background:#a0ffa0; }
+.btn-sm.cancel { background:rgba(255,255,255,.07); color:var(--mu); border:1px solid var(--border); }
+
+/* ── HISTORIQUE ── */
+.section-title {
+  font-family:var(--fontd); font-size:.9rem; font-weight:700; color:var(--wh);
+  margin-bottom:12px; display:flex; align-items:center; gap:8px;
+}
+.section-title i { color:var(--g); }
+.hist-item {
+  background:var(--sf); border:1px solid var(--border);
+  border-radius:10px; padding:12px 14px; margin-bottom:8px;
+}
+.hi-top { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+.hi-dest { font-weight:700; color:var(--wh); font-size:.86rem; flex:1; }
+.hi-status { font-size:.65rem; font-weight:700; padding:2px 8px; border-radius:20px; }
+.hi-status.termine { background:rgba(107,255,107,.1); color:var(--g); }
+.hi-status.en_cours { background:rgba(255,153,0,.1); color:var(--orange); }
+.hi-meta { font-size:.72rem; color:var(--mu); font-family:var(--fontm); }
+
+/* ── INVENTAIRE ── */
+.inv-item {
+  display:flex; align-items:center; gap:12px;
+  background:var(--sf); border:1px solid var(--border);
+  border-radius:10px; padding:12px 14px; margin-bottom:8px;
+}
+.inv-icon {
+  width:36px; height:36px; border-radius:8px; display:flex; align-items:center;
+  justify-content:center; font-size:.9rem; flex-shrink:0;
+}
+.inv-icon.bon { background:rgba(107,255,107,.1); color:var(--g); }
+.inv-icon.a_verifier { background:rgba(255,153,0,.1); color:var(--orange); }
+.inv-icon.hors_service { background:rgba(255,77,77,.1); color:var(--red); }
+.inv-info { flex:1; }
+.inv-name { font-weight:600; color:var(--wh); font-size:.84rem; }
+.inv-qty  { font-size:.72rem; color:var(--mu); }
+.inv-etat-badge { font-size:.62rem; font-weight:700; padding:2px 8px; border-radius:20px; white-space:nowrap; }
+
+/* ── TABS ── */
+.tabs { display:flex; gap:4px; background:var(--sf); border-radius:10px; padding:4px; margin-bottom:16px; }
+.tab {
+  flex:1; padding:9px; border:none; border-radius:7px; cursor:pointer;
+  font-family:var(--fontd); font-size:.78rem; font-weight:700;
+  background:transparent; color:var(--mu); transition:all .2s;
+}
+.tab.active { background:rgba(107,255,107,.15); color:var(--g); }
+
+/* ── TOAST ── */
+#amb-toast {
+  position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(80px);
+  background:rgba(6,13,6,.95); border:1px solid var(--border2); color:var(--g);
+  padding:11px 20px; border-radius:20px; font-size:.82rem; font-weight:600;
+  z-index:9999; transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+  font-family:var(--fontd); display:flex; align-items:center; gap:8px;
+  backdrop-filter:blur(16px); pointer-events:none;
+}
+#amb-toast.show { transform:translateX(-50%) translateY(0); }
+
+/* ─── GEO TRACKER ─── */
+#geo-status-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(6,13,6,.97);
+  border-top:1px solid rgba(107,255,107,.15);
+  padding:8px 20px;
+  display:flex;align-items:center;gap:10px;
+  font-size:.72rem;color:var(--mu);
+  font-family:var(--fontm);z-index:500;
+}
+.geo-dot{width:8px;height:8px;border-radius:50%;background:var(--g);flex-shrink:0}
+.geo-dot.error{background:var(--red)}
+.geo-dot.waiting{background:var(--orange);animation:dotPulse 1s infinite}
+#geo-adresse{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#geo-coords{color:var(--g);font-size:.68rem}
+
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <svg width="48" height="48" viewBox="0 0 42 42" fill="none">
+        <circle cx="21" cy="21" r="20" stroke="#6bff6b" stroke-width="1.5" fill="rgba(107,255,107,.06)"/>
+        <rect x="17" y="11" width="8" height="20" rx="2.5" fill="#6bff6b"/>
+        <rect x="11" y="17" width="20" height="8" rx="2.5" fill="#6bff6b"/>
+      </svg>
+      <h2>Secours Abalo</h2>
+      <p>Dashboard Ambulance</p>
+    </div>
+    <input id="amb-username" class="form-control" placeholder="Identifiant (ex: AMB-001)">
+    <input id="amb-password" class="form-control" type="password" placeholder="Mot de passe">
+    <button class="btn-login" onclick="ambLogin()">
+      <i class="fa-solid fa-right-to-bracket"></i> Connexion
+    </button>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD ══ -->
+<div id="dashboard-screen">
+  <div class="amb-header">
+    <span class="amb-plate" id="hdr-plate">AMB-???</span>
+    <span class="amb-driver" id="hdr-driver">Chargement…</span>
+    <span class="amb-status-pill dispo" id="hdr-status">Disponible</span>
+    <button class="amb-logout" onclick="ambLogout()"><i class="fa-solid fa-right-from-bracket"></i></button>
+  </div>
+
+  <div class="content">
+
+    <!-- Mission en cours -->
+    <div class="mission-card" id="mission-card">
+      <div class="mc-title"><i class="fa-solid fa-truck-medical"></i> Mission en cours</div>
+      <div class="mc-dest" id="mc-dest">—</div>
+      <div class="mc-meta" id="mc-meta">—</div>
+      <div class="mc-timer" id="mc-timer">00:00:00</div>
+      <div style="display:flex;gap:8px">
+        <button class="action-btn arrive" style="flex:1" id="btn-arrive" onclick="clicArrive()">
+          <i class="fa-solid fa-map-marker-check"></i> Arrivé à destination
+        </button>
+        <button class="action-btn garage" style="flex:1" id="btn-garage" onclick="clicGarage()">
+          <i class="fa-solid fa-garage"></i> Retour garage
+        </button>
+      </div>
+    </div>
+
+    <!-- Bouton DÉMARRER (quand pas de mission) -->
+    <div id="demarrer-section">
+      <button class="action-btn start" onclick="afficherFormMission()" id="btn-demarrer">
+        <i class="fa-solid fa-play"></i> Démarrer une Mission
+      </button>
+    </div>
+
+    <!-- Formulaire nouvelle mission -->
+    <div class="new-mission-form" id="form-mission">
+      <div style="font-family:var(--fontd);font-weight:800;color:var(--wh);margin-bottom:14px">
+        <i class="fa-solid fa-route" style="color:var(--g);margin-right:6px"></i>Nouvelle Mission
+      </div>
+      <div class="form-group">
+        <label class="form-label">Destination <span style="color:var(--red)">*</span></label>
+        <input class="form-control" id="inp-dest" placeholder="Ex: Hôpital Lomé-Commune, CHR Tsévié…">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Type de mission</label>
+        <select class="form-control" id="inp-motif">
+          <option value="evacuation">Évacuation d'urgence</option>
+          <option value="transfert">Transfert inter-hospitalier</option>
+          <option value="rapatriement">Rapatriement</option>
+          <option value="autre">Autre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes (optionnel)</label>
+        <textarea class="form-control" id="inp-notes" rows="2" placeholder="Patient, condition, équipe embarquée…"></textarea>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-sm green" onclick="demarrerMission()">
+          <i class="fa-solid fa-play"></i> Confirmer le départ
+        </button>
+        <button class="btn-sm cancel" onclick="masquerFormMission()">Annuler</button>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('historique', this)">
+        <i class="fa-solid fa-clock-rotate-left"></i> Historique
+      </button>
+      <button class="tab" onclick="switchTab('inventaire', this)">
+        <i class="fa-solid fa-box-medical"></i> Inventaire
+      </button>
+    </div>
+
+    <!-- Historique missions -->
+    <div id="tab-historique">
+      <div class="section-title"><i class="fa-solid fa-route"></i> Mes Missions</div>
+      <div id="hist-list"><div style="text-align:center;padding:20px;color:var(--mu);font-size:.8rem">Chargement…</div></div>
+    </div>
+
+    <!-- Inventaire équipements -->
+    <div id="tab-inventaire" style="display:none">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div class="section-title" style="margin:0"><i class="fa-solid fa-box-medical"></i> Équipements à bord</div>
+        <button onclick="afficherFormEquipement()" style="background:rgba(107,255,107,.12);border:1px solid var(--border2);color:var(--g);padding:6px 12px;border-radius:6px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:var(--fontd)">
+          <i class="fa-solid fa-plus"></i> Ajouter
+        </button>
+      </div>
+      <div id="inv-form" style="display:none;background:var(--sf);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px">
+        <input class="form-control" id="inv-nom" placeholder="Nom de l'équipement">
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <input class="form-control" id="inv-qty" type="number" placeholder="Qté" style="width:80px">
+          <select class="form-control" id="inv-etat">
+            <option value="bon">Bon état</option>
+            <option value="a_verifier">À vérifier</option>
+            <option value="hors_service">Hors service</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn-sm green" onclick="ajouterEquipement()">Enregistrer</button>
+          <button class="btn-sm cancel" onclick="document.getElementById('inv-form').style.display='none'">Annuler</button>
+        </div>
+      </div>
+      <div id="inv-list"><div style="text-align:center;padding:20px;color:var(--mu);font-size:.8rem">Chargement…</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="amb-toast"><i class="fa-solid fa-check" id="at-icon"></i><span id="at-msg"></span></div>
+
+<!-- ══ BARRE GPS (toujours visible) ══ -->
+<div id="geo-status-bar">
+  <div class="geo-dot waiting" id="geo-dot"></div>
+  <span id="geo-adresse">Initialisation GPS…</span>
+  <span id="geo-coords"></span>
+</div>
+
+<script>
+const API = "http://localhost:8026";
+
+// ── État ──
+let _token         = null;
+let _ambulanceId   = null;
+let _immat         = null;
+let _driverNom     = null;
+let _missionActive = null;
+let _timerInterval = null;
+let _gpsInterval   = null;
+
+// ── ambFetch avec gestion 401 ──
+async function ambFetch(path, options={}) {
+  // Toujours lire depuis localStorage en cas de rechargement
+  const token = _token || localStorage.getItem("amb_token") 
+                || JSON.parse(localStorage.getItem("amb_session")||"null")?.access_token;
+  
+  const headers = { "Content-Type":"application/json", ...(options.headers||{}) };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  
+  const res = await fetch(API + path, { ...options, headers });
+  
+  if (res.status === 401) {
+    // Token expiré : nettoyer et retourner au login
+    localStorage.removeItem("amb_session");
+    localStorage.removeItem("amb_token");
+    _token = null;
+    document.getElementById("login-screen").style.display    = "flex";
+    document.getElementById("dashboard-screen").style.display = "none";
+    toast("Session expirée — reconnectez-vous", "fa-lock");
+    throw new Error("Token invalide");
+  }
+  
+  if (!res.ok) {
+    const err = await res.json().catch(()=>({}));
+    throw new Error(err.detail || "Erreur API");
+  }
+  return res.status === 204 ? null : res.json();
+}
+
+function toast(msg, icon="fa-check") {
+  const t = document.getElementById("amb-toast");
+  document.getElementById("at-msg").textContent  = msg;
+  document.getElementById("at-icon").className   = `fa-solid ${icon}`;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 3000);
+}
+
+// ── Helpers session ──
+function saveAmbSession(data) {
+  _token       = data.access_token;
+  _ambulanceId = data.ambulance_id;
+  _immat       = data.immatriculation;
+  _driverNom   = data.ambulancier_nom || "Ambulancier";
+  localStorage.setItem("amb_session", JSON.stringify(data));
+  // Stocker aussi le token séparément pour accès facile
+  localStorage.setItem("amb_token", data.access_token);
+}
+
+// function loadAmbSession() {
+//   const s = JSON.parse(localStorage.getItem("amb_session") || "null");
+//   if (s) { _token=s.access_token; _ambulanceId=s.ambulance_id; _immat=s.immatriculation; _driverNom=s.ambulancier_nom||"Ambulancier"; }
+//   return s;
+// }
+function loadAmbSession() {
+  const s = JSON.parse(localStorage.getItem("amb_session") || "null");
+  if (s) {
+    _token       = s.access_token;
+    _ambulanceId = s.ambulance_id;
+    _immat       = s.immatriculation;
+    _driverNom   = s.ambulancier_nom || "Ambulancier";
+    // Synchroniser amb_token aussi
+    localStorage.setItem("amb_token", s.access_token);
+  }
+  return s;
+}
+
+// ── LOGIN ──
+async function ambLogin() {
+  const username = document.getElementById("amb-username").value.trim();
+  const password = document.getElementById("amb-password").value;
+  if (!username || !password) { toast("Identifiants requis", "fa-exclamation"); return; }
+  try {
+    const body = new URLSearchParams({ username, password });
+    const res  = await fetch(`${API}/ambulance/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body,
+    });
+    if (!res.ok) throw new Error("Identifiants incorrects");
+    const data = await res.json();
+    saveAmbSession(data);
+    afficherDashboard();
+  } catch(e) { toast(e.message, "fa-xmark"); }
+}
+
+function ambLogout() {
+  localStorage.removeItem("amb_session");
+  clearInterval(_timerInterval);
+  clearInterval(_gpsInterval);
+  document.getElementById("login-screen").style.display  = "flex";
+  document.getElementById("dashboard-screen").style.display = "none";
+}
+
+// ── AFFICHER DASHBOARD ──
+async function afficherDashboard() {
+  document.getElementById("login-screen").style.display  = "none";
+  document.getElementById("dashboard-screen").style.display = "block";
+  document.getElementById("hdr-plate").textContent  = _immat  || "AMB";
+  document.getElementById("hdr-driver").textContent = _driverNom || "—";
+
+  await verifierMissionActive();
+  chargerHistorique();
+  chargerInventaire();
+  demarrerGeolocalisation();
+}
+
+// ── VÉRIFIER MISSION ACTIVE ──
+async function verifierMissionActive() {
+  try {
+    const m = await ambFetch("/ambulance/missions/en_cours");
+    if (m) {
+      _missionActive = m;
+      afficherMissionEnCours(m);
+    } else {
+      masquerMissionEnCours();
+    }
+  } catch(e) { console.error(e); }
+}
+
+function afficherMissionEnCours(m) {
+  _missionActive = m;
+  document.getElementById("mission-card").classList.add("visible");
+  document.getElementById("demarrer-section").style.display = "none";
+  document.getElementById("mc-dest").textContent = m.destination;
+  document.getElementById("mc-meta").textContent =
+    `${m.motif||"Mission"} · Départ : ${m.heure_depart ? new Date(m.heure_depart).toLocaleTimeString("fr-FR") : "—"}`;
+
+  // Statut header
+  const s = document.getElementById("hdr-status");
+  s.className = "amb-status-pill mission";
+  s.textContent = "En mission";
+
+  // Bouton arrivé / retour selon statut
+  document.getElementById("btn-arrive").style.display = m.statut === "en_cours"  ? "flex" : "none";
+  document.getElementById("btn-garage").style.display = m.statut === "arrive"    ? "flex" : "flex"; // toujours visible
+
+  // Timer
+  clearInterval(_timerInterval);
+  const debut = m.heure_depart ? new Date(m.heure_depart) : new Date();
+  _timerInterval = setInterval(() => {
+    const diff = Math.floor((Date.now() - debut.getTime()) / 1000);
+    const h = String(Math.floor(diff/3600)).padStart(2,"0");
+    const mi = String(Math.floor((diff%3600)/60)).padStart(2,"0");
+    const s  = String(diff%60).padStart(2,"0");
+    document.getElementById("mc-timer").textContent = `${h}:${mi}:${s}`;
+  }, 1000);
+
+  // GPS toutes les 30 secondes
+  clearInterval(_gpsInterval);
+  _gpsInterval = setInterval(() => envoyerGPS(m.id), 30000);
+}
+
+function masquerMissionEnCours() {
+  document.getElementById("mission-card").classList.remove("visible");
+  document.getElementById("demarrer-section").style.display = "block";
+  const s = document.getElementById("hdr-status");
+  s.className = "amb-status-pill dispo";
+  s.textContent = "Disponible";
+  clearInterval(_timerInterval);
+  clearInterval(_gpsInterval);
+  _missionActive = null;
+}
+
+// ── ENVOI GPS ──
+async function envoyerGPS(missionId) {
+  if (!navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(async pos => {
+    try {
+      await ambFetch(`/ambulance/position?mission_id=${missionId}`, {
+        method: "POST",
+        body:   JSON.stringify({ latitude: pos.coords.latitude, longitude: pos.coords.longitude, vitesse_kmh: (pos.coords.speed || 0) * 3.6 }),
+      });
+    } catch(e) { console.warn("GPS:", e); }
+  });
+}
+
+// ── FORMULAIRE MISSION ──
+function afficherFormMission() {
+  document.getElementById("form-mission").classList.add("visible");
+  document.getElementById("btn-demarrer").style.display = "none";
+}
+function masquerFormMission() {
+  document.getElementById("form-mission").classList.remove("visible");
+  document.getElementById("btn-demarrer").style.display = "flex";
+}
+
+async function demarrerMission() {
+  const dest = document.getElementById("inp-dest").value.trim();
+  if (!dest) { toast("Destination requise", "fa-exclamation"); return; }
+
+  const payload = {
+    destination: dest,
+    motif:       document.getElementById("inp-motif").value,
+    notes:       document.getElementById("inp-notes").value || null,
+  };
+
+  // Géolocalisation si disponible
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      async pos => {
+        payload.lat_depart = pos.coords.latitude;
+        payload.lng_depart = pos.coords.longitude;
+        await lancerMission(payload);
+      },
+      async () => await lancerMission(payload)
+    );
+  } else {
+    await lancerMission(payload);
+  }
+}
+
+async function lancerMission(payload) {
+  try {
+    const m = await ambFetch("/ambulance/missions/demarrer", {
+      method: "POST", body: JSON.stringify(payload),
+    });
+
+    try {
+      await ambFetch("/interventions", {
+        method: "POST",
+        body: JSON.stringify({
+          type_urgence: payload.motif || "evacuation",
+          localisation: payload.destination,
+          description:  `Mission ambulance ${_immat} – ${payload.destination}`,
+          eta_minutes:  7,
+        }),
+      });
+    } catch(e) { console.warn("Intervention non créée:", e); }
+    // ← FIN AJOUT
+
+    masquerFormMission();
+    afficherMissionEnCours(m);
+    chargerHistorique();
+    toast("Mission démarrée !", "fa-truck-medical");
+  } catch(e) { toast("Erreur : " + e.message, "fa-xmark"); }
+}
+
+// ── CLICS STATUT ──
+async function clicArrive() {
+  if (!_missionActive) return;
+  try {
+    let lat, lng;
+    if (navigator.geolocation) {
+      await new Promise(res => navigator.geolocation.getCurrentPosition(
+        p => { lat=p.coords.latitude; lng=p.coords.longitude; res(); },
+        () => res()
+      ));
+    }
+    const m = await ambFetch(
+      `/ambulance/missions/${_missionActive.id}/arrive?lat=${lat||""}&lng=${lng||""}`,
+      { method: "PATCH" }
+    );
+    _missionActive = m;
+    document.getElementById("btn-arrive").style.display = "none";
+    toast("Arrivée enregistrée !", "fa-map-marker-check");
+  } catch(e) { toast("Erreur : " + e.message, "fa-xmark"); }
+}
+
+async function clicGarage() {
+  if (!_missionActive) return;
+  try {
+    const m = await ambFetch(
+      `/ambulance/missions/${_missionActive.id}/retour`,
+      { method: "PATCH" }
+    );
+    masquerMissionEnCours();
+    chargerHistorique();
+    toast("Retour au garage enregistré !", "fa-garage");
+  } catch(e) { toast("Erreur : " + e.message, "fa-xmark"); }
+}
+
+// ── HISTORIQUE ──
+async function chargerHistorique() {
+  const el = document.getElementById("hist-list");
+  try {
+    const data = await ambFetch("/ambulance/missions/historique?limit=30");
+    if (!data || data.length === 0) {
+      el.innerHTML = `<div style="text-align:center;padding:20px;color:var(--mu);font-size:.8rem">Aucune mission</div>`;
+      return;
+    }
+    el.innerHTML = data.map(m => {
+      const duree = (m.heure_depart && m.heure_retour)
+        ? (() => {
+            const diff = Math.floor((new Date(m.heure_retour) - new Date(m.heure_depart)) / 60000);
+            return `${Math.floor(diff/60)}h${String(diff%60).padStart(2,"0")}`;
+          })()
+        : "—";
+      return `<div class="hist-item">
+        <div class="hi-top">
+          <i class="fa-solid fa-map-marker-alt" style="color:var(--g)"></i>
+          <span class="hi-dest">${m.destination}</span>
+          <span class="hi-status ${m.statut}">${m.statut === "termine" ? "Terminée" : "En cours"}</span>
+        </div>
+        <div class="hi-meta">
+          ${m.motif||"—"} · ${m.heure_depart ? new Date(m.heure_depart).toLocaleDateString("fr-FR",{day:"2-digit",month:"short",year:"2-digit",hour:"2-digit",minute:"2-digit"}) : "—"}
+          ${duree !== "—" ? " · Durée : " + duree : ""}
+          ${m.distance_km ? " · " + m.distance_km + " km" : ""}
+        </div>
+      </div>`;
+    }).join("");
+  } catch(e) {
+    el.innerHTML = `<div style="text-align:center;padding:20px;color:var(--mu);font-size:.8rem">Erreur chargement</div>`;
+  }
+}
+
+// ── INVENTAIRE ──
+async function chargerInventaire() {
+  const el = document.getElementById("inv-list");
+  try {
+    const data = await ambFetch("/ambulance/inventaire");
+    if (!data || data.length === 0) {
+      el.innerHTML = `<div style="text-align:center;padding:20px;color:var(--mu);font-size:.8rem">
+        Aucun équipement enregistré.<br>Ajoutez vos équipements à bord.</div>`;
+      return;
+    }
+    const icones = { bon:"fa-check", a_verifier:"fa-triangle-exclamation", hors_service:"fa-xmark" };
+    el.innerHTML = data.map(item => `
+      <div class="inv-item">
+        <div class="inv-icon ${item.etat}">
+          <i class="fa-solid ${icones[item.etat]||"fa-box"}"></i>
+        </div>
+        <div class="inv-info">
+          <div class="inv-name">${item.equipement}</div>
+          <div class="inv-qty">Quantité : ${item.quantite} · Vérif : ${item.derniere_verif||"—"}</div>
+        </div>
+        <span class="inv-etat-badge" style="background:${item.etat==="bon"?"rgba(107,255,107,.1)":item.etat==="a_verifier"?"rgba(255,153,0,.1)":"rgba(255,77,77,.1)"};color:${item.etat==="bon"?"var(--g)":item.etat==="a_verifier"?"var(--orange)":"var(--red)"}">
+          ${item.etat==="bon"?"✓ Bon":item.etat==="a_verifier"?"⚠ À vérifier":"✗ HS"}
+        </span>
+      </div>
+    `).join("");
+  } catch(e) {
+    el.innerHTML = `<div style="text-align:center;padding:20px;color:var(--mu);font-size:.8rem">Erreur chargement</div>`;
+  }
+}
+
+function afficherFormEquipement() {
+  document.getElementById("inv-form").style.display = "block";
+}
+
+async function ajouterEquipement() {
+  const nom = document.getElementById("inv-nom").value.trim();
+  if (!nom) { toast("Nom requis", "fa-exclamation"); return; }
+  try {
+    await ambFetch("/ambulance/inventaire", {
+      method: "POST",
+      body:   JSON.stringify({
+        equipement:    nom,
+        quantite:      parseInt(document.getElementById("inv-qty").value)||1,
+        etat:          document.getElementById("inv-etat").value,
+        derniere_verif: new Date().toISOString().slice(0,10),
+      }),
+    });
+    document.getElementById("inv-form").style.display = "none";
+    document.getElementById("inv-nom").value = "";
+    chargerInventaire();
+    toast("Équipement ajouté !", "fa-box-medical");
+  } catch(e) { toast("Erreur : " + e.message, "fa-xmark"); }
+}
+
+// ── TABS ──
+function switchTab(tab, btn) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("tab-historique").style.display = tab==="historique" ? "block" : "none";
+  document.getElementById("tab-inventaire").style.display = tab==="inventaire" ? "block" : "none";
+}
+
+// ── INIT ──
+document.addEventListener("DOMContentLoaded", () => {
+  const s = loadAmbSession();
+  if (s && s.access_token) {
+    afficherDashboard();
+  }
+});
+
+
+// ════════════════════════════════════════════
+//  GÉOLOCALISATION AUTOMATIQUE — AMBULANCE
+// ════════════════════════════════════════════
+
+let _geoWatchId      = null;
+let _dernierePosition = null;
+let _geoIntervalId   = null;
+const GEO_INTERVAL   = 5000; 
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (localStorage.getItem("amb_session")) {
+    demarrerGeolocalisation();
+  }
+});
+
+// ── 2. Enregistrer le Service Worker (fond d'écran) ──
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw-geo.js").catch(() => {});
+}
+
+// ── 3. Fonction principale de démarrage GPS ──
+function demarrerGeolocalisation() {
+  if (!("geolocation" in navigator)) {
+    majStatutGeo("GPS non supporté", true);
+    return;
+  }
+
+  majStatutGeo("Recherche du signal GPS…", false, true);
+
+  // watchPosition pour mise à jour continue
+  _geoWatchId = navigator.geolocation.watchPosition(
+    (pos) => {
+      _dernierePosition = {
+        latitude:  pos.coords.latitude,
+        longitude: pos.coords.longitude,
+        precision: pos.coords.accuracy
+      };
+    },
+    (err) => {
+      console.warn("GPS:", err.message);
+      majStatutGeo("Signal GPS perdu", true);
+    },
+    {
+      enableHighAccuracy: true,
+      maximumAge:         0,
+      timeout:            10000
+    }
+  );
+
+  // Envoi toutes les 5 secondes
+  _geoIntervalId = setInterval(envoyerPosition, GEO_INTERVAL);
+
+  // Premier envoi immédiat
+  setTimeout(envoyerPosition, 1500);
+}
+
+// ── 4. Envoi de la position + reverse geocoding ──
+async function envoyerPosition() {
+  if (!_dernierePosition) return;
+
+  const { latitude, longitude } = _dernierePosition;
+
+  // Reverse geocoding via Nominatim (OpenStreetMap — gratuit, sans clé API)
+  let adresseDetails = {};
+  try {
+    const resp = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`,
+      { headers: { "Accept-Language": "fr" } }
+    );
+    const geo = await resp.json();
+    const a   = geo.address || {};
+
+    adresseDetails = {
+      nom:          geo.display_name || "",
+      rue:          a.road || a.pedestrian || a.footway || "",
+      quartier:     a.suburb || a.neighbourhood || a.quarter || "",
+      ville:        a.city || a.town || a.village || a.municipality || "",
+      commune:      a.county || "",
+      pays:         a.country || "",
+      code_postal:  a.postcode || "",
+      // Informations de trajectoire / tronçon
+      troncon:      a.road || "",
+      lieu:         a.amenity || a.building || a.leisure || a.shop || "",
+      stationnement: a.parking || a.amenity === "parking" ? "Zone parking" : "",
+    };
+
+    // Affichage dans la barre GPS
+    const ligneAdresse = [
+      adresseDetails.rue,
+      adresseDetails.quartier,
+      adresseDetails.ville
+    ].filter(Boolean).join(", ") || geo.display_name || `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+
+    majStatutGeo(ligneAdresse, false, false, latitude, longitude);
+
+  } catch {
+    // Si Nominatim échoue, on envoie juste les coords
+    majStatutGeo(`${latitude.toFixed(5)}, ${longitude.toFixed(5)}`, false);
+  }
+
+  // Envoi au backend
+  try {
+    // Utiliser _token (variable mémoire) ou fallback localStorage
+    const token = _token || localStorage.getItem("amb_token");
+    if (!token) return;
+
+    await fetch(`${API}/ambulance/position`, {
+      method:  "POST",
+      headers: {
+        "Content-Type":  "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        latitude,
+        longitude,
+        adresse_details: adresseDetails
+      })
+    });
+  } catch (e) {
+    console.warn("Envoi position échoué:", e);
+  }
+}
+
+// ── 5. Mise à jour de la barre de statut GPS ──
+function majStatutGeo(texte, erreur = false, attente = false, lat = null, lng = null) {
+  const dot    = document.getElementById("geo-dot");
+  const adEl   = document.getElementById("geo-adresse");
+  const coords = document.getElementById("geo-coords");
+
+  if (dot) {
+    dot.className = "geo-dot";
+    if (erreur)  dot.classList.add("error");
+    if (attente) dot.classList.add("waiting");
+  }
+  if (adEl)   adEl.textContent   = texte;
+  if (coords) coords.textContent = lat ? `${lat.toFixed(5)}, ${lng.toFixed(5)}` : "";
+}
+
+</script>
+
+</body>
+</html>

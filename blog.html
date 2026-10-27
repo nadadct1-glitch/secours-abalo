@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Secours Abalo · Blog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{
+  --g:#6bff6b;--gd:#3a9e3a;--gg:rgba(107,255,107,.15);
+  --bg:#060d06;--bg2:#0a130a;--sf:#0f1c0f;--sf2:#141f14;
+  --tx:#d8ecd8;--mu:#6a8e6a;--wh:#f0fff0;
+  --red:#ff4d4d;--orange:#ff9900;--blue:#4db8ff;--yellow:#ffd700;
+  --border:rgba(107,255,107,.1);--border2:rgba(107,255,107,.22);
+  --font:'DM Sans',sans-serif;--fontd:'Syne',sans-serif;--fontm:'DM Mono',monospace;
+  --topbar-h:56px;--bottombar-h:60px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--tx);font-family:var(--font);overflow-x:hidden;font-size:14px;max-width:100vw}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:var(--font);border:none;background:none}
+
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");opacity:.2}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  position:fixed;top:0;left:0;right:0;height:var(--topbar-h);z-index:300;
+  background:rgba(6,13,6,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 14px;gap:10px;
+}
+.tb-brand{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.tb-logo{width:28px;height:28px;flex-shrink:0}
+.tb-name{font-family:var(--fontd);font-weight:800;font-size:.85rem;color:var(--wh)}
+.tb-name span{color:var(--g)}
+.tb-search{
+  flex:1;max-width:360px;background:rgba(255,255,255,.06);
+  border:1px solid var(--border);border-radius:50px;
+  padding:7px 14px;display:flex;align-items:center;gap:8px;
+  transition:border-color .2s;min-width:0;
+}
+.tb-search:focus-within{border-color:var(--border2)}
+.tb-search i{color:var(--mu);font-size:.82rem;flex-shrink:0}
+.tb-search input{background:none;border:none;outline:none;color:var(--tx);font-family:var(--font);font-size:.82rem;flex:1;min-width:0}
+.tb-search input::placeholder{color:var(--mu)}
+.tb-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.tba-btn{
+  width:34px;height:34px;border-radius:50%;background:var(--gg);
+  border:1px solid var(--border);color:var(--g);font-size:.82rem;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.tba-btn:hover{background:rgba(107,255,107,.25);border-color:var(--border2)}
+
+/* ══ LAYOUT ══ */
+.layout{display:flex;min-height:100vh;padding-top:var(--topbar-h)}
+
+/* ══ SIDEBAR ══ */
+.sidebar{
+  position:fixed;top:var(--topbar-h);left:0;width:220px;height:calc(100vh - var(--topbar-h));
+  background:rgba(6,13,6,.95);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;z-index:200;overflow-y:auto;
+  transition:transform .3s;
+}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(107,255,107,.15);border-radius:2px}
+.sb-nav{padding:14px 0;flex:1}
+.sb-item{
+  display:flex;align-items:center;gap:10px;padding:10px 20px;
+  color:var(--mu);font-size:.84rem;font-weight:500;
+  border:none;background:none;width:100%;text-align:left;cursor:pointer;
+  transition:all .2s;position:relative;
+}
+.sb-item i{width:18px;text-align:center;font-size:.9rem;flex-shrink:0}
+.sb-item:hover{color:var(--tx);background:rgba(107,255,107,.05)}
+.sb-item.active{color:var(--g);background:rgba(107,255,107,.08)}
+.sb-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60%;background:var(--g);border-radius:0 2px 2px 0}
+.sb-section{font-size:.6rem;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.12em;padding:14px 20px 6px;font-family:var(--fontm)}
+.sb-divider{height:1px;background:var(--border);margin:8px 16px}
+.sb-stats{padding:14px 20px;border-top:1px solid var(--border)}
+.sb-stat{margin-bottom:10px}
+.sb-stat-label{font-size:.62rem;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;font-family:var(--fontm)}
+.sb-stat-val{font-family:var(--fontm);font-size:1.2rem;font-weight:500;color:var(--g)}
+
+/* ══ CONTENU PRINCIPAL ══ */
+.main-content{margin-left:220px;flex:1;min-height:calc(100vh - var(--topbar-h));min-width:0;max-width:100%}
+
+/* ══ HERO SECTION ══ */
+.blog-hero{
+  position:relative;overflow:hidden;
+  padding:60px 32px 48px;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,rgba(107,255,107,.04) 0%,transparent 100%);
+}
+.blog-hero::before{
+  content:'';position:absolute;top:-60px;right:-40px;
+  width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(107,255,107,.07) 0%,transparent 70%);
+  pointer-events:none;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(107,255,107,.1);border:1px solid rgba(107,255,107,.2);
+  color:var(--g);font-size:.62rem;font-weight:700;padding:4px 10px;
+  border-radius:20px;text-transform:uppercase;letter-spacing:.08em;
+  font-family:var(--fontm);margin-bottom:14px;
+}
+.hero-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--g);animation:heroPulse 1.5s infinite}
+@keyframes heroPulse{0%,100%{box-shadow:0 0 0 0 rgba(107,255,107,.5)}50%{box-shadow:0 0 0 5px rgba(107,255,107,0)}}
+.hero-title{font-family:var(--fontd);font-size:2.4rem;font-weight:800;color:var(--wh);line-height:1.1;margin-bottom:12px}
+.hero-title span{color:var(--g)}
+.hero-sub{font-size:.9rem;color:var(--mu);max-width:480px;line-height:1.7}
+.hero-count{
+  margin-top:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+}
+.hc-item{display:flex;align-items:center;gap:6px;font-size:.76rem;color:var(--mu)}
+.hc-item strong{color:var(--g);font-family:var(--fontm)}
+
+/* ══ TABS ══ */
+.tabs-bar{
+  position:sticky;top:var(--topbar-h);z-index:100;
+  background:rgba(6,13,6,.92);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:0;overflow-x:auto;padding:0 12px;
+  scrollbar-width:none;
+}
+.tabs-bar::-webkit-scrollbar{display:none}
+.tab-btn{
+  padding:12px 14px;font-size:.8rem;font-weight:600;color:var(--mu);
+  white-space:nowrap;border:none;background:none;cursor:pointer;
+  border-bottom:2.5px solid transparent;transition:all .2s;font-family:var(--fontd);
+  display:flex;align-items:center;gap:5px;
+}
+.tab-btn:hover{color:var(--tx)}
+.tab-btn.active{color:var(--g);border-bottom-color:var(--g)}
+.tab-btn .tc{font-size:.6rem;background:rgba(107,255,107,.15);color:var(--g);padding:2px 6px;border-radius:10px;font-family:var(--fontm)}
+.sort-bar{margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.sort-select{background:var(--sf2);border:1px solid var(--border);color:var(--tx);padding:5px 8px;border-radius:8px;font-family:var(--font);font-size:.76rem;outline:none;cursor:pointer}
+.sort-select option{background:var(--bg2)}
+.view-toggle{display:flex;gap:3px}
+.view-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);color:var(--mu);display:flex;align-items:center;justify-content:center;font-size:.8rem;cursor:pointer;transition:all .2s;background:none}
+.view-btn.active,.view-btn:hover{background:var(--gg);border-color:var(--border2);color:var(--g)}
+
+/* ══ ARTICLE EN VEDETTE ══ */
+.featured-wrap{padding:20px 20px 0;box-sizing:border-box;width:100%}
+.featured-article{
+  position:relative;border-radius:16px;overflow:hidden;
+  border:1px solid rgba(107,255,107,.2);
+  background:var(--sf);cursor:pointer;
+  transition:all .35s;
+  animation:fadeUp .5s ease both;
+  display:flex;min-height:260px;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.featured-article:hover{border-color:rgba(107,255,107,.4);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.featured-cover{
+  width:320px;flex-shrink:0;position:relative;overflow:hidden;
+  background:var(--bg2);
+}
+.featured-cover img{width:100%;height:100%;object-fit:cover;transition:transform .5s;display:block}
+.featured-article:hover .featured-cover img{transform:scale(1.05)}
+.featured-cover-empty{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--sf),var(--bg2));
+}
+.featured-cover-empty i{font-size:3rem;color:var(--g);opacity:.3}
+.featured-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(0,0,0,0) 60%,rgba(6,13,6,.8) 100%);
+  pointer-events:none;
+}
+.featured-body{flex:1;padding:28px 28px 24px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+.featured-meta{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.f-badge{
+  background:var(--gg);border:1px solid var(--border2);color:var(--g);
+  font-size:.6rem;font-weight:700;padding:3px 8px;border-radius:20px;
+  text-transform:uppercase;letter-spacing:.07em;font-family:var(--fontm);
+}
+.f-badge.vedette{background:rgba(255,215,0,.15);border-color:rgba(255,215,0,.3);color:var(--yellow)}
+.featured-title{
+  font-family:var(--fontd);font-size:1.4rem;font-weight:800;
+  color:var(--wh);line-height:1.25;margin-bottom:10px;
+}
+.featured-resume{font-size:.84rem;color:var(--tx);line-height:1.7;margin-bottom:16px;max-width:480px}
+.featured-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.f-author{display:flex;align-items:center;gap:8px}
+.f-avatar{
+  width:30px;height:30px;border-radius:50%;background:var(--gg);
+  border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-weight:700;color:var(--g);font-family:var(--fontd);
+}
+.f-author-info{font-size:.74rem}
+.f-author-name{color:var(--wh);font-weight:600;font-family:var(--fontd)}
+.f-author-date{color:var(--mu)}
+.f-actions{display:flex;gap:6px}
+.f-action-btn{
+  display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:8px;
+  font-size:.74rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:var(--fontd);
+}
+.f-action-btn.primary{background:var(--g);color:#000}
+.f-action-btn.primary:hover{background:#a0ffa0;transform:translateY(-1px)}
+.f-action-btn.secondary{background:var(--gg);border:1px solid var(--border2);color:var(--g)}
+.f-action-btn.secondary:hover{background:rgba(107,255,107,.25)}
+.featured-label{
+  position:absolute;top:14px;left:14px;
+  background:rgba(255,215,0,.9);color:#000;
+  font-size:.58rem;font-weight:700;padding:3px 8px;border-radius:20px;
+  text-transform:uppercase;letter-spacing:.07em;display:flex;align-items:center;gap:4px;
+}
+
+/* ══ FEED ══ */
+.feed{padding:16px 20px;box-sizing:border-box;width:100%}
+.feed-section-title{
+  font-family:var(--fontd);font-size:.82rem;font-weight:700;color:var(--mu);
+  text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.feed-section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── Grille standard ── */
+.feed-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:16px;
+  width:100%;
+  box-sizing:border-box;
+}
+.feed-grid.list-view{grid-template-columns:1fr;gap:10px}
+
+/* ══ ARTICLE CARD ══ */
+.article-card{
+  background:var(--sf);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;cursor:pointer;position:relative;
+  transition:all .3s;
+  animation:cardIn .4s ease both;
+  width:100%;box-sizing:border-box;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.article-card:hover{border-color:rgba(107,255,107,.3);transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.5)}
+
+/* Vignette de couverture */
+.card-cover{
+  position:relative;overflow:hidden;background:var(--bg2);
+  height:180px;width:100%;
+}
+.card-cover img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.article-card:hover .card-cover img{transform:scale(1.06)}
+.card-cover-empty{
+  width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;color:var(--mu);
+  background:linear-gradient(135deg,rgba(107,255,107,.04) 0%,transparent 100%);
+}
+.card-cover-empty i{font-size:2.2rem;color:var(--g);opacity:.35}
+.card-cover-empty span{font-size:.68rem;font-family:var(--fontm);opacity:.5}
+.card-cover-gradient{
+  position:absolute;bottom:0;left:0;right:0;height:60px;
+  background:linear-gradient(transparent,rgba(6,13,6,.8));
+  pointer-events:none;
+}
+.card-cat-badge{
+  position:absolute;top:10px;left:10px;
+  background:rgba(6,13,6,.82);backdrop-filter:blur(6px);
+  border:1px solid rgba(107,255,107,.25);color:var(--g);
+  font-size:.55rem;font-weight:700;padding:3px 8px;border-radius:20px;
+  text-transform:uppercase;letter-spacing:.07em;font-family:var(--fontm);
+  display:flex;align-items:center;gap:4px;
+}
+.card-read-time{
+  position:absolute;bottom:8px;right:8px;
+  background:rgba(6,13,6,.8);color:var(--mu);
+  font-size:.6rem;padding:2px 6px;border-radius:4px;font-family:var(--fontm);
+}
+
+/* Corps de la card */
+.card-body{padding:16px}
+.card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+.card-tag{
+  background:rgba(107,255,107,.07);border:1px solid rgba(107,255,107,.12);
+  color:var(--g);font-size:.58rem;font-weight:600;padding:2px 7px;
+  border-radius:20px;font-family:var(--fontm);
+}
+.card-title{
+  font-family:var(--fontd);font-size:.92rem;font-weight:700;color:var(--wh);
+  line-height:1.35;margin-bottom:7px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.card-resume{
+  font-size:.76rem;color:var(--tx);line-height:1.6;margin-bottom:12px;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+}
+.card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--border)}
+.card-author{display:flex;align-items:center;gap:6px;min-width:0;flex:1}
+.card-av{
+  width:24px;height:24px;border-radius:50%;background:var(--gg);
+  border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;
+  font-size:.55rem;font-weight:700;color:var(--g);font-family:var(--fontd);flex-shrink:0;
+}
+.card-author-name{font-size:.7rem;font-weight:600;color:var(--wh);font-family:var(--fontd);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-date{font-size:.65rem;color:var(--mu);font-family:var(--fontm)}
+.card-actions{display:flex;gap:5px;flex-shrink:0}
+.card-action{
+  width:28px;height:28px;border-radius:7px;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:.75rem;
+  color:var(--mu);cursor:pointer;transition:all .2s;
+}
+.card-action:hover{border-color:var(--border2);color:var(--g);background:var(--gg)}
+.card-action.saved{border-color:rgba(255,215,0,.4);color:var(--yellow);background:rgba(255,215,0,.1)}
+
+/* ══ LISTE VIEW ══ */
+.list-card{
+  background:var(--sf);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;display:flex;cursor:pointer;
+  transition:all .3s;
+  animation:cardIn .4s ease both;
+  width:100%;box-sizing:border-box;
+}
+.list-card:hover{border-color:rgba(107,255,107,.3);background:var(--sf2);transform:translateX(4px)}
+.list-thumb{width:130px;flex-shrink:0;position:relative;overflow:hidden;background:var(--bg2)}
+.list-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.list-thumb-empty{width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,rgba(107,255,107,.04),transparent)}
+.list-thumb-empty i{font-size:1.8rem;color:var(--g);opacity:.3}
+.list-body{flex:1;padding:14px 16px;display:flex;flex-direction:column;justify-content:space-between;min-width:0;overflow:hidden}
+.list-meta{display:flex;align-items:center;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.list-cat{background:var(--gg);border:1px solid var(--border2);color:var(--g);
+  font-size:.58rem;font-weight:700;padding:2px 7px;border-radius:20px;font-family:var(--fontm);text-transform:uppercase}
+.list-title{font-family:var(--fontd);font-size:.88rem;font-weight:700;color:var(--wh);
+  margin-bottom:5px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.list-resume{font-size:.74rem;color:var(--tx);line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:8px}
+.list-footer{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.list-tags{display:flex;gap:3px}
+.list-tag{font-size:.58rem;color:var(--mu);font-family:var(--fontm)}
+.list-date{font-size:.62rem;color:var(--mu);font-family:var(--fontm);margin-left:auto}
+.list-btns{display:flex;gap:4px;margin-left:6px}
+.list-btn{
+  background:var(--gg);border:1px solid var(--border2);color:var(--g);
+  padding:4px 9px;border-radius:7px;font-size:.68rem;font-weight:600;
+  cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.list-btn:hover{background:rgba(107,255,107,.25)}
+
+/* ══ MODAL ARTICLE ══ */
+.article-modal{
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,.96);backdrop-filter:blur(16px);
+  display:none;overflow-y:auto;overflow-x:hidden;
+}
+.article-modal.open{display:block;animation:modalFade .3s ease}
+@keyframes modalFade{from{opacity:0}to{opacity:1}}
+.modal-inner{
+  max-width:760px;margin:0 auto;
+  padding:20px 16px 60px;
+  box-sizing:border-box;
+}
+.modal-close-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-top:8px}
+.modal-back{
+  display:flex;align-items:center;gap:7px;color:var(--mu);font-size:.8rem;
+  font-weight:600;cursor:pointer;transition:color .2s;font-family:var(--fontd);border:none;background:none;
+}
+.modal-back:hover{color:var(--g)}
+.modal-close-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  color:var(--mu);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .25s;font-size:.9rem;
+}
+.modal-close-btn:hover{background:rgba(255,77,77,.3);color:var(--red)}
+
+/* Couverture article */
+.article-cover{
+  border-radius:14px;overflow:hidden;margin-bottom:28px;
+  position:relative;height:300px;background:var(--sf);width:100%;
+}
+.article-cover img{width:100%;height:100%;object-fit:cover;display:block}
+.article-cover-empty{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,rgba(107,255,107,.06),rgba(6,13,6,1));
+}
+.article-cover-empty i{font-size:4rem;color:var(--g);opacity:.25}
+.article-cover-gradient{
+  position:absolute;bottom:0;left:0;right:0;height:100px;
+  background:linear-gradient(transparent,rgba(6,13,6,.7));
+}
+.article-cat-row{
+  position:absolute;bottom:16px;left:16px;display:flex;gap:6px;flex-wrap:wrap;
+}
+
+/* En-tête de l'article */
+.article-header{margin-bottom:24px}
+.article-cats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.a-cat{
+  background:rgba(107,255,107,.1);border:1px solid rgba(107,255,107,.2);color:var(--g);
+  font-size:.62rem;font-weight:700;padding:3px 9px;border-radius:20px;
+  text-transform:uppercase;letter-spacing:.07em;font-family:var(--fontm);
+}
+.article-title{
+  font-family:var(--fontd);font-size:1.8rem;font-weight:800;color:var(--wh);
+  line-height:1.2;margin-bottom:14px;
+}
+.article-resume{
+  font-size:.92rem;color:var(--mu);line-height:1.7;margin-bottom:16px;
+  font-style:italic;border-left:3px solid var(--g);padding-left:14px;
+}
+.article-meta-row{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:12px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  margin-bottom:24px;
+}
+.am-item{display:flex;align-items:center;gap:5px;font-size:.74rem;color:var(--mu)}
+.am-item i{font-size:.8rem;color:var(--g)}
+.am-item strong{color:var(--wh)}
+.am-author{display:flex;align-items:center;gap:7px}
+.am-avatar{
+  width:28px;height:28px;border-radius:50%;background:var(--gg);
+  border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:700;color:var(--g);font-family:var(--fontd);
+}
+
+/* Corps de l'article */
+.article-content{
+  font-size:.9rem;color:var(--tx);line-height:1.9;
+  white-space:pre-wrap;word-break:break-word;
+}
+.article-tags-row{margin-top:24px;padding-top:16px;border-top:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap}
+.a-tag{
+  background:rgba(107,255,107,.07);border:1px solid rgba(107,255,107,.12);
+  color:var(--g);font-size:.65rem;font-weight:600;padding:3px 9px;
+  border-radius:20px;font-family:var(--fontm);
+}
+
+/* Actions de l'article */
+.article-actions-row{
+  display:flex;gap:10px;margin-top:24px;flex-wrap:wrap;
+}
+.aa-btn{
+  display:flex;align-items:center;gap:7px;padding:10px 18px;border-radius:10px;
+  font-size:.8rem;font-weight:600;cursor:pointer;transition:all .25s;font-family:var(--fontd);
+}
+.aa-btn.share{background:rgba(77,184,255,.1);border:1px solid rgba(77,184,255,.25);color:var(--blue)}
+.aa-btn.share:hover{background:rgba(77,184,255,.2)}
+.aa-btn.save{background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.2);color:var(--yellow)}
+.aa-btn.save:hover{background:rgba(255,215,0,.2)}
+.aa-btn.back{background:var(--gg);border:1px solid var(--border2);color:var(--g)}
+.aa-btn.back:hover{background:rgba(107,255,107,.25)}
+
+/* ══ TOAST ══ */
+.toast-container{position:fixed;bottom:24px;right:14px;z-index:2000;display:flex;flex-direction:column;gap:7px}
+.toast{background:var(--sf2);border:1px solid var(--border2);border-radius:12px;padding:11px 16px;display:flex;align-items:center;gap:9px;max-width:280px;box-shadow:0 12px 36px rgba(0,0,0,.6);animation:toastIn .4s cubic-bezier(.34,1.56,.64,1);transition:all .3s}
+.toast.removing{opacity:0;transform:translateX(20px)}
+@keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+.toast i{font-size:.95rem;flex-shrink:0}
+.toast.success i{color:var(--g)}.toast.info i{color:var(--blue)}.toast.warn i{color:var(--orange)}
+.toast-text h4{font-size:.77rem;font-weight:700;color:var(--wh);margin-bottom:1px;font-family:var(--fontd)}
+.toast-text p{font-size:.7rem;color:var(--tx)}
+
+/* ══ LOADER / EMPTY ══ */
+.loader{display:flex;align-items:center;justify-content:center;padding:60px;color:var(--mu);font-size:.82rem;gap:12px;width:100%;grid-column:1/-1}
+.loader-dots{display:flex;gap:6px}
+.loader-dot{width:8px;height:8px;border-radius:50%;background:var(--g);animation:dotBounce 1.4s ease-in-out infinite}
+.loader-dot:nth-child(2){animation-delay:.2s}.loader-dot:nth-child(3){animation-delay:.4s}
+@keyframes dotBounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-12px);opacity:1}}
+.empty-state{text-align:center;padding:60px 20px;color:var(--mu);grid-column:1/-1}
+.empty-state i{font-size:2.8rem;display:block;margin-bottom:14px;opacity:.4}
+.empty-state h3{font-family:var(--fontd);color:var(--tx);margin-bottom:7px;font-size:.98rem}
+.empty-state p{font-size:.8rem;margin-bottom:18px}
+.empty-btn{display:inline-flex;align-items:center;gap:6px;background:var(--gg);border:1px solid var(--border2);color:var(--g);padding:8px 16px;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer;font-family:var(--fontd);transition:all .2s}
+.empty-btn:hover{background:rgba(107,255,107,.25)}
+
+/* ══ BOTTOM NAV ══ */
+.bottomnav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;height:var(--bottombar-h);
+  background:rgba(6,13,6,.95);backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  z-index:300;align-items:center;justify-content:space-around;padding:0 4px;
+}
+.bn-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;padding:4px;cursor:pointer;
+  color:var(--mu);font-size:.56rem;font-weight:600;font-family:var(--fontd);
+  text-transform:uppercase;letter-spacing:.04em;transition:all .2s;border:none;background:none;
+}
+.bn-item i{font-size:1.1rem;transition:all .2s}
+.bn-item.active{color:var(--g)}
+.bn-item.active i{color:var(--g);transform:translateY(-1px)}
+
+/* ══ SIDEBAR OVERLAY ══ */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199}
+.sidebar-overlay.visible{display:block}
+
+/* ══ RESPONSIVE ══ */
+
+/* Tablette et mobile (≤ 900px) */
+@media(max-width:900px){
+  .sidebar{width:0;transform:translateX(-100%)}
+  .sidebar.open{width:240px;transform:translateX(0);box-shadow:0 0 40px rgba(0,0,0,.8)}
+  .main-content{margin-left:0}
+  .featured-cover{width:180px}
+  .featured-title{font-size:1.1rem}
+  .hero-title{font-size:1.7rem}
+  .bottomnav{display:flex}
+  .main-content{padding-bottom:var(--bottombar-h)}
+  .feed-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+}
+
+/* Petite tablette (≤ 700px) */
+@media(max-width:700px){
+  .featured-article{flex-direction:column}
+  .featured-cover{width:100%;height:200px}
+  .featured-overlay{background:linear-gradient(transparent 60%,rgba(6,13,6,.85))}
+  .featured-body{padding:18px}
+  .featured-title{font-size:1.1rem}
+  .feed-grid{grid-template-columns:1fr;gap:12px}
+  .feed-grid.list-view{grid-template-columns:1fr;gap:10px}
+  .blog-hero{padding:40px 16px 32px}
+  .hero-title{font-size:1.5rem}
+  .feed{padding:12px 12px}
+  .article-title{font-size:1.35rem}
+  .modal-inner{padding:16px 12px 60px}
+  .article-cover{height:200px}
+}
+
+/* ══ MOBILE (≤ 480px) — Correction débordement ══ */
+@media(max-width:480px){
+  /* Bloquer tout overflow horizontal */
+  html,body{overflow-x:hidden;max-width:100vw}
+  .layout,.main-content{overflow-x:hidden;max-width:100vw}
+
+  /* Feed : 1 colonne, sans padding qui déborde */
+  .feed{padding:10px 10px;box-sizing:border-box;width:100%}
+  .feed-section-title{font-size:.72rem}
+
+  /* Grille : 1 seule colonne, pleine largeur */
+  .feed-grid{
+    grid-template-columns:1fr !important;
+    gap:10px;
+    width:100%;
+    box-sizing:border-box;
+  }
+  .feed-grid.list-view{
+    grid-template-columns:1fr !important;
+    gap:8px;
+  }
+
+  /* Article card : pleine largeur, pas de débordement */
+  .article-card{
+    width:100%;
+    max-width:100%;
+    box-sizing:border-box;
+    border-radius:12px;
+    overflow:hidden;
+  }
+  .card-cover{height:190px;width:100%}
+  .card-body{padding:13px}
+  .card-title{font-size:.9rem}
+  .card-resume{font-size:.75rem;-webkit-line-clamp:2}
+
+  /* List card */
+  .list-card{
+    width:100%;
+    max-width:100%;
+    box-sizing:border-box;
+    overflow:hidden;
+  }
+  .list-thumb{width:100px;flex-shrink:0;min-height:90px}
+  .list-body{padding:10px 12px;min-width:0;overflow:hidden}
+  .list-title{font-size:.82rem}
+  .list-resume{-webkit-line-clamp:2;font-size:.72rem}
+  .list-footer{gap:6px}
+  .list-btns{margin-left:0}
+
+  /* Featured : vertical, pleine largeur */
+  .featured-wrap{padding:10px 10px 0;box-sizing:border-box;width:100%}
+  .featured-article{
+    flex-direction:column;min-height:auto;
+    border-radius:12px;width:100%;box-sizing:border-box;
+    overflow:hidden;
+  }
+  .featured-cover{width:100%;height:180px}
+  .featured-body{padding:12px 12px 14px}
+  .featured-title{font-size:.95rem}
+  .featured-resume{
+    font-size:.76rem;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+  .featured-footer{gap:6px}
+  .f-action-btn{padding:6px 10px;font-size:.7rem}
+
+  /* Hero compact */
+  .blog-hero{padding:24px 12px 20px}
+  .hero-title{font-size:1.3rem}
+  .hero-sub{font-size:.78rem}
+  .hero-count{gap:8px}
+  .hc-item{font-size:.68rem}
+
+  /* Tabs */
+  .tabs-bar{padding:0 6px}
+  .tab-btn{padding:10px 8px;font-size:.68rem;gap:3px}
+  .tab-btn i{font-size:.7rem}
+
+  /* Modal */
+  .modal-inner{padding:12px 10px 80px;box-sizing:border-box;width:100%}
+  .article-cover{height:170px;border-radius:10px;margin-bottom:16px}
+  .article-title{font-size:1.15rem}
+  .article-resume{font-size:.82rem}
+  .article-content{font-size:.83rem}
+  .article-actions-row{gap:8px}
+  .aa-btn{padding:8px 12px;font-size:.74rem}
+
+  /* Toast */
+  .toast-container{right:8px;bottom:72px}
+  .toast{max-width:calc(100vw - 16px)}
+}
+
+/* Très petits mobiles (≤ 360px) */
+@media(max-width:360px){
+  .tb-search{display:none}
+  .hero-title{font-size:1.15rem}
+  .card-cover{height:160px}
+  .featured-cover{height:150px}
+  .tab-btn{padding:9px 6px;font-size:.64rem}
+  .list-thumb{width:80px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<header class="topbar">
+  <div class="tb-brand">
+    <svg class="tb-logo" viewBox="0 0 42 42" fill="none">
+      <circle cx="21" cy="21" r="20" stroke="#6bff6b" stroke-width="1.5" fill="rgba(107,255,107,.06)"/>
+      <rect x="17" y="11" width="8" height="20" rx="2.5" fill="#6bff6b"/>
+      <rect x="11" y="17" width="20" height="8" rx="2.5" fill="#6bff6b"/>
+    </svg>
+    <div class="tb-name">Secours <span>Abalo</span></div>
+  </div>
+  <div class="tb-search">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" id="searchInput" placeholder="Rechercher un article…" oninput="filterArticles()">
+  </div>
+  <div class="tb-actions">
+    <button class="tba-btn" onclick="toggleSidebar()" title="Menu"><i class="fa-solid fa-bars"></i></button>
+    <button class="tba-btn" title="Notifications"><i class="fa-solid fa-bell"></i></button>
+  </div>
+</header>
+
+<!-- ══ OVERLAY ══ -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar" id="sidebar">
+  <nav class="sb-nav">
+    <div class="sb-section">Navigation</div>
+    <button class="sb-item" onclick="window.location.href='dashboard_client.html'"><i class="fa-solid fa-gauge-high"></i> Dashboard</button>
+    <button class="sb-item" onclick="window.location.href='gallerie.html'"><i class="fa-solid fa-photo-film"></i> Galerie</button>
+    <button class="sb-item active"><i class="fa-solid fa-newspaper"></i> Blog</button>
+
+    <div class="sb-section">Catégories</div>
+    <button class="sb-item" onclick="filterByCategorie('Premiers Secours');closeSidebar()"><i class="fa-solid fa-heart-pulse"></i> Premiers Secours</button>
+    <button class="sb-item" onclick="filterByCategorie('Formation');closeSidebar()"><i class="fa-solid fa-graduation-cap"></i> Formation</button>
+    <button class="sb-item" onclick="filterByCategorie('Actualités');closeSidebar()"><i class="fa-solid fa-newspaper"></i> Actualités</button>
+    <button class="sb-item" onclick="filterByCategorie('Conseils Santé');closeSidebar()"><i class="fa-solid fa-stethoscope"></i> Conseils Santé</button>
+    <button class="sb-item" onclick="filterByCategorie('Nos Interventions');closeSidebar()"><i class="fa-solid fa-ambulance"></i> Nos Interventions</button>
+    <button class="sb-item" onclick="filterByCategorie('Témoignages');closeSidebar()"><i class="fa-solid fa-comments"></i> Témoignages</button>
+
+    <div class="sb-divider"></div>
+    <div class="sb-section">Trier par</div>
+    <button class="sb-item" onclick="currentSort='recent';filterArticles();closeSidebar()"><i class="fa-solid fa-clock-rotate-left"></i> Plus récents</button>
+    <button class="sb-item" onclick="currentSort='alpha';filterArticles();closeSidebar()"><i class="fa-solid fa-arrow-down-a-z"></i> Alphabétique</button>
+    <button class="sb-item" onclick="currentSort='saved';filterArticles();closeSidebar()"><i class="fa-solid fa-bookmark"></i> Mes sauvegardes</button>
+  </nav>
+  <div class="sb-stats">
+    <div class="sb-stat">
+      <div class="sb-stat-label">Articles publiés</div>
+      <div class="sb-stat-val" id="stat-total">0</div>
+    </div>
+    <div class="sb-stat">
+      <div class="sb-stat-label">Sauvegardés</div>
+      <div class="sb-stat-val" id="stat-saved">0</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ══ CONTENU ══ -->
+<div class="layout">
+  <main class="main-content">
+
+    <!-- HERO -->
+    <div class="blog-hero">
+      <div class="hero-badge"><span></span>Blog &amp; Articles</div>
+      <h1 class="hero-title">Informations &amp; <span>Conseils</span><br>Secours Abalo</h1>
+      <p class="hero-sub">Premiers secours, actualités médicales, témoignages et guides pratiques publiés par notre équipe.</p>
+      <div class="hero-count">
+        <div class="hc-item"><i class="fa-solid fa-newspaper" style="color:var(--g)"></i><strong id="hc-total">0</strong> articles publiés</div>
+        <div class="hc-item"><i class="fa-solid fa-tag" style="color:var(--g)"></i><strong id="hc-cats">0</strong> catégories</div>
+        <div class="hc-item"><i class="fa-solid fa-bookmark" style="color:var(--g)"></i><strong id="hc-saved">0</strong> sauvegardés</div>
+      </div>
+    </div>
+
+    <!-- ARTICLE EN VEDETTE -->
+    <div class="featured-wrap" id="featuredWrap" style="display:none">
+      <div id="featuredArticle"></div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs-bar">
+      <button class="tab-btn active" id="tab-all" onclick="setTab('all')"><i class="fa-solid fa-th-large"></i> Tous <span class="tc" id="count-all">0</span></button>
+      <button class="tab-btn" id="tab-Premiers Secours" onclick="setTab('Premiers Secours')"><i class="fa-solid fa-heart-pulse"></i> Premiers Secours</button>
+      <button class="tab-btn" id="tab-Formation" onclick="setTab('Formation')"><i class="fa-solid fa-graduation-cap"></i> Formation</button>
+      <button class="tab-btn" id="tab-Actualités" onclick="setTab('Actualités')"><i class="fa-solid fa-newspaper"></i> Actualités</button>
+      <button class="tab-btn" id="tab-Conseils Santé" onclick="setTab('Conseils Santé')"><i class="fa-solid fa-stethoscope"></i> Santé</button>
+      <button class="tab-btn" id="tab-saved" onclick="setTab('saved')"><i class="fa-solid fa-bookmark" style="color:var(--yellow)"></i> Sauvés</button>
+      <div class="sort-bar">
+        <select class="sort-select" id="sortSelect" onchange="currentSort=this.value;filterArticles()">
+          <option value="recent">Récents</option>
+          <option value="alpha">A → Z</option>
+          <option value="saved">Sauvés</option>
+        </select>
+        <div class="view-toggle">
+          <button class="view-btn active" id="viewGrid" onclick="setView('grid')" title="Grille"><i class="fa-solid fa-th-large"></i></button>
+          <button class="view-btn" id="viewList" onclick="setView('list')" title="Liste"><i class="fa-solid fa-list"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEED -->
+    <div class="feed">
+      <div class="feed-section-title" id="feedSectionTitle">Tous les articles</div>
+      <div id="feedGrid" class="feed-grid">
+        <div class="loader"><div class="loader-dots"><div class="loader-dot"></div><div class="loader-dot"></div><div class="loader-dot"></div></div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ══ BOTTOM NAV ══ -->
+<nav class="bottomnav">
+  <button class="bn-item" onclick="window.location.href='galerie.html'"><i class="fa-solid fa-photo-film"></i>Galerie</button>
+  <button class="bn-item active"><i class="fa-solid fa-newspaper"></i>Blog</button>
+  <button class="bn-item" onclick="setTab('saved')"><i class="fa-solid fa-bookmark"></i>Sauvés</button>
+  <button class="bn-item" onclick="window.location.href='admin.html'"><i class="fa-solid fa-gauge-high"></i>Admin</button>
+</nav>
+
+<!-- ══ MODAL ARTICLE ══ -->
+<div class="article-modal" id="articleModal">
+  <div class="modal-inner">
+    <div class="modal-close-row">
+      <button class="modal-back" onclick="closeArticle()"><i class="fa-solid fa-arrow-left"></i> Retour au blog</button>
+      <button class="modal-close-btn" onclick="closeArticle()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div id="articleContent"></div>
+  </div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ─── CONFIG ─────────────────────────────────
+const API = "http://localhost:8026";
+
+async function apiFetch(path, options = {}) {
+  // const token = localStorage.getItem("sa_token");
+  const token = localStorage.getItem('sa_token') || sessionStorage.getItem('sa_token');
+  const headers = { ...(options.headers || {}) };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  if (options.body && !(options.body instanceof FormData)) headers["Content-Type"] = "application/json";
+  const res = await fetch(API + path, { ...options, headers });
+  if (!res.ok) throw new Error(`Erreur ${res.status}`);
+  return res.status === 204 ? null : res.json();
+}
+
+// ─── ÉTAT ────────────────────────────────────
+let allArticles = [];
+let filteredArticles = [];
+let currentTab = "all";
+let currentView = "grid";
+let currentSort = "recent";
+let currentCatFilter = null;
+let savedArticles = new Set(JSON.parse(localStorage.getItem("sa_blog_saved") || "[]"));
+const CAT_ICONS = {
+  "Premiers Secours": "fa-heart-pulse",
+  "Formation": "fa-graduation-cap",
+  "Actualités": "fa-newspaper",
+  "Conseils Santé": "fa-stethoscope",
+  "Nos Interventions": "fa-ambulance",
+  "Témoignages": "fa-comments",
+};
+
+// ─── CHARGEMENT ──────────────────────────────
+window.addEventListener("DOMContentLoaded", loadArticles);
+
+async function loadArticles() {
+  showLoader();
+  try {
+    const data = await apiFetch("/media/articles?statut=Publier%20maintenant");
+    allArticles = (data || []).filter(a => a.statut === "Publier maintenant" || !a.statut || a.statut === "Publier maintenant");
+    if (allArticles.length === 0) allArticles = getDemoArticles();
+  } catch (e) {
+    console.warn("API indisponible, démo:", e.message);
+    allArticles = getDemoArticles();
+  }
+  updateCounts();
+  renderFeatured();
+  filterArticles();
+}
+
+function getDemoArticles() {
+  const now = new Date().toISOString();
+  return [
+    { id:"a1", titre:"Comment reconnaître un arrêt cardiaque ?", categorie:"Premiers Secours", auteur:"Dr. Agbodjan", resume:"L'arrêt cardiaque est une urgence absolue. Apprenez les signes qui ne trompent pas et les gestes qui sauvent.", contenu:"Un arrêt cardiaque survient quand le cœur cesse de pomper le sang. Les signes sont : perte de conscience soudaine, absence de respiration normale, absence de pouls.\n\nQue faire ?\n1. Appelez le 8880 immédiatement\n2. Commencez les compressions thoraciques\n3. Utilisez un défibrillateur si disponible\n4. Ne vous arrêtez pas jusqu'à l'arrivée des secours\n\nLes compressions doivent être effectuées au centre de la poitrine, à une profondeur de 5 à 6 cm, à un rythme de 100 à 120 par minute.", tags:"rcp,urgence,premiers-secours", statut:"Publier maintenant", image_url:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop&q=70", created_at:now },
+    { id:"a2", titre:"Nos équipes formées aux standards OMS 2026", categorie:"Formation", auteur:"Julien Abalo", resume:"Secours Abalo poursuit sa montée en compétences avec une nouvelle session de formation internationale validée par l'OMS.", contenu:"En mars 2026, l'intégralité de nos secouristes a participé à une formation intensive de 5 jours certifiée par les standards de l'Organisation Mondiale de la Santé.\n\nAu programme :\n• Réanimation cardio-pulmonaire avancée\n• Gestion des traumatismes\n• Protocoles d'évacuation internationale\n• Communication en situation de crise\n\nCette formation renforce notre capacité à intervenir dans les cas les plus complexes.", tags:"formation,oms,secouristes", statut:"Publier maintenant", image_url:"https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=800&auto=format&fit=crop&q=70", created_at:now },
+    { id:"a3", titre:"10 gestes essentiels en cas d'accident de la route", categorie:"Premiers Secours", auteur:"Ama T.", resume:"Face à un accident, chaque seconde compte. Voici les 10 réflexes que tout conducteur doit connaître.", contenu:"1. Sécurisez la zone : allumez vos feux de détresse\n2. Ne déplacez pas les blessés (sauf risque incendie)\n3. Appelez le 8880\n4. Parlez aux victimes pour les rassurer\n5. Contrôlez les hémorragies par compression\n6. Ne donnez rien à boire ou à manger\n7. Couvrez les blessés pour éviter l'hypothermie\n8. Restez sur place jusqu'à l'arrivée des secours\n9. Éloignez les curieux\n10. Donnez toutes les informations aux secouristes", tags:"accident,route,gestes", statut:"Publier maintenant", image_url:"https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=800&auto=format&fit=crop&q=70", created_at:now },
+    { id:"a4", titre:"Témoignage : Yawa sauvée grâce à son abonnement", categorie:"Témoignages", auteur:"Rédaction", resume:"Yawa Koffi, abonnée Famille+, raconte comment l'équipe Secours Abalo lui a sauvé la vie lors d'une crise d'hypertension.", contenu:"\"C'était un vendredi soir. J'ai ressenti une douleur terrible à la tête et j'ai perdu connaissance. Mon mari a immédiatement appelé le numéro Secours Abalo. En moins de 7 minutes, l'ambulance était là.\"\n\nYawa souffrait d'une crise hypertensive sévère. Grâce à l'intervention rapide et aux informations médicales pré-enregistrées dans son profil (groupe sanguin, antécédents, traitement en cours), les secouristes ont pu agir immédiatement.\n\nAujourd'hui, Yawa va bien et continue de recommander Secours Abalo à toute sa famille.", tags:"témoignage,hypertension,famille", statut:"Publier maintenant", image_url:"https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=800&auto=format&fit=crop&q=70", created_at:now },
+    { id:"a5", titre:"Hypertension : les signes à ne pas ignorer", categorie:"Conseils Santé", auteur:"Dr. Agbodjan", resume:"L'hypertension artérielle est souvent appelée 'le tueur silencieux'. Apprenez à reconnaître ses symptômes.", contenu:"L'hypertension artérielle (HTA) touche des millions de personnes en Afrique subsaharienne, souvent sans symptômes visibles.\n\nSignes d'alerte :\n• Maux de tête persistants, surtout le matin\n• Vision trouble ou double\n• Bourdonnements d'oreilles\n• Saignements de nez fréquents\n• Fatigue inhabituelle\n• Vertiges\n\nQue faire ?\nSi vous présentez ces symptômes, consultez immédiatement un médecin. En cas de crise hypertensive (tension > 180/110), appelez le 8880 sans attendre.", tags:"hypertension,santé,prévention", statut:"Publier maintenant", image_url:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop&q=70", created_at:now },
+    { id:"a6", titre:"Journée Mondiale des Premiers Secours 2026 à Lomé", categorie:"Actualités", auteur:"Direction", resume:"Secours Abalo a participé activement à la Journée Mondiale des Premiers Secours avec des ateliers gratuits à Adidogomé.", contenu:"Le 13 septembre 2026, notre équipe a organisé plusieurs ateliers gratuits ouverts au grand public dans le quartier d'Adidogomé, Lomé.\n\nAu programme :\n• Démonstrations de RCP\n• Formations aux gestes de premiers secours\n• Distribution de guides pratiques\n• Sensibilisation à l'importance d'un abonnement secours\n\nPlus de 300 personnes ont participé à cet événement. Nous remercions tous les bénévoles et partenaires qui ont rendu cette journée possible.", tags:"journée-mondiale,événement,lomé", statut:"Publier maintenant", image_url:"https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&auto=format&fit=crop&q=70", created_at:now },
+  ];
+}
+
+// ─── AFFICHAGE ARTICLE EN VEDETTE ────────────
+function renderFeatured() {
+  const published = allArticles.filter(a => a.statut !== "Brouillon");
+  if (published.length === 0) return;
+  const art = published[0];
+  const wrap = document.getElementById("featuredWrap");
+  const el   = document.getElementById("featuredArticle");
+  wrap.style.display = "block";
+
+  el.innerHTML = `
+    <div class="featured-article" onclick="openArticle('${art.id}')">
+      <div class="featured-label"><i class="fa-solid fa-star"></i> À la une</div>
+      <div class="featured-cover">
+        ${art.image_url
+          ? `<img src="${art.image_url}" alt="${art.titre}" onerror="this.parentElement.innerHTML='<div class=\\'featured-cover-empty\\'><i class=\\'fa-solid fa-newspaper\\'></i></div>'">`
+          : `<div class="featured-cover-empty"><i class="fa-solid fa-newspaper"></i></div>`}
+        <div class="featured-overlay"></div>
+      </div>
+      <div class="featured-body">
+        <div>
+          <div class="featured-meta">
+            <span class="f-badge vedette"><i class="fa-solid fa-star"></i> À la une</span>
+            ${art.categorie ? `<span class="f-badge">${art.categorie}</span>` : ""}
+          </div>
+          <div class="featured-title">${art.titre}</div>
+          ${art.resume ? `<div class="featured-resume">${art.resume}</div>` : ""}
+        </div>
+        <div class="featured-footer">
+          <div class="f-author">
+            <div class="f-avatar">${(art.auteur||"SA").slice(0,2).toUpperCase()}</div>
+            <div class="f-author-info">
+              <div class="f-author-name">${art.auteur || "Secours Abalo"}</div>
+              <div class="f-author-date">${fmtDate(art.created_at)}</div>
+            </div>
+          </div>
+          <div class="f-actions" onclick="event.stopPropagation()">
+            <button class="f-action-btn primary" onclick="openArticle('${art.id}')">
+              <i class="fa-solid fa-book-open"></i> Lire
+            </button>
+            <button class="f-action-btn secondary" onclick="toggleSave('${art.id}',this)">
+              <i class="fa-${savedArticles.has(art.id)?'solid':'regular'} fa-bookmark"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ─── FILTRES ─────────────────────────────────
+function filterArticles() {
+  let result = allArticles.filter(a => a.statut !== "Brouillon");
+
+  if (currentTab === "saved") result = result.filter(a => savedArticles.has(a.id));
+  else if (currentTab !== "all") result = result.filter(a => a.categorie === currentTab);
+  if (currentCatFilter && currentTab === "all") result = result.filter(a => a.categorie === currentCatFilter);
+
+  const q = document.getElementById("searchInput")?.value?.toLowerCase() || "";
+  if (q) result = result.filter(a =>
+    a.titre?.toLowerCase().includes(q) ||
+    a.resume?.toLowerCase().includes(q) ||
+    a.contenu?.toLowerCase().includes(q) ||
+    a.categorie?.toLowerCase().includes(q) ||
+    a.auteur?.toLowerCase().includes(q) ||
+    a.tags?.toLowerCase().includes(q)
+  );
+
+  switch(currentSort) {
+    case "alpha":  result.sort((a,b) => a.titre?.localeCompare(b.titre)); break;
+    case "saved":  result = result.filter(a => savedArticles.has(a.id)); break;
+    default:       result.sort((a,b) => new Date(b.created_at)-new Date(a.created_at));
+  }
+
+  filteredArticles = result;
+  document.getElementById("count-all").textContent = allArticles.filter(a=>a.statut!=="Brouillon").length;
+  const sectionTitles = {
+    "all":"Tous les articles","saved":"Articles sauvegardés",
+    "Premiers Secours":"Premiers Secours","Formation":"Formation",
+    "Actualités":"Actualités","Conseils Santé":"Conseils Santé"
+  };
+  document.getElementById("feedSectionTitle").textContent = currentCatFilter || sectionTitles[currentTab] || currentTab;
+  renderFeed();
+}
+
+function renderFeed() {
+  const grid = document.getElementById("feedGrid");
+  if (filteredArticles.length === 0) {
+    grid.innerHTML = `<div class="empty-state">
+      <i class="fa-solid fa-newspaper"></i>
+      <h3>Aucun article trouvé</h3>
+      <p>${currentTab==="saved"?"Vous n'avez encore rien sauvegardé.":"Essayez un autre filtre ou revenez bientôt."}</p>
+      ${currentTab==="saved"?"":"<button class='empty-btn' onclick='setTab(\"all\")'><i class='fa-solid fa-th-large'></i> Voir tous les articles</button>"}
+    </div>`;
+    return;
+  }
+  const startIdx = currentTab === "saved" ? 0 : 1;
+  const articles = currentTab === "saved" ? filteredArticles : filteredArticles.slice(startIdx);
+  if (currentView === "grid") {
+    grid.className = "feed-grid";
+    grid.innerHTML = articles.map((a,i) => buildGridCard(a,i)).join("");
+  } else {
+    grid.className = "feed-grid list-view";
+    grid.innerHTML = articles.map((a,i) => buildListCard(a,i)).join("");
+  }
+}
+
+function buildGridCard(art, idx) {
+  const isSaved = savedArticles.has(art.id);
+  const icon    = CAT_ICONS[art.categorie] || "fa-newspaper";
+  const tags    = (art.tags||"").split(",").filter(Boolean).slice(0,3);
+  const readTime = estimateReadTime(art.contenu);
+  const delay   = `animation-delay:${idx*0.06}s`;
+
+  return `<div class="article-card" style="${delay}" onclick="openArticle('${art.id}')">
+    <div class="card-cover">
+      ${art.image_url
+        ? `<img src="${art.image_url}" alt="${art.titre}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'card-cover-empty\\'><i class=\\'fa-solid ${icon}\\'></i><span>${art.categorie||''}</span></div>'">`
+        : `<div class="card-cover-empty"><i class="fa-solid ${icon}"></i><span>${art.categorie||'Article'}</span></div>`}
+      <div class="card-cover-gradient"></div>
+      <div class="card-cat-badge"><i class="fa-solid ${icon}"></i> ${art.categorie||'Article'}</div>
+      <div class="card-read-time"><i class="fa-regular fa-clock"></i> ${readTime} min</div>
+    </div>
+    <div class="card-body">
+      ${tags.length ? `<div class="card-tags">${tags.map(t=>`<span class="card-tag">#${t.trim()}</span>`).join("")}</div>` : ""}
+      <div class="card-title">${art.titre}</div>
+      ${art.resume ? `<div class="card-resume">${art.resume}</div>` : ""}
+      <div class="card-footer">
+        <div class="card-author">
+          <div class="card-av">${(art.auteur||"SA").slice(0,2).toUpperCase()}</div>
+          <div>
+            <div class="card-author-name">${art.auteur||"Secours Abalo"}</div>
+            <div class="card-date">${fmtDate(art.created_at)}</div>
+          </div>
+        </div>
+        <div class="card-actions" onclick="event.stopPropagation()">
+          <button class="card-action" onclick="shareArticle('${art.id}')" title="Partager"><i class="fa-solid fa-share"></i></button>
+          <button class="card-action ${isSaved?'saved':''}" onclick="toggleSave('${art.id}',this)" title="Sauvegarder">
+            <i class="fa-${isSaved?'solid':'regular'} fa-bookmark"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildListCard(art, idx) {
+  const isSaved = savedArticles.has(art.id);
+  const icon    = CAT_ICONS[art.categorie] || "fa-newspaper";
+  const tags    = (art.tags||"").split(",").filter(Boolean).slice(0,3);
+  const delay   = `animation-delay:${idx*0.05}s`;
+
+  return `<div class="list-card" style="${delay}">
+    <div class="list-thumb" onclick="openArticle('${art.id}')">
+      ${art.image_url
+        ? `<img src="${art.image_url}" alt="${art.titre}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'list-thumb-empty\\'><i class=\\'fa-solid ${icon}\\'></i></div>'">`
+        : `<div class="list-thumb-empty"><i class="fa-solid ${icon}"></i></div>`}
+    </div>
+    <div class="list-body">
+      <div>
+        <div class="list-meta">
+          <span class="list-cat"><i class="fa-solid ${icon}"></i> ${art.categorie||'Article'}</span>
+          <span style="font-size:.62rem;color:var(--mu);font-family:var(--fontm)"><i class="fa-regular fa-clock"></i> ${estimateReadTime(art.contenu)} min</span>
+        </div>
+        <div class="list-title" onclick="openArticle('${art.id}')">${art.titre}</div>
+        ${art.resume ? `<div class="list-resume">${art.resume}</div>` : ""}
+      </div>
+      <div class="list-footer">
+        <div class="list-tags">${tags.map(t=>`<span class="list-tag">#${t.trim()}</span>`).join(" ")}</div>
+        <div class="list-date">${fmtDate(art.created_at)}</div>
+        <div class="list-btns" onclick="event.stopPropagation()">
+          <button class="list-btn" onclick="openArticle('${art.id}')"><i class="fa-solid fa-book-open"></i> Lire</button>
+          <button class="list-btn" onclick="toggleSave('${art.id}',this)" style="${isSaved?"background:rgba(255,215,0,.1);border-color:rgba(255,215,0,.25);color:var(--yellow)":""}">
+            <i class="fa-${isSaved?'solid':'regular'} fa-bookmark"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ─── OUVERTURE ARTICLE ───────────────────────
+function openArticle(id) {
+  const art = allArticles.find(a => a.id === id);
+  if (!art) return;
+  const isSaved = savedArticles.has(art.id);
+  const icon    = CAT_ICONS[art.categorie] || "fa-newspaper";
+  const tags    = (art.tags||"").split(",").filter(Boolean);
+
+  document.getElementById("articleContent").innerHTML = `
+    <div class="article-cover">
+      ${art.image_url
+        ? `<img src="${art.image_url}" alt="${art.titre}" onerror="this.parentElement.innerHTML='<div class=\\'article-cover-empty\\'><i class=\\'fa-solid fa-newspaper\\'></i></div>'">`
+        : `<div class="article-cover-empty"><i class="fa-solid fa-newspaper"></i></div>`}
+      <div class="article-cover-gradient"></div>
+      ${art.categorie ? `<div class="article-cat-row"><span class="a-cat"><i class="fa-solid ${icon}"></i> ${art.categorie}</span></div>` : ""}
+    </div>
+
+    <div class="article-header">
+      <div class="article-title">${art.titre}</div>
+      ${art.resume ? `<div class="article-resume">${art.resume}</div>` : ""}
+      <div class="article-meta-row">
+        <div class="am-item am-author">
+          <div class="am-avatar">${(art.auteur||"SA").slice(0,2).toUpperCase()}</div>
+          <div>
+            <strong>${art.auteur||"Secours Abalo"}</strong>
+          </div>
+        </div>
+        <div class="am-item"><i class="fa-regular fa-calendar"></i> ${fmtDate(art.created_at)}</div>
+        <div class="am-item"><i class="fa-regular fa-clock"></i> ${estimateReadTime(art.contenu)} min de lecture</div>
+      </div>
+    </div>
+
+    ${art.contenu ? `<div class="article-content">${art.contenu}</div>` : `<div style="color:var(--mu);font-size:.85rem;font-style:italic">Contenu non disponible.</div>`}
+
+    ${tags.length ? `<div class="article-tags-row">${tags.map(t=>`<span class="a-tag">#${t.trim()}</span>`).join("")}</div>` : ""}
+
+    <div class="article-actions-row">
+      <button class="aa-btn back" onclick="closeArticle()"><i class="fa-solid fa-arrow-left"></i> Retour</button>
+      <button class="aa-btn share" onclick="shareArticle('${art.id}')"><i class="fa-solid fa-share-nodes"></i> Partager</button>
+      <button class="aa-btn save" id="modal-save-btn-${art.id}" onclick="toggleSave('${art.id}',this)">
+        <i class="fa-${isSaved?'solid':'regular'} fa-bookmark"></i> ${isSaved?'Sauvegardé':'Sauvegarder'}
+      </button>
+    </div>`;
+
+  document.getElementById("articleModal").classList.add("open");
+  document.getElementById("articleModal").scrollTop = 0;
+  document.body.style.overflow = "hidden";
+}
+
+function closeArticle() {
+  document.getElementById("articleModal").classList.remove("open");
+  document.body.style.overflow = "";
+}
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeArticle(); });
+
+// ─── SAUVEGARDE ──────────────────────────────
+function toggleSave(id, btn) {
+  if (savedArticles.has(id)) {
+    savedArticles.delete(id);
+    showToast("info","Retiré des favoris","Article retiré de vos sauvegardes.");
+  } else {
+    savedArticles.add(id);
+    const art = allArticles.find(a=>a.id===id);
+    showToast("success","Article sauvegardé ⭐",`"${art?.titre?.slice(0,30)||'Article'}" ajouté.`);
+  }
+  localStorage.setItem("sa_blog_saved", JSON.stringify([...savedArticles]));
+  updateCounts();
+  document.querySelectorAll(`[onclick*="toggleSave('${id}"`).forEach(b => {
+    const isS = savedArticles.has(id);
+    const icon = b.querySelector("i");
+    if (icon) icon.className = `fa-${isS?"solid":"regular"} fa-bookmark`;
+    if (b.classList.contains("card-action")) b.classList.toggle("saved", isS);
+    if (b.id?.startsWith("modal-save-btn")) {
+      b.innerHTML = `<i class="fa-${isS?"solid":"regular"} fa-bookmark"></i> ${isS?"Sauvegardé":"Sauvegarder"}`;
+    }
+  });
+  if (currentTab === "saved") filterArticles();
+}
+
+// ─── PARTAGE ─────────────────────────────────
+function shareArticle(id) {
+  const art = allArticles.find(a=>a.id===id);
+  const text = encodeURIComponent(`Découvrez cet article de Secours Abalo : ${art?.titre||""}`);
+  const url  = encodeURIComponent(window.location.href + "?article=" + id);
+  const wUrl = `https://wa.me/?text=${text}%20${url}`;
+  window.open(wUrl, "_blank");
+  showToast("success","Partage","Lien WhatsApp ouvert.");
+}
+
+// ─── TABS / FILTRES ──────────────────────────
+function setTab(tab) {
+  currentTab = tab; currentCatFilter = null;
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  const btn = document.getElementById("tab-"+tab);
+  if (btn) btn.classList.add("active");
+  else document.getElementById("tab-all")?.classList.add("active");
+  filterArticles();
+  document.querySelector(".main-content")?.scrollTo?.(0, 0);
+}
+function filterByCategorie(cat) {
+  currentCatFilter = currentCatFilter === cat ? null : cat;
+  currentTab = "all";
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.getElementById("tab-all")?.classList.add("active");
+  filterArticles();
+}
+function setView(v) {
+  currentView = v;
+  document.querySelectorAll(".view-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("view"+(v==="grid"?"Grid":"List")).classList.add("active");
+  filterArticles();
+}
+
+// ─── SIDEBAR ─────────────────────────────────
+function toggleSidebar(){
+  const sb = document.getElementById("sidebar");
+  const ov = document.getElementById("sidebarOverlay");
+  sb.classList.toggle("open"); ov.classList.toggle("visible", sb.classList.contains("open"));
+}
+function closeSidebar(){
+  document.getElementById("sidebar").classList.remove("open");
+  document.getElementById("sidebarOverlay").classList.remove("visible");
+}
+
+// ─── COMPTEURS ───────────────────────────────
+function updateCounts() {
+  const total = allArticles.filter(a=>a.statut!=="Brouillon").length;
+  const cats  = new Set(allArticles.filter(a=>a.statut!=="Brouillon").map(a=>a.categorie).filter(Boolean)).size;
+  const saved = savedArticles.size;
+  document.getElementById("stat-total").textContent = total;
+  document.getElementById("stat-saved").textContent = saved;
+  document.getElementById("hc-total").textContent   = total;
+  document.getElementById("hc-cats").textContent    = cats;
+  document.getElementById("hc-saved").textContent   = saved;
+  document.getElementById("count-all").textContent  = total;
+}
+
+// ─── UTILS ───────────────────────────────────
+function showLoader() {
+  document.getElementById("feedGrid").innerHTML = `<div class="loader"><div class="loader-dots"><div class="loader-dot"></div><div class="loader-dot"></div><div class="loader-dot"></div></div></div>`;
+}
+function fmtDate(str) {
+  if (!str) return "—";
+  return new Date(str).toLocaleDateString("fr-FR", {day:"2-digit",month:"long",year:"numeric"});
+}
+function estimateReadTime(text) {
+  if (!text) return 1;
+  const words = text.trim().split(/\s+/).length;
+  return Math.max(1, Math.round(words / 200));
+}
+let toastCount = 0;
+function showToast(type, title, msg) {
+  const container = document.getElementById("toastContainer");
+  const icons = {success:"fa-circle-check",error:"fa-circle-xmark",info:"fa-circle-info",warn:"fa-triangle-exclamation"};
+  const div = document.createElement("div");
+  div.className = `toast ${type}`;
+  div.innerHTML = `<i class="fa-solid ${icons[type]||icons.info}"></i><div class="toast-text"><h4>${title}</h4><p>${msg}</p></div>`;
+  container.appendChild(div);
+  setTimeout(()=>{ div.classList.add("removing"); setTimeout(()=>div.remove(),300); }, 3500);
+}
+</script>
+</body>
+</html>

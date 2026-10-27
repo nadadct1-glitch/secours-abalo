@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secours Abalo – Accès Administration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{
+  --g:#6bff6b;--gd:#3a9e3a;--gg:rgba(107,255,107,.15);--gr:rgba(107,255,107,.07);
+  --glow:0 0 30px rgba(107,255,107,.35);--bg:#060d06;--bg2:#0a130a;--sf:#0f1c0f;
+  --sf2:#141f14;--tx:#e0f0e0;--mu:#7a9e7a;--wh:#f5fff5;--red:#ff4d4d;
+  --border:rgba(107,255,107,.1);--border2:rgba(107,255,107,.25);
+  --r8:8px;--r12:12px;--r16:16px;--r50:50px;
+  --font:'DM Sans',sans-serif;--fontd:'Syne',sans-serif;--fontm:'DM Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:var(--bg);color:var(--tx);font-family:var(--font);
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  overflow-x:hidden;position:relative;font-size:14px;
+}
+
+/* ── FOND ANIMÉ ── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 30%, rgba(107,255,107,.07) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 60% at 80% 70%, rgba(107,255,107,.04) 0%, transparent 50%),
+    radial-gradient(ellipse 30% 30% at 50% 0%, rgba(107,255,107,.06) 0%, transparent 50%);
+  animation:bgPulse 8s ease-in-out infinite;
+}
+@keyframes bgPulse{
+  0%,100%{opacity:1}
+  50%{opacity:.6}
+}
+/* Grain */
+body::after{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+  opacity:.3
+}
+
+/* ── GRILLE DÉCO ── */
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(107,255,107,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(107,255,107,.025) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+}
+
+/* ── PARTICULES FLOTTANTES ── */
+.particles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.particle{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle,rgba(107,255,107,.5),transparent);
+  animation:particleFloat linear infinite;
+}
+@keyframes particleFloat{
+  0%{transform:translateY(100vh) scale(0);opacity:0}
+  10%{opacity:1}
+  90%{opacity:.5}
+  100%{transform:translateY(-20px) scale(1);opacity:0}
+}
+
+/* ── WRAPPER ── */
+.auth-wrapper{
+  position:relative;z-index:10;width:100%;max-width:480px;
+  padding:20px;animation:wrapIn .6s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes wrapIn{
+  from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ── LOGO HEADER ── */
+.auth-brand{text-align:center;margin-bottom:32px}
+.auth-logo{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:64px;height:64px;border-radius:18px;
+  background:rgba(107,255,107,.08);border:1.5px solid var(--border2);
+  margin:0 auto 16px;position:relative;
+  animation:logoSpin 6s ease-in-out infinite;
+}
+@keyframes logoSpin{
+  0%,100%{box-shadow:0 0 0 0 rgba(107,255,107,.1),var(--glow)}
+  50%{box-shadow:0 0 0 12px rgba(107,255,107,.05),0 0 60px rgba(107,255,107,.5)}
+}
+.auth-logo svg{width:32px;height:32px}
+.auth-brand h1{
+  font-family:var(--fontd);font-size:1.5rem;font-weight:800;
+  color:var(--wh);letter-spacing:-.02em;line-height:1.1;
+}
+.auth-brand p{
+  font-size:.78rem;color:var(--mu);margin-top:6px;
+  font-family:var(--fontm);letter-spacing:.05em;text-transform:uppercase;
+}
+
+/* ── CARD ── */
+.auth-card{
+  background:rgba(10,19,10,.92);
+  border:1px solid var(--border);
+  border-radius:22px;
+  box-shadow:
+    0 32px 80px rgba(0,0,0,.6),
+    0 0 0 1px rgba(107,255,107,.05),
+    inset 0 1px 0 rgba(107,255,107,.06);
+  overflow:hidden;backdrop-filter:blur(24px);
+}
+
+/* ── TABS ── */
+.auth-tabs{
+  display:flex;border-bottom:1px solid var(--border);
+  background:rgba(6,13,6,.8);
+}
+.auth-tab{
+  flex:1;padding:16px;text-align:center;cursor:pointer;
+  font-family:var(--fontd);font-size:.82rem;font-weight:700;
+  color:var(--mu);letter-spacing:.04em;text-transform:uppercase;
+  transition:all .25s;border:none;background:none;
+  position:relative;
+}
+.auth-tab::after{
+  content:'';position:absolute;bottom:0;left:20%;right:20%;height:2px;
+  background:var(--g);border-radius:2px 2px 0 0;
+  transform:scaleX(0);transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.auth-tab.active{color:var(--g)}
+.auth-tab.active::after{transform:scaleX(1)}
+.auth-tab:hover:not(.active){color:var(--tx)}
+
+/* ── PANELS ── */
+.auth-panels{position:relative;overflow:hidden}
+.auth-panel{
+  padding:28px 28px 30px;
+  animation:panelIn .35s cubic-bezier(.4,0,.2,1);
+}
+.auth-panel.hidden{display:none}
+@keyframes panelIn{
+  from{opacity:0;transform:translateX(12px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+/* ── SECTION TITLE ── */
+.panel-title{
+  font-family:var(--fontd);font-size:1.05rem;font-weight:800;
+  color:var(--wh);margin-bottom:4px;
+}
+.panel-sub{font-size:.78rem;color:var(--mu);margin-bottom:24px;line-height:1.5}
+
+/* ── FORM ── */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{margin-bottom:14px}
+.form-label{
+  display:block;font-size:.74rem;font-weight:600;color:var(--tx);
+  margin-bottom:7px;font-family:var(--fontd);letter-spacing:.02em;
+}
+.form-label .req{color:var(--red);margin-left:2px}
+
+.input-wrap{position:relative}
+.input-icon{
+  position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  color:var(--mu);font-size:.8rem;pointer-events:none;transition:color .2s;
+}
+.form-control{
+  background:rgba(15,28,15,.7);border:1px solid rgba(107,255,107,.12);
+  border-radius:var(--r8);padding:11px 14px 11px 38px;
+  color:var(--tx);font-family:var(--font);font-size:.84rem;
+  outline:none;transition:all .25s;width:100%;
+}
+.form-control.no-icon{padding-left:14px}
+.form-control:focus{
+  border-color:rgba(107,255,107,.5);
+  box-shadow:0 0 0 3px rgba(107,255,107,.07),0 0 20px rgba(107,255,107,.05);
+  background:rgba(15,28,15,.9);
+}
+.form-control:focus ~ .input-icon,
+.input-wrap:focus-within .input-icon{color:var(--g)}
+.form-control::placeholder{color:rgba(122,158,122,.5)}
+.form-control.error{border-color:rgba(255,77,77,.5)}
+.form-control.success{border-color:rgba(107,255,107,.4)}
+
+/* Champ mot de passe avec toggle */
+.password-toggle{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:none;border:none;color:var(--mu);cursor:pointer;
+  font-size:.85rem;padding:4px;transition:color .2s;
+}
+.password-toggle:hover{color:var(--g)}
+
+/* ── STRENGTH BAR ── */
+.strength-bar{margin-top:8px}
+.strength-track{
+  height:3px;background:rgba(107,255,107,.07);border-radius:2px;
+  overflow:hidden;margin-bottom:5px;
+}
+.strength-fill{
+  height:100%;border-radius:2px;width:0;
+  transition:width .4s ease,background .4s ease;
+}
+.strength-label{font-size:.65rem;color:var(--mu);font-family:var(--fontm)}
+
+/* ── SELECT ── */
+select.form-control{
+  cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%237a9e7a' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;
+  padding-right:32px;appearance:none;
+}
+select.form-control option{background:var(--bg2);color:var(--tx)}
+
+/* ── ALERT ── */
+.auth-alert{
+  display:flex;align-items:center;gap:10px;padding:11px 14px;
+  border-radius:var(--r8);font-size:.8rem;margin-bottom:16px;
+  animation:alertIn .3s ease;
+}
+@keyframes alertIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.auth-alert.danger{background:rgba(255,77,77,.08);border:1px solid rgba(255,77,77,.2);color:var(--red)}
+.auth-alert.success{background:rgba(107,255,107,.08);border:1px solid rgba(107,255,107,.2);color:var(--g)}
+.auth-alert.warning{background:rgba(255,153,0,.08);border:1px solid rgba(255,153,0,.2);color:#ff9900}
+.auth-alert.hidden{display:none}
+
+/* ── DIVIDER ── */
+.form-divider{
+  display:flex;align-items:center;gap:12px;margin:18px 0;
+  font-size:.7rem;color:var(--mu);font-family:var(--fontm);letter-spacing:.06em;text-transform:uppercase;
+}
+.form-divider::before,.form-divider::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+
+/* ── SUBMIT BTN ── */
+.btn-submit{
+  width:100%;background:var(--g);color:#000;border:none;
+  padding:13px 22px;border-radius:var(--r8);
+  font-size:.88rem;font-weight:800;cursor:pointer;
+  transition:all .25s;font-family:var(--fontd);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  position:relative;overflow:hidden;letter-spacing:.02em;
+}
+.btn-submit::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.2),transparent);
+  opacity:0;transition:opacity .25s;
+}
+.btn-submit:hover{
+  background:#a0ffa0;transform:translateY(-2px);
+  box-shadow:0 12px 32px rgba(107,255,107,.35);
+}
+.btn-submit:hover::before{opacity:1}
+.btn-submit:active{transform:translateY(0)}
+.btn-submit:disabled{
+  background:rgba(107,255,107,.3);color:rgba(0,0,0,.5);
+  cursor:not-allowed;transform:none;box-shadow:none;
+}
+.btn-submit .spinner{
+  width:16px;height:16px;border:2px solid rgba(0,0,0,.3);
+  border-top-color:#000;border-radius:50%;animation:spin .7s linear infinite;display:none;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn-submit.loading .btn-text{display:none}
+.btn-submit.loading .spinner{display:block}
+
+/* ── CHECKBOXES ── */
+.form-check{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px}
+.custom-check{
+  width:18px;height:18px;border:1.5px solid rgba(107,255,107,.25);
+  border-radius:5px;background:rgba(15,28,15,.7);cursor:pointer;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;margin-top:1px;
+}
+.custom-check.checked{background:var(--g);border-color:var(--g)}
+.custom-check.checked::after{
+  content:'✓';color:#000;font-size:.75rem;font-weight:800;
+}
+.check-label{font-size:.78rem;color:var(--mu);line-height:1.5;cursor:pointer}
+.check-label a{color:var(--g);text-decoration:none}
+.check-label a:hover{text-decoration:underline}
+
+/* ── FORGOT ── */
+.forgot-link{
+  display:block;text-align:right;font-size:.75rem;
+  color:var(--mu);margin-top:-6px;margin-bottom:18px;
+  text-decoration:none;transition:color .2s;font-family:var(--fontm);
+}
+.forgot-link:hover{color:var(--g)}
+
+/* ── FOOTER ── */
+.auth-footer{
+  text-align:center;padding:18px 28px;border-top:1px solid var(--border);
+  font-size:.74rem;color:var(--mu);background:rgba(6,13,6,.5);
+}
+.auth-footer a{color:var(--g);text-decoration:none;font-weight:600}
+.auth-footer a:hover{text-decoration:underline}
+
+/* ── BADGE ADMIN ── */
+.admin-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(107,255,107,.1);border:1px solid var(--border2);
+  color:var(--g);font-size:.62rem;font-weight:700;
+  padding:4px 10px;border-radius:var(--r50);margin:0 auto 14px;
+  text-transform:uppercase;letter-spacing:.08em;font-family:var(--fontm);
+}
+.admin-badge i{font-size:.65rem}
+
+/* ── STEP INDICATOR ── */
+.steps{
+  display:flex;align-items:center;justify-content:center;
+  gap:8px;margin-bottom:24px;
+}
+.step{
+  display:flex;align-items:center;gap:8px;
+}
+.step-dot{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:700;font-family:var(--fontm);
+  border:1.5px solid var(--border);color:var(--mu);background:var(--sf);
+  transition:all .3s;flex-shrink:0;
+}
+.step-dot.active{
+  border-color:var(--g);color:var(--g);
+  background:rgba(107,255,107,.1);
+  box-shadow:0 0 12px rgba(107,255,107,.25);
+}
+.step-dot.done{
+  border-color:var(--gd);background:var(--g);color:#000;
+}
+.step-line{width:40px;height:1px;background:var(--border)}
+.step-label{font-size:.65rem;color:var(--mu);display:none}
+
+/* ── SUCCESS STATE ── */
+.success-state{
+  text-align:center;padding:16px 0;
+  animation:successIn .5s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes successIn{
+  from{opacity:0;transform:scale(.8)}
+  to{opacity:1;transform:scale(1)}
+}
+.success-icon{
+  width:72px;height:72px;border-radius:50%;
+  background:rgba(107,255,107,.12);border:2px solid rgba(107,255,107,.4);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 16px;
+  animation:successPulse 1.5s ease infinite;
+}
+@keyframes successPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(107,255,107,.3)}
+  50%{box-shadow:0 0 0 16px rgba(107,255,107,0)}
+}
+.success-icon i{font-size:2rem;color:var(--g)}
+.success-state h3{font-family:var(--fontd);font-size:1.1rem;color:var(--wh);margin-bottom:8px}
+.success-state p{font-size:.8rem;color:var(--mu);line-height:1.6}
+
+/* ── SECURITY HINT ── */
+.security-row{
+  display:flex;align-items:center;gap:6px;
+  font-size:.68rem;color:var(--mu);margin-top:14px;
+  justify-content:center;font-family:var(--fontm);
+}
+.security-row i{color:var(--g);font-size:.7rem}
+
+/* ── FIELD HINT / ERROR ── */
+.field-msg{
+  font-size:.68rem;margin-top:5px;font-family:var(--fontm);
+  display:none;
+}
+.field-msg.error{color:var(--red);display:block}
+.field-msg.hint{color:var(--mu);display:block}
+
+/* ── PROGRESS MULTI-STEP ── */
+.step-panels .step-panel{display:none}
+.step-panels .step-panel.active{display:block;animation:panelIn .3s ease}
+
+/* ── RESPONSIVE ── */
+@media(max-width:520px){
+  .auth-wrapper{padding:12px}
+  .auth-panel{padding:22px 18px 24px}
+  .form-row{grid-template-columns:1fr}
+  .auth-footer{padding:14px 18px}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+
+<!-- PARTICULES -->
+<div class="particles" id="particles"></div>
+
+<div class="auth-wrapper">
+
+  <!-- BRAND -->
+  <div class="auth-brand">
+    <div class="auth-logo">
+      <svg viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="21" cy="21" r="20" stroke="#6bff6b" stroke-width="1.5" fill="rgba(107,255,107,.06)"/>
+        <rect x="17" y="11" width="8" height="20" rx="2.5" fill="#6bff6b"/>
+        <rect x="11" y="17" width="20" height="8" rx="2.5" fill="#6bff6b"/>
+      </svg>
+    </div>
+    <h1>Secours Abalo</h1>
+    <p>Administration · Accès sécurisé</p>
+  </div>
+
+  <!-- CARD -->
+  <div class="auth-card">
+
+    <!-- TABS -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">
+        <i class="fa-solid fa-right-to-bracket" style="margin-right:6px"></i>Connexion
+      </button>
+      <button class="auth-tab" id="tab-register" onclick="switchTab('register')">
+        <i class="fa-solid fa-user-plus" style="margin-right:6px"></i>Inscription
+      </button>
+    </div>
+
+    <div class="auth-panels">
+
+      <!-- ══ PANEL LOGIN ══ -->
+      <div class="auth-panel" id="panel-login">
+
+        <div style="text-align:center;margin-bottom:20px">
+          <div class="admin-badge"><i class="fa-solid fa-shield-halved"></i> Espace Administrateur</div>
+          <div class="panel-title">Bon retour 👋</div>
+          <div class="panel-sub">Connectez-vous pour accéder au tableau de bord Secours Abalo.</div>
+        </div>
+
+        <!-- Alert -->
+        <div class="auth-alert danger hidden" id="login-alert">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span id="login-alert-msg">Identifiants incorrects.</span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Email administrateur <span class="req">*</span></label>
+          <div class="input-wrap">
+            <i class="fa-solid fa-envelope input-icon"></i>
+            <input class="form-control" id="login-email" type="email"
+                   placeholder="admin@secours-abalo.org" autocomplete="email">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Mot de passe <span class="req">*</span></label>
+          <div class="input-wrap" style="position:relative">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input class="form-control" id="login-password" type="password"
+                   placeholder="••••••••••" autocomplete="current-password"
+                   onkeydown="if(event.key==='Enter')submitLogin()">
+            <button class="password-toggle" onclick="togglePass('login-password',this)" type="button" tabindex="-1">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <a href="#" class="forgot-link" onclick="showForgot();return false">
+          <i class="fa-solid fa-circle-question" style="margin-right:4px"></i>Mot de passe oublié ?
+        </a>
+
+        <div class="form-check">
+          <div class="custom-check" id="remember-check" onclick="toggleCheck('remember-check')"></div>
+          <div class="check-label" onclick="toggleCheck('remember-check')">Rester connecté pendant 7 jours</div>
+        </div>
+
+        <button class="btn-submit" id="login-btn" onclick="submitLogin()">
+          <span class="btn-text"><i class="fa-solid fa-right-to-bracket"></i> Accéder au Dashboard</span>
+          <div class="spinner"></div>
+        </button>
+
+        <div class="security-row">
+          <i class="fa-solid fa-shield-halved"></i>
+          Connexion chiffrée SSL · JWT Token · Session 24h
+        </div>
+
+      </div>
+
+      <!-- ══ PANEL REGISTER ══ -->
+      <div class="auth-panel hidden" id="panel-register">
+
+        <!-- STEPS INDICATOR -->
+        <div class="steps" id="reg-steps">
+          <div class="step">
+            <div class="step-dot active" id="step-dot-1">1</div>
+          </div>
+          <div class="step-line"></div>
+          <div class="step">
+            <div class="step-dot" id="step-dot-2">2</div>
+          </div>
+          <div class="step-line"></div>
+          <div class="step">
+            <div class="step-dot" id="step-dot-3">3</div>
+          </div>
+        </div>
+
+        <!-- Alert -->
+        <div class="auth-alert danger hidden" id="reg-alert">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span id="reg-alert-msg">Une erreur est survenue.</span>
+        </div>
+
+        <div class="step-panels">
+
+          <!-- STEP 1 : Identité -->
+          <div class="step-panel active" id="reg-step-1">
+            <div class="panel-title">Créer un compte admin</div>
+            <div class="panel-sub">Étape 1 / 3 — Informations personnelles</div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Prénom <span class="req">*</span></label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-user input-icon"></i>
+                  <input class="form-control" id="reg-prenom" placeholder="Julien" autocomplete="given-name">
+                </div>
+                <span class="field-msg error hidden" id="err-prenom">Prénom requis</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Nom <span class="req">*</span></label>
+                <div class="input-wrap">
+                  <i class="fa-solid fa-user input-icon"></i>
+                  <input class="form-control" id="reg-nom" placeholder="Abalo" autocomplete="family-name">
+                </div>
+                <span class="field-msg error hidden" id="err-nom">Nom requis</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email professionnel <span class="req">*</span></label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-envelope input-icon"></i>
+                <input class="form-control" id="reg-email" type="email"
+                       placeholder="admin@secours-abalo.org" autocomplete="email"
+                       oninput="checkEmailAvailability()">
+              </div>
+              <span class="field-msg error hidden" id="err-email">Email invalide</span>
+              <span class="field-msg" id="msg-email" style="display:none"></span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Téléphone</label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-phone input-icon"></i>
+                <input class="form-control" id="reg-tel" type="tel"
+                       placeholder="+228 90 12 34 56" autocomplete="tel">
+              </div>
+            </div>
+
+            <button class="btn-submit" onclick="regStep1Next()">
+              <span class="btn-text">Continuer <i class="fa-solid fa-arrow-right" style="margin-left:4px"></i></span>
+            </button>
+          </div>
+
+          <!-- STEP 2 : Accès -->
+          <div class="step-panel" id="reg-step-2">
+            <div class="panel-title">Sécurité du compte</div>
+            <div class="panel-sub">Étape 2 / 3 — Définissez un mot de passe fort et votre rôle.</div>
+
+            <div class="form-group">
+              <label class="form-label">Mot de passe <span class="req">*</span></label>
+              <div class="input-wrap" style="position:relative">
+                <i class="fa-solid fa-lock input-icon"></i>
+                <input class="form-control" id="reg-password" type="password"
+                       placeholder="Min. 8 caractères" autocomplete="new-password"
+                       oninput="updateStrength()">
+                <button class="password-toggle" onclick="togglePass('reg-password',this)" type="button" tabindex="-1">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+              <div class="strength-bar">
+                <div class="strength-track"><div class="strength-fill" id="strength-fill"></div></div>
+                <div class="strength-label" id="strength-label">Entrez un mot de passe</div>
+              </div>
+              <span class="field-msg error hidden" id="err-password">Mot de passe trop court (min. 8 car.)</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Confirmer le mot de passe <span class="req">*</span></label>
+              <div class="input-wrap" style="position:relative">
+                <i class="fa-solid fa-lock input-icon"></i>
+                <input class="form-control" id="reg-confirm" type="password"
+                       placeholder="Répétez le mot de passe" autocomplete="new-password"
+                       oninput="checkConfirm()">
+                <button class="password-toggle" onclick="togglePass('reg-confirm',this)" type="button" tabindex="-1">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+              <span class="field-msg error hidden" id="err-confirm">Les mots de passe ne correspondent pas</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Rôle / Poste</label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-id-badge input-icon"></i>
+                <select class="form-control" id="reg-role" style="padding-left:38px">
+                  <option value="">Sélectionner un rôle…</option>
+                  <option value="super_admin">Super Administrateur</option>
+                  <option value="admin">Administrateur</option>
+                  <option value="gestionnaire_rh">Gestionnaire RH</option>
+                  <option value="comptable">Comptable</option>
+                  <option value="moderateur">Modérateur Contenu</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Code d'accès administrateur <span class="req">*</span></label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-key input-icon"></i>
+                <input class="form-control" id="reg-access-code" type="password"
+                       placeholder="Code fourni par le super-admin">
+              </div>
+              <span class="field-msg hint">Ce code vous a été transmis par votre responsable.</span>
+              <span class="field-msg error hidden" id="err-code">Code d'accès invalide</span>
+            </div>
+
+            <div style="display:flex;gap:10px">
+              <button class="btn-submit" style="flex:0 0 auto;width:auto;padding:13px 18px;background:var(--sf2);border:1px solid var(--border);color:var(--mu);font-size:.8rem" onclick="regGoStep(1)">
+                <i class="fa-solid fa-arrow-left"></i>
+              </button>
+              <button class="btn-submit" onclick="regStep2Next()" style="flex:1">
+                <span class="btn-text">Continuer <i class="fa-solid fa-arrow-right" style="margin-left:4px"></i></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 3 : Confirmation -->
+          <div class="step-panel" id="reg-step-3">
+            <div class="panel-title">Confirmation</div>
+            <div class="panel-sub">Étape 3 / 3 — Vérifiez vos informations avant de créer le compte.</div>
+
+            <div id="reg-summary" style="background:var(--sf2);border:1px solid var(--border);border-radius:var(--r12);padding:16px;margin-bottom:20px;font-size:.8rem;line-height:1.9"></div>
+
+            <div class="form-check" style="margin-bottom:18px">
+              <div class="custom-check" id="terms-check" onclick="toggleCheck('terms-check')"></div>
+              <div class="check-label" onclick="toggleCheck('terms-check')">
+                J'accepte les <a href="#" onclick="return false">Conditions d'utilisation</a> et la
+                <a href="#" onclick="return false">Politique de confidentialité</a> de Secours Abalo.
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px">
+              <button class="btn-submit" style="flex:0 0 auto;width:auto;padding:13px 18px;background:var(--sf2);border:1px solid var(--border);color:var(--mu);font-size:.8rem" onclick="regGoStep(2)">
+                <i class="fa-solid fa-arrow-left"></i>
+              </button>
+              <button class="btn-submit" id="reg-btn" onclick="submitRegister()" style="flex:1">
+                <span class="btn-text"><i class="fa-solid fa-user-shield"></i> Créer le compte</span>
+                <div class="spinner"></div>
+              </button>
+            </div>
+
+            <div class="security-row">
+              <i class="fa-solid fa-shield-halved"></i>
+              Données chiffrées · Accès restreint · RGPD
+            </div>
+          </div>
+
+          <!-- STEP SUCCESS -->
+          <div class="step-panel" id="reg-success">
+            <div class="success-state">
+              <div class="success-icon"><i class="fa-solid fa-user-check"></i></div>
+              <h3>Compte créé avec succès !</h3>
+              <p style="margin-bottom:20px">
+                Votre compte administrateur <strong id="success-email" style="color:var(--g)"></strong>
+                a bien été créé.<br>Vous allez être redirigé vers la connexion…
+              </p>
+              <button class="btn-submit" style="max-width:260px;margin:0 auto" onclick="switchTab('login')">
+                <i class="fa-solid fa-right-to-bracket"></i> Se connecter maintenant
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /panels -->
+
+    <!-- FOOTER -->
+    <div class="auth-footer">
+      <i class="fa-solid fa-shield-halved" style="color:var(--g);margin-right:4px"></i>
+      Numéro d'urgence : <a href="tel:8880"><strong>8880</strong></a> ·
+      <a href="mailto:contact@secours-abalo.org">contact@secours-abalo.org</a>
+    </div>
+
+  </div><!-- /card -->
+
+</div><!-- /wrapper -->
+
+<!-- MODAL : Mot de passe oublié -->
+<div id="modal-forgot" style="position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.85);
+  display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(12px)">
+  <div style="background:var(--sf);border:1px solid var(--border2);border-radius:18px;
+    width:min(420px,95vw);padding:28px;position:relative;animation:wrapIn .35s cubic-bezier(.34,1.56,.64,1)">
+    <h3 style="font-family:var(--fontd);color:var(--wh);margin-bottom:6px;font-size:1rem">
+      <i class="fa-solid fa-key" style="color:var(--g);margin-right:8px"></i>Récupération du mot de passe
+    </h3>
+    <p style="font-size:.78rem;color:var(--mu);margin-bottom:20px;line-height:1.6">
+      Entrez votre email. Si un compte administrateur existe, vous recevrez un lien de réinitialisation.
+    </p>
+    <div class="auth-alert success hidden" id="forgot-success">
+      <i class="fa-solid fa-check"></i>
+      <span>Email envoyé ! Vérifiez votre boîte mail.</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email administrateur</label>
+      <div class="input-wrap">
+        <i class="fa-solid fa-envelope input-icon"></i>
+        <input class="form-control" id="forgot-email" type="email" placeholder="admin@secours-abalo.org">
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button style="flex:1;background:var(--sf2);border:1px solid var(--border);color:var(--mu);
+        padding:11px;border-radius:var(--r8);cursor:pointer;font-family:var(--fontd);font-size:.82rem;
+        transition:all .2s" onmouseover="this.style.color='var(--wh)'" onmouseout="this.style.color='var(--mu)'"
+        onclick="hideForgot()">Annuler</button>
+      <button class="btn-submit" style="flex:2" onclick="submitForgot()">
+        <i class="fa-solid fa-paper-plane"></i> Envoyer le lien
+      </button>
+    </div>
+    <button onclick="hideForgot()" style="position:absolute;top:14px;right:14px;
+      background:rgba(255,255,255,.06);border:none;color:var(--mu);width:28px;height:28px;
+      border-radius:50%;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+</div>
+
+<script>
+const API = "http://localhost:8026";
+
+/* ── PARTICULES ── */
+(function createParticles(){
+  const container = document.getElementById('particles');
+  for(let i=0;i<12;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random()*6+3;
+    p.style.cssText = `
+      width:${size}px;height:${size}px;
+      left:${Math.random()*100}%;
+      bottom:${-size}px;
+      animation-duration:${Math.random()*20+15}s;
+      animation-delay:${Math.random()*10}s;
+      opacity:${Math.random()*.5+.1};
+    `;
+    container.appendChild(p);
+  }
+})();
+
+/* ── TABS ── */
+let currentTab = 'login';
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('panel-login').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('panel-register').classList.toggle('hidden', tab !== 'register');
+  // Reset alerts
+  document.querySelectorAll('.auth-alert').forEach(a => a.classList.add('hidden'));
+}
+
+/* ── TOGGLE PASSWORD ── */
+function togglePass(inputId, btn) {
+  const input = document.getElementById(inputId);
+  const icon = btn.querySelector('i');
+  if(input.type === 'password'){
+    input.type = 'text';
+    icon.className = 'fa-solid fa-eye-slash';
+  } else {
+    input.type = 'password';
+    icon.className = 'fa-solid fa-eye';
+  }
+}
+
+/* ── CHECKBOX ── */
+function toggleCheck(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('checked');
+}
+
+/* ── STRENGTH BAR ── */
+function updateStrength() {
+  const pwd = document.getElementById('reg-password').value;
+  const fill = document.getElementById('strength-fill');
+  const label = document.getElementById('strength-label');
+  let score = 0;
+  if(pwd.length >= 8) score++;
+  if(pwd.length >= 12) score++;
+  if(/[A-Z]/.test(pwd)) score++;
+  if(/[0-9]/.test(pwd)) score++;
+  if(/[^A-Za-z0-9]/.test(pwd)) score++;
+  const levels = [
+    {w:'0%', c:'transparent', t:'Entrez un mot de passe'},
+    {w:'25%', c:'#ff4d4d', t:'⚠ Très faible'},
+    {w:'45%', c:'#ff9900', t:'Faible'},
+    {w:'65%', c:'#ffd700', t:'Moyen'},
+    {w:'85%', c:'#6bff6b', t:'Fort'},
+    {w:'100%', c:'#3a9e3a', t:'✓ Très fort'},
+  ];
+  const lvl = levels[Math.min(score, 5)];
+  fill.style.width = lvl.w;
+  fill.style.background = lvl.c;
+  label.textContent = lvl.t;
+  label.style.color = score < 2 ? 'var(--red)' : score < 4 ? '#ff9900' : 'var(--g)';
+}
+
+function checkConfirm() {
+  const pwd = document.getElementById('reg-password').value;
+  const conf = document.getElementById('reg-confirm').value;
+  const err = document.getElementById('err-confirm');
+  const input = document.getElementById('reg-confirm');
+  if(conf && conf !== pwd){
+    err.classList.remove('hidden');
+    input.classList.add('error');
+  } else {
+    err.classList.add('hidden');
+    input.classList.remove('error');
+    if(conf && conf === pwd) input.classList.add('success');
+  }
+}
+
+/* ── EMAIL CHECK ── */
+let emailCheckTimer = null;
+async function checkEmailAvailability() {
+  clearTimeout(emailCheckTimer);
+  const email = document.getElementById('reg-email').value;
+  const msgEl = document.getElementById('msg-email');
+  msgEl.style.display = 'none';
+  if(!email || !/\S+@\S+\.\S+/.test(email)) return;
+  emailCheckTimer = setTimeout(async () => {
+    try {
+      const res = await fetch(`${API}/auth/check-email?email=${encodeURIComponent(email)}`);
+      const data = await res.json();
+      msgEl.style.display = 'block';
+      if(data.available){
+        msgEl.className = 'field-msg';
+        msgEl.style.color = 'var(--g)';
+        msgEl.textContent = '✓ Email disponible';
+        document.getElementById('reg-email').classList.add('success');
+        document.getElementById('reg-email').classList.remove('error');
+      } else {
+        msgEl.className = 'field-msg error';
+        msgEl.style.color = 'var(--red)';
+        msgEl.textContent = '✗ Email déjà utilisé';
+        document.getElementById('reg-email').classList.add('error');
+        document.getElementById('reg-email').classList.remove('success');
+      }
+    } catch(e) { /* silencieux si API pas connectée */ }
+  }, 600);
+}
+
+/* ── MULTI-STEP REGISTER ── */
+let currentStep = 1;
+function regGoStep(step) {
+  document.getElementById(`reg-step-${currentStep}`)?.classList.remove('active');
+  document.getElementById(`reg-step-${step}`)?.classList.add('active');
+  // Dots
+  for(let i=1;i<=3;i++){
+    const dot = document.getElementById(`step-dot-${i}`);
+    dot.className = 'step-dot';
+    if(i < step) dot.classList.add('done'), dot.innerHTML = '<i class="fa-solid fa-check" style="font-size:.6rem"></i>';
+    else if(i === step) dot.classList.add('active'), dot.textContent = i;
+    else dot.textContent = i;
+  }
+  currentStep = step;
+}
+
+function regStep1Next() {
+  const prenom = document.getElementById('reg-prenom').value.trim();
+  const nom = document.getElementById('reg-nom').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  let ok = true;
+
+  function fieldErr(id, errId, show) {
+    document.getElementById(id).classList.toggle('error', show);
+    const e = document.getElementById(errId);
+    if(e) { if(show) e.classList.remove('hidden'); else e.classList.add('hidden'); }
+  }
+
+  if(!prenom){ fieldErr('reg-prenom','err-prenom',true); ok=false; } else fieldErr('reg-prenom','err-prenom',false);
+  if(!nom){ fieldErr('reg-nom','err-nom',true); ok=false; } else fieldErr('reg-nom','err-nom',false);
+  if(!email||!/\S+@\S+\.\S+/.test(email)){ fieldErr('reg-email','err-email',true); ok=false; } else fieldErr('reg-email','err-email',false);
+
+  if(ok) regGoStep(2);
+}
+
+function regStep2Next() {
+  const pwd = document.getElementById('reg-password').value;
+  const conf = document.getElementById('reg-confirm').value;
+  const code = document.getElementById('reg-access-code').value.trim();
+  let ok = true;
+
+  if(pwd.length < 8){
+    document.getElementById('err-password').classList.remove('hidden');
+    document.getElementById('reg-password').classList.add('error');
+    ok = false;
+  } else {
+    document.getElementById('err-password').classList.add('hidden');
+    document.getElementById('reg-password').classList.remove('error');
+  }
+
+  if(pwd !== conf){
+    document.getElementById('err-confirm').classList.remove('hidden');
+    document.getElementById('reg-confirm').classList.add('error');
+    ok = false;
+  } else {
+    document.getElementById('err-confirm').classList.add('hidden');
+  }
+
+  if(!code){
+    document.getElementById('err-code').classList.remove('hidden');
+    document.getElementById('reg-access-code').classList.add('error');
+    ok = false;
+  } else {
+    document.getElementById('err-code').classList.add('hidden');
+    document.getElementById('reg-access-code').classList.remove('error');
+  }
+
+  if(ok) {
+    // Construire le résumé
+    const prenom = document.getElementById('reg-prenom').value;
+    const nom = document.getElementById('reg-nom').value;
+    const email = document.getElementById('reg-email').value;
+    const tel = document.getElementById('reg-tel').value || 'Non renseigné';
+    const role = document.getElementById('reg-role');
+    const roleText = role.options[role.selectedIndex].text;
+    document.getElementById('reg-summary').innerHTML = `
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><span style="color:var(--mu);font-size:.68rem;font-family:var(--fontm);text-transform:uppercase">Prénom</span><br><strong style="color:var(--wh)">${prenom}</strong></div>
+        <div><span style="color:var(--mu);font-size:.68rem;font-family:var(--fontm);text-transform:uppercase">Nom</span><br><strong style="color:var(--wh)">${nom}</strong></div>
+        <div><span style="color:var(--mu);font-size:.68rem;font-family:var(--fontm);text-transform:uppercase">Email</span><br><strong style="color:var(--g)">${email}</strong></div>
+        <div><span style="color:var(--mu);font-size:.68rem;font-family:var(--fontm);text-transform:uppercase">Téléphone</span><br><strong style="color:var(--wh)">${tel}</strong></div>
+        <div style="grid-column:span 2"><span style="color:var(--mu);font-size:.68rem;font-family:var(--fontm);text-transform:uppercase">Rôle</span><br><strong style="color:var(--wh)">${roleText || 'Non défini'}</strong></div>
+      </div>
+    `;
+    regGoStep(3);
+  }
+}
+
+/* ── SUBMIT LOGIN ── */
+async function submitLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const alertEl = document.getElementById('login-alert');
+  const btn = document.getElementById('login-btn');
+
+  if(!email || !password){
+    showAlert('login-alert','login-alert-msg','Email et mot de passe requis.','danger');
+    return;
+  }
+
+  btn.classList.add('loading'); btn.disabled = true;
+  alertEl.classList.add('hidden');
+
+  try {
+    const body = new URLSearchParams({ username: email, password });
+    const res = await fetch(`${API}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body,
+    });
+
+    if(!res.ok){
+      const err = await res.json().catch(()=>({}));
+      const msg = err.detail || 'Identifiants incorrects.';
+      showAlert('login-alert','login-alert-msg', msg, 'danger');
+      btn.classList.remove('loading'); btn.disabled = false;
+      // Shake
+      document.querySelector('.auth-card').style.animation = 'none';
+      setTimeout(()=> shakeCard(), 50);
+      return;
+    }
+
+    const data = await res.json();
+
+    if(!data.is_admin){
+      showAlert('login-alert','login-alert-msg',
+        'Accès refusé — ce compte ne dispose pas de privilèges administrateur.','danger');
+      btn.classList.remove('loading'); btn.disabled = false;
+      return;
+    }
+
+    // Sauvegarder la session
+    const remember = document.getElementById('remember-check').classList.contains('checked');
+    if(remember){
+      localStorage.setItem('sa_token', data.access_token);
+      localStorage.setItem('sa_user', JSON.stringify(data));
+    } else {
+      sessionStorage.setItem('sa_token', data.access_token);
+      sessionStorage.setItem('sa_user', JSON.stringify(data));
+    }
+
+    showAlert('login-alert','login-alert-msg',
+      `Bienvenue ${data.prenom} ! Redirection en cours…`, 'success');
+    document.getElementById('login-alert').classList.remove('hidden');
+    document.getElementById('login-alert').className = 'auth-alert success';
+
+    setTimeout(()=> { window.location.href = 'dashboard.html'; }, 1200);
+
+  } catch(e) {
+    showAlert('login-alert','login-alert-msg',
+      'Impossible de joindre le serveur. Vérifiez votre connexion.','danger');
+    btn.classList.remove('loading'); btn.disabled = false;
+  }
+}
+
+/* ── SUBMIT REGISTER ── */
+async function submitRegister() {
+  const termsChecked = document.getElementById('terms-check').classList.contains('checked');
+  if(!termsChecked){
+    showAlert('reg-alert','reg-alert-msg','Vous devez accepter les conditions d\'utilisation.','danger');
+    return;
+  }
+
+  const btn = document.getElementById('reg-btn');
+  btn.classList.add('loading'); btn.disabled = true;
+  document.getElementById('reg-alert').classList.add('hidden');
+
+  const payload = {
+    prenom: document.getElementById('reg-prenom').value.trim(),
+    nom: document.getElementById('reg-nom').value.trim(),
+    email: document.getElementById('reg-email').value.trim(),
+    telephone: document.getElementById('reg-tel').value.trim() || null,
+    password: document.getElementById('reg-password').value,
+    access_code: document.getElementById('reg-access-code').value.trim(),
+    role: document.getElementById('reg-role').value || null,
+  };
+
+  try {
+    const res = await fetch(`${API}/auth/register-admin`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if(!res.ok){
+      const err = await res.json().catch(()=>({}));
+      showAlert('reg-alert','reg-alert-msg', err.detail || 'Erreur lors de la création du compte.', 'danger');
+      btn.classList.remove('loading'); btn.disabled = false;
+      return;
+    }
+
+    // Succès
+    document.getElementById('reg-step-3').classList.remove('active');
+    document.getElementById('reg-success').classList.add('active');
+    document.getElementById('reg-steps').style.display = 'none';
+    document.getElementById('success-email').textContent = payload.email;
+    // Marquer tous les dots comme done
+    for(let i=1;i<=3;i++){
+      const dot = document.getElementById(`step-dot-${i}`);
+      dot.className = 'step-dot done';
+      dot.innerHTML = '<i class="fa-solid fa-check" style="font-size:.6rem"></i>';
+    }
+
+  } catch(e) {
+    showAlert('reg-alert','reg-alert-msg',
+      'Impossible de joindre le serveur. Vérifiez votre connexion.','danger');
+    btn.classList.remove('loading'); btn.disabled = false;
+  }
+}
+
+/* ── MOT DE PASSE OUBLIÉ ── */
+function showForgot(){
+  document.getElementById('modal-forgot').style.display = 'flex';
+}
+function hideForgot(){
+  document.getElementById('modal-forgot').style.display = 'none';
+  document.getElementById('forgot-success').classList.add('hidden');
+  document.getElementById('forgot-email').value = '';
+}
+async function submitForgot(){
+  const email = document.getElementById('forgot-email').value.trim();
+  if(!email) return;
+  try {
+    await fetch(`${API}/auth/forgot-password`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ email }),
+    });
+  } catch(e){ /* silencieux */ }
+  document.getElementById('forgot-success').classList.remove('hidden');
+  document.getElementById('forgot-email').disabled = true;
+}
+
+/* ── HELPERS ── */
+function showAlert(alertId, msgId, msg, type){
+  const el = document.getElementById(alertId);
+  const msgEl = document.getElementById(msgId);
+  el.className = `auth-alert ${type}`;
+  msgEl.textContent = msg;
+}
+
+function shakeCard(){
+  const card = document.querySelector('.auth-card');
+  card.style.transition = 'transform .08s ease';
+  let i = 0;
+  const dir = [5,-5,4,-4,3,-3,2,-2,1,-1,0];
+  const interval = setInterval(()=>{
+    if(i >= dir.length){ clearInterval(interval); card.style.transform = ''; return; }
+    card.style.transform = `translateX(${dir[i++]}px)`;
+  },50);
+}
+
+/* ── SESSION CHECK : redirige si déjà connecté ── */
+(function checkSession(){
+  const token = localStorage.getItem('sa_token') || sessionStorage.getItem('sa_token');
+  const user = JSON.parse(localStorage.getItem('sa_user') || sessionStorage.getItem('sa_user') || 'null');
+  if(token && user && user.is_admin){
+    // Déjà connecté → aller au dashboard
+    window.location.href = 'dashboard.html';
+  }
+})();
+
+/* ── FERMER MODAL EN CLIQUANT L'OVERLAY ── */
+document.getElementById('modal-forgot').addEventListener('click', function(e){
+  if(e.target === this) hideForgot();
+});
+</script>
+</body>
+</html>

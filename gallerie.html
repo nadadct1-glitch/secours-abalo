@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Secours Abalo · Galerie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{
+  --g:#6bff6b;--gd:#3a9e3a;--gg:rgba(107,255,107,.15);
+  --bg:#060d06;--bg2:#0a130a;--sf:#0f1c0f;--sf2:#141f14;
+  --tx:#d8ecd8;--mu:#6a8e6a;--wh:#f0fff0;
+  --red:#ff4d4d;--orange:#ff9900;--yellow:#ffd700;--blue:#4db8ff;--pink:#ff6eb4;
+  --border:rgba(107,255,107,.1);--border2:rgba(107,255,107,.22);
+  --font:'DM Sans',sans-serif;--fontd:'Syne',sans-serif;--fontm:'DM Mono',monospace;
+  --topbar-h:56px;--bottombar-h:60px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--font);overflow-x:hidden;font-size:14px}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:var(--font);border:none;background:none}
+
+/* ── BRUIT DE FOND ── */
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");opacity:.2}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  position:fixed;top:0;left:0;right:0;height:var(--topbar-h);z-index:300;
+  background:rgba(6,13,6,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 14px;gap:10px;
+}
+.tb-brand{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.tb-logo{width:28px;height:28px;flex-shrink:0}
+.tb-name{font-family:var(--fontd);font-weight:800;font-size:.85rem;color:var(--wh)}
+.tb-name span{color:var(--g)}
+.tb-search{
+  flex:1;max-width:360px;background:rgba(255,255,255,.06);
+  border:1px solid var(--border);border-radius:50px;
+  padding:7px 14px;display:flex;align-items:center;gap:8px;
+  transition:border-color .2s;min-width:0;
+}
+.tb-search:focus-within{border-color:var(--border2)}
+.tb-search i{color:var(--mu);font-size:.82rem;flex-shrink:0}
+.tb-search input{background:none;border:none;outline:none;color:var(--tx);font-family:var(--font);font-size:.82rem;flex:1;min-width:0}
+.tb-search input::placeholder{color:var(--mu)}
+.tb-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.tba-btn{
+  width:34px;height:34px;border-radius:50%;background:var(--gg);
+  border:1px solid var(--border);color:var(--g);font-size:.82rem;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;position:relative;
+}
+.tba-btn:hover{background:rgba(107,255,107,.25);border-color:var(--border2)}
+.tba-notif{position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:var(--red);border:2px solid var(--bg)}
+
+/* ══ LAYOUT ══ */
+.layout{display:flex;min-height:100vh;padding-top:var(--topbar-h)}
+
+/* ══ SIDEBAR GAUCHE (desktop) ══ */
+.sidebar{
+  position:fixed;top:var(--topbar-h);left:0;width:220px;height:calc(100vh - var(--topbar-h));
+  background:rgba(6,13,6,.95);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;z-index:200;overflow-y:auto;
+  transition:transform .3s;
+}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(107,255,107,.15);border-radius:2px}
+.sb-nav{padding:14px 0;flex:1}
+.sb-item{
+  display:flex;align-items:center;gap:10px;padding:10px 20px;
+  color:var(--mu);font-size:.84rem;font-weight:500;
+  border:none;background:none;width:100%;text-align:left;cursor:pointer;
+  transition:all .2s;position:relative;border-radius:0;
+}
+.sb-item i{width:18px;text-align:center;font-size:.9rem;flex-shrink:0}
+.sb-item:hover{color:var(--tx);background:rgba(107,255,107,.05)}
+.sb-item.active{color:var(--g);background:rgba(107,255,107,.08)}
+.sb-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60%;background:var(--g);border-radius:0 2px 2px 0}
+.sb-section{font-size:.6rem;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.12em;padding:14px 20px 6px;font-family:var(--fontm)}
+.sb-divider{height:1px;background:var(--border);margin:8px 16px}
+.sb-stats{padding:14px 20px;border-top:1px solid var(--border)}
+.sb-stat{margin-bottom:10px}
+.sb-stat-label{font-size:.62rem;color:var(--mu);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;font-family:var(--fontm)}
+.sb-stat-val{font-family:var(--fontm);font-size:1.2rem;font-weight:500;color:var(--g)}
+
+/* ══ CONTENU PRINCIPAL ══ */
+.main-content{margin-left:220px;flex:1;min-height:calc(100vh - var(--topbar-h))}
+
+/* ══ TABS (filtres) ══ */
+.tabs-bar{
+  position:sticky;top:var(--topbar-h);z-index:100;
+  background:rgba(6,13,6,.92);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:0;overflow-x:auto;padding:0 12px;
+  scrollbar-width:none;
+}
+.tabs-bar::-webkit-scrollbar{display:none}
+.tab-btn{
+  padding:12px 14px;font-size:.8rem;font-weight:600;color:var(--mu);
+  white-space:nowrap;border:none;background:none;cursor:pointer;
+  border-bottom:2.5px solid transparent;transition:all .2s;font-family:var(--fontd);
+  display:flex;align-items:center;gap:5px;
+}
+.tab-btn:hover{color:var(--tx)}
+.tab-btn.active{color:var(--g);border-bottom-color:var(--g)}
+.tab-btn .tc{font-size:.6rem;background:rgba(107,255,107,.15);color:var(--g);padding:2px 6px;border-radius:10px;font-family:var(--fontm)}
+.sort-bar{margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.sort-select{background:var(--sf2);border:1px solid var(--border);color:var(--tx);padding:5px 8px;border-radius:8px;font-family:var(--font);font-size:.76rem;outline:none;cursor:pointer}
+.sort-select option{background:var(--bg2)}
+.view-toggle{display:flex;gap:3px}
+.view-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);color:var(--mu);display:flex;align-items:center;justify-content:center;font-size:.8rem;cursor:pointer;transition:all .2s;background:none}
+.view-btn.active,.view-btn:hover{background:var(--gg);border-color:var(--border2);color:var(--g)}
+
+/* ══ FEED ══ */
+.feed{padding:8px}
+
+/* ── Mobile first : 1 colonne plein écran TikTok ── */
+.feed-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
+.feed-grid.list-view{grid-template-columns:1fr;gap:10px}
+
+/* ══ MEDIA CARD — style TikTok ══ */
+.media-card{
+  background:var(--sf);border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;cursor:pointer;position:relative;
+  transition:all .3s;
+  animation:cardIn .4s ease both;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.media-card:hover{border-color:rgba(107,255,107,.3);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.5)}
+.media-card:active{transform:scale(.97)}
+
+/* Miniature TikTok : ratio 9:16, image plein cadre */
+.card-thumb{position:relative;overflow:hidden;background:var(--bg2);aspect-ratio:9/16}
+.card-thumb img,.card-thumb video{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
+.media-card:hover .card-thumb img{transform:scale(1.05)}
+
+/* Gradient overlay sur la miniature */
+.card-overlay-gradient{
+  position:absolute;inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.0) 0%,
+    rgba(0,0,0,.0) 40%,
+    rgba(0,0,0,.6) 75%,
+    rgba(0,0,0,.88) 100%
+  );
+  pointer-events:none;
+}
+
+/* Infos en bas de la miniature (style TikTok) */
+.card-thumb-info{
+  position:absolute;bottom:0;left:0;right:0;padding:10px 10px 10px;
+  z-index:2;
+}
+.card-thumb-author{display:flex;align-items:center;gap:5px;margin-bottom:5px}
+.card-thumb-avatar{width:22px;height:22px;border-radius:50%;background:var(--gg);border:1.5px solid rgba(107,255,107,.5);display:flex;align-items:center;justify-content:center;font-size:.55rem;color:var(--g);font-weight:700;font-family:var(--fontd);flex-shrink:0}
+.card-thumb-author-name{font-size:.68rem;font-weight:700;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.8)}
+.card-thumb-title{font-family:var(--fontd);font-size:.75rem;font-weight:700;color:#fff;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-shadow:0 1px 6px rgba(0,0,0,.9);margin-bottom:5px}
+.card-thumb-tags{display:flex;flex-wrap:wrap;gap:3px}
+.card-thumb-tag{font-size:.55rem;color:rgba(107,255,107,.9);font-weight:600;font-family:var(--fontm)}
+
+/* Actions latérales TikTok (droite de la card) */
+.card-side-actions{
+  position:absolute;right:6px;bottom:80px;
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  z-index:3;
+}
+.card-action-btn{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  background:none;border:none;cursor:pointer;color:#fff;
+}
+.card-action-icon{
+  width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;
+  background:rgba(0,0,0,.5);backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.18);
+  transition:all .2s;
+}
+.card-action-btn:active .card-action-icon{transform:scale(.87)}
+.card-action-count{font-size:.55rem;color:rgba(255,255,255,.85);font-family:var(--fontm);font-weight:600;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+.card-action-btn.liked .card-action-icon{background:rgba(255,77,77,.5);border-color:rgba(255,77,77,.5);color:#ff8080}
+.card-action-btn.liked .card-action-count{color:#ff8080}
+.card-action-btn.saved .card-action-icon{background:rgba(255,215,0,.4);border-color:rgba(255,215,0,.5);color:var(--yellow)}
+
+/* Badges sur le thumb */
+.card-type-badge{
+  position:absolute;top:8px;left:8px;z-index:3;
+  background:rgba(0,0,0,.65);backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.12);
+  color:#fff;font-size:.55rem;font-weight:700;
+  padding:3px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:.06em;
+  display:flex;align-items:center;gap:3px;
+}
+.card-type-badge.video{background:rgba(255,77,77,.7);border-color:rgba(255,77,77,.4)}
+.card-duration{
+  position:absolute;bottom:8px;left:8px;z-index:3;
+  background:rgba(0,0,0,.75);color:#fff;font-size:.6rem;padding:2px 6px;border-radius:4px;font-family:var(--fontm);
+}
+.card-trending{
+  position:absolute;top:8px;right:8px;z-index:3;
+  background:var(--red);color:#fff;font-size:.52rem;font-weight:700;
+  padding:3px 7px;border-radius:20px;
+  display:flex;align-items:center;gap:3px;animation:trendPulse 1.5s ease-in-out infinite;
+}
+@keyframes trendPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,77,77,.4)}50%{box-shadow:0 0 0 5px rgba(255,77,77,0)}}
+
+/* Play icon centré pour vidéos */
+.card-play-center{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(255,255,255,.18);backdrop-filter:blur(6px);
+  border:2px solid rgba(255,255,255,.35);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:1.1rem;
+  pointer-events:none;z-index:2;
+}
+
+/* ══ LISTE VIEW ══ */
+.list-card{
+  background:var(--sf);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;display:flex;gap:0;cursor:pointer;
+  transition:all .3s;
+  animation:cardIn .4s ease both;
+}
+.list-card:hover{border-color:rgba(107,255,107,.3);background:var(--sf2)}
+.list-card:active{transform:scale(.99)}
+.list-thumb{width:110px;flex-shrink:0;position:relative;overflow:hidden;aspect-ratio:9/16}
+.list-thumb img,.list-thumb video{width:100%;height:100%;object-fit:cover;display:block}
+.list-body{flex:1;padding:12px 14px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+.card-title{font-family:var(--fontd);font-size:.88rem;font-weight:700;color:var(--wh);margin-bottom:5px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-desc{font-size:.73rem;color:var(--tx);line-height:1.5;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-tags{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:8px}
+.card-tag{background:rgba(107,255,107,.08);border:1px solid rgba(107,255,107,.15);color:var(--g);font-size:.58rem;font-weight:600;padding:2px 6px;border-radius:20px;font-family:var(--fontm)}
+.list-stats{display:flex;gap:10px;flex-wrap:wrap}
+.list-stat{display:flex;align-items:center;gap:4px;font-size:.7rem;color:var(--mu)}
+.list-stat i{font-size:.78rem}
+.list-date{font-size:.62rem;color:var(--mu);font-family:var(--fontm);margin-top:4px}
+.list-btns{display:flex;gap:5px;margin-top:8px}
+.list-btn{background:var(--gg);border:1px solid var(--border2);color:var(--g);padding:5px 10px;border-radius:8px;font-size:.7rem;font-weight:600;cursor:pointer;transition:all .2s}
+.list-btn:hover{background:rgba(107,255,107,.25)}
+
+/* ══ MODAL PLEIN ÉCRAN ══ */
+.media-modal{
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(0,0,0,.97);
+  display:none;
+}
+.media-modal.open{display:flex;animation:modalIn .3s ease}
+@keyframes modalIn{from{opacity:0}to{opacity:1}}
+.modal-layout{display:flex;width:100%;height:100%}
+
+/* Zone media */
+.modal-media{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  position:relative;background:#000;overflow:hidden;
+}
+.modal-media img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.modal-media video{width:100%;height:100%;object-fit:contain}
+.modal-close{
+  position:absolute;top:16px;left:16px;z-index:10;
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,.1);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:1rem;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .25s;
+}
+.modal-close:hover{background:rgba(255,77,77,.4)}
+.modal-nav{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,.1);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:.95rem;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .25s;z-index:10;
+}
+.modal-nav:hover{background:rgba(255,255,255,.25)}
+.modal-nav.prev{left:14px}
+.modal-nav.next{right:14px}
+.modal-video-controls{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(transparent,rgba(0,0,0,.8));
+  padding:30px 16px 14px;
+  display:none;
+}
+.modal-video-controls.visible{display:block}
+.mvc-progress{width:100%;height:4px;background:rgba(255,255,255,.2);border-radius:2px;cursor:pointer;margin-bottom:10px}
+.mvc-progress-fill{height:100%;background:var(--g);border-radius:2px;pointer-events:none}
+.mvc-row{display:flex;align-items:center;gap:10px}
+.mvc-btn{color:#fff;font-size:1rem;cursor:pointer;background:none;border:none;padding:4px}
+.mvc-time{font-size:.7rem;color:rgba(255,255,255,.7);font-family:var(--fontm)}
+.mvc-vol{display:flex;align-items:center;gap:5px;margin-left:auto}
+.mvc-vol-slider{width:60px;accent-color:var(--g)}
+.mvc-fullscreen{margin-left:6px}
+
+/* Sidebar droite du modal */
+.modal-sidebar{
+  width:340px;flex-shrink:0;background:rgba(10,18,10,.97);
+  border-left:1px solid rgba(107,255,107,.1);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.ms-header{padding:16px 18px;border-bottom:1px solid rgba(107,255,107,.1)}
+.ms-author{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ms-avatar{width:40px;height:40px;border-radius:50%;background:var(--gg);border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.95rem;color:var(--g);font-weight:700;font-family:var(--fontd);overflow:hidden;flex-shrink:0}
+.ms-avatar img{width:100%;height:100%;object-fit:cover}
+.ms-author-info h4{font-family:var(--fontd);font-size:.88rem;font-weight:700;color:var(--wh);margin-bottom:2px}
+.ms-author-info p{font-size:.7rem;color:var(--mu)}
+.ms-follow-btn{margin-left:auto;background:var(--g);color:#000;border:none;border-radius:8px;padding:6px 12px;font-size:.73rem;font-weight:700;cursor:pointer;font-family:var(--fontd);transition:all .2s;flex-shrink:0}
+.ms-follow-btn:hover{background:#a0ffa0}
+.ms-follow-btn.following{background:var(--gg);color:var(--g);border:1px solid var(--border2)}
+.ms-title{font-family:var(--fontd);font-size:.95rem;font-weight:800;color:var(--wh);margin-bottom:5px;line-height:1.3}
+.ms-desc{font-size:.8rem;color:var(--tx);line-height:1.6;margin-bottom:8px}
+.ms-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+.ms-tag{background:rgba(107,255,107,.08);border:1px solid rgba(107,255,107,.2);color:var(--g);font-size:.62rem;font-weight:600;padding:3px 8px;border-radius:20px}
+.ms-stats{display:flex;gap:0;padding:10px 18px;border-bottom:1px solid rgba(107,255,107,.08)}
+.ms-stat-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px;border-radius:10px;cursor:pointer;transition:all .2s;border:none;background:none}
+.ms-stat-btn:hover{background:rgba(255,255,255,.05)}
+.ms-stat-icon{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:all .25s}
+.ms-stat-icon.like{background:rgba(255,77,77,.12);color:var(--red)}
+.ms-stat-btn.liked .ms-stat-icon.like{background:var(--red);color:#fff}
+.ms-stat-icon.comment{background:rgba(107,255,107,.12);color:var(--g)}
+.ms-stat-icon.share{background:rgba(77,184,255,.12);color:var(--blue)}
+.ms-stat-icon.save{background:rgba(255,215,0,.12);color:var(--yellow)}
+.ms-stat-btn.saved .ms-stat-icon.save{background:var(--yellow);color:#000}
+.ms-stat-icon.download{background:rgba(181,110,255,.12);color:#b56eff}
+.ms-stat-count{font-size:.7rem;font-weight:700;color:var(--tx)}
+.ms-comments{flex:1;overflow-y:auto;padding:12px 18px}
+.ms-comments::-webkit-scrollbar{width:3px}
+.ms-comments::-webkit-scrollbar-thumb{background:rgba(107,255,107,.15);border-radius:2px}
+.ms-comments-title{font-size:.7rem;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;font-family:var(--fontm)}
+.comment{display:flex;gap:9px;margin-bottom:12px;animation:commentIn .3s ease}
+@keyframes commentIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+.comment-avatar{width:28px;height:28px;border-radius:50%;background:var(--gg);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:.65rem;color:var(--g);font-weight:700;flex-shrink:0;font-family:var(--fontd)}
+.comment-author{font-size:.73rem;font-weight:700;color:var(--wh);margin-bottom:2px;font-family:var(--fontd)}
+.comment-text{font-size:.76rem;color:var(--tx);line-height:1.5}
+.comment-time{font-size:.6rem;color:var(--mu);margin-top:2px;font-family:var(--fontm)}
+.comment-actions{display:flex;gap:7px;margin-top:3px}
+.comment-like-btn{font-size:.62rem;color:var(--mu);cursor:pointer;display:flex;align-items:center;gap:3px;transition:color .2s;background:none;border:none;padding:0}
+.comment-like-btn:hover,.comment-like-btn.liked{color:var(--red)}
+.comment-reply-btn{font-size:.62rem;color:var(--mu);cursor:pointer;transition:color .2s;background:none;border:none;padding:0}
+.comment-reply-btn:hover{color:var(--g)}
+.no-comments{text-align:center;padding:28px;color:var(--mu);font-size:.8rem}
+.no-comments i{font-size:2rem;display:block;margin-bottom:10px;opacity:.5}
+.ms-input-area{padding:12px 18px;border-top:1px solid rgba(107,255,107,.08)}
+.ms-input-row{display:flex;gap:7px;align-items:flex-end}
+.ms-input{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(107,255,107,.1);border-radius:10px;padding:8px 11px;color:var(--tx);font-family:var(--font);font-size:.8rem;outline:none;resize:none;max-height:80px;min-height:34px;transition:border-color .2s}
+.ms-input:focus{border-color:rgba(107,255,107,.35)}
+.ms-input::placeholder{color:var(--mu)}
+.ms-send-btn{width:34px;height:34px;border-radius:10px;background:var(--g);color:#000;display:flex;align-items:center;justify-content:center;font-size:.82rem;cursor:pointer;transition:all .2s;border:none;flex-shrink:0}
+.ms-send-btn:hover{background:#a0ffa0}
+.ms-emoji-row{display:flex;gap:4px;margin-top:5px}
+.ms-emoji{font-size:.88rem;cursor:pointer;padding:3px;border-radius:4px;transition:transform .2s;background:none;border:none}
+.ms-emoji:hover{transform:scale(1.3)}
+
+/* ══ MODAL SHARE ══ */
+.share-modal{
+  position:fixed;inset:0;z-index:1200;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);
+  display:none;align-items:flex-end;justify-content:center;
+}
+.share-modal.open{display:flex;animation:slideUp .3s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.share-box{
+  background:var(--sf);border:1px solid var(--border);border-radius:20px 20px 0 0;
+  width:min(480px,100%);padding:22px;
+}
+.share-title{font-family:var(--fontd);font-size:.92rem;font-weight:700;color:var(--wh);margin-bottom:16px;text-align:center}
+.share-link-row{display:flex;gap:7px;margin-bottom:16px}
+.share-link-input{flex:1;background:var(--sf2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--tx);font-family:var(--fontm);font-size:.72rem;outline:none}
+.share-copy-btn{background:var(--g);color:#000;border:none;border-radius:8px;padding:8px 14px;font-weight:700;font-size:.76rem;cursor:pointer;font-family:var(--fontd);transition:all .2s;white-space:nowrap}
+.share-copy-btn:hover{background:#a0ffa0}
+.share-platforms{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.share-platform{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;transition:all .2s}
+.share-platform:hover{transform:translateY(-3px)}
+.sp-icon{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:#fff}
+.sp-label{font-size:.6rem;color:var(--mu);font-weight:500}
+.share-close-btn{display:block;width:100%;margin-top:16px;padding:10px;border-radius:10px;border:1px solid var(--border);background:none;color:var(--mu);cursor:pointer;font-family:var(--fontd);font-weight:600;transition:all .2s}
+.share-close-btn:hover{border-color:var(--border2);color:var(--tx)}
+
+/* ══ TOAST ══ */
+.toast-container{position:fixed;bottom:24px;right:14px;z-index:2000;display:flex;flex-direction:column;gap:7px}
+.toast{background:var(--sf2);border:1px solid var(--border2);border-radius:12px;padding:11px 16px;display:flex;align-items:center;gap:9px;max-width:280px;box-shadow:0 12px 36px rgba(0,0,0,.6);animation:toastIn .4s cubic-bezier(.34,1.56,.64,1);transition:all .3s}
+.toast.removing{opacity:0;transform:translateX(20px)}
+@keyframes toastIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+.toast i{font-size:.95rem;flex-shrink:0}
+.toast.success i{color:var(--g)}.toast.error i{color:var(--red)}.toast.info i{color:var(--blue)}.toast.warn i{color:var(--orange)}
+.toast-text h4{font-size:.77rem;font-weight:700;color:var(--wh);margin-bottom:1px;font-family:var(--fontd)}
+.toast-text p{font-size:.7rem;color:var(--tx)}
+
+/* ══ LOADER ══ */
+.loader{display:flex;align-items:center;justify-content:center;padding:60px;color:var(--mu);font-size:.82rem;gap:12px;width:100%}
+.loader-dots{display:flex;gap:6px}
+.loader-dot{width:8px;height:8px;border-radius:50%;background:var(--g);animation:dotBounce 1.4s ease-in-out infinite}
+.loader-dot:nth-child(2){animation-delay:.2s}.loader-dot:nth-child(3){animation-delay:.4s}
+@keyframes dotBounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-12px);opacity:1}}
+
+/* ══ EMPTY STATE ══ */
+.empty-state{text-align:center;padding:60px 20px;color:var(--mu)}
+.empty-state i{font-size:2.8rem;display:block;margin-bottom:14px;opacity:.4}
+.empty-state h3{font-family:var(--fontd);color:var(--tx);margin-bottom:7px;font-size:.98rem}
+.empty-state p{font-size:.8rem;margin-bottom:18px}
+
+/* ══ BARRE DE NAV MOBILE (bottom) ══ */
+.bottomnav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;height:var(--bottombar-h);
+  background:rgba(6,13,6,.95);backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  z-index:300;align-items:center;justify-content:space-around;padding:0 4px;
+}
+.bn-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;padding:4px;cursor:pointer;
+  color:var(--mu);font-size:.56rem;font-weight:600;font-family:var(--fontd);
+  text-transform:uppercase;letter-spacing:.04em;
+  transition:all .2s;border:none;background:none;
+}
+.bn-item i{font-size:1.1rem;transition:all .2s}
+.bn-item.active{color:var(--g)}
+.bn-item.active i{color:var(--g);transform:translateY(-1px)}
+.bn-item:active{transform:scale(.92)}
+
+/* ══ RESPONSIVE ══ */
+
+/* Tablette portrait → 2 colonnes */
+@media(min-width:601px) and (max-width:900px){
+  .feed-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .feed{padding:12px}
+}
+
+/* Desktop → multi colonnes */
+@media(min-width:901px){
+  .feed-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+  .feed-grid.list-view{grid-template-columns:1fr}
+  .feed{padding:16px}
+}
+
+/* Masquer sidebar sur mobile/tablette */
+@media(max-width:900px){
+  .sidebar{width:0;transform:translateX(-100%)}
+  .sidebar.open{width:240px;transform:translateX(0);box-shadow:0 0 40px rgba(0,0,0,.8)}
+  .main-content{margin-left:0}
+  .modal-sidebar{width:300px}
+  .bottomnav{display:flex}
+  .main-content{padding-bottom:var(--bottombar-h)}
+  .toast-container{bottom:calc(var(--bottombar-h) + 10px)}
+}
+
+/* Mobile ≤600px */
+@media(max-width:600px){
+  :root{--topbar-h:50px;--bottombar-h:58px}
+  .topbar{padding:0 10px;gap:8px}
+  .tb-name{font-size:.78rem}
+  .tb-search{padding:6px 12px}
+  .tba-btn{width:32px;height:32px;font-size:.78rem}
+  .tabs-bar{padding:0 6px}
+  .tab-btn{padding:10px 10px;font-size:.75rem;gap:4px}
+  .sort-bar{gap:4px}
+  .sort-select{font-size:.7rem;padding:4px 6px}
+  .view-toggle{gap:2px}
+  .view-btn{width:28px;height:28px;font-size:.75rem}
+
+  /* ──  1 colonne plein écran sur téléphone ── */
+  .feed{padding:0;background:var(--bg)}
+  .feed-grid{
+    grid-template-columns:1fr;
+    gap:0;
+  }
+  /* Chaque card occupe toute la largeur de l'écran, hauteur TikTok */
+  .media-card{
+    border-radius:0;
+    border-left:none;
+    border-right:none;
+    border-top:none;
+    border-bottom:1px solid rgba(107,255,107,.07);
+  }
+  .card-thumb{
+    aspect-ratio:9/16;
+    height:calc(100svh - var(--topbar-h) - var(--bottombar-h) - 42px);
+    max-height:88svh;
+  }
+
+  /* Modal mobile */
+  .modal-layout{flex-direction:column}
+  .modal-media{flex:0 0 52vh;min-height:52vh}
+  .modal-sidebar{width:100%;flex:1;border-left:none;border-top:1px solid rgba(107,255,107,.1)}
+  .modal-close{top:12px;left:12px;width:36px;height:36px;font-size:.9rem}
+  .modal-nav{width:36px;height:36px;font-size:.85rem}
+  .modal-nav.prev{left:10px}
+  .modal-nav.next{right:10px}
+  .ms-header{padding:12px 14px}
+  .ms-stats{padding:8px 14px}
+  .ms-comments{padding:10px 14px}
+  .ms-input-area{padding:10px 14px}
+
+  .share-box{border-radius:16px 16px 0 0;padding:18px 16px}
+  .share-platforms{gap:8px}
+  .sp-icon{width:42px;height:42px;border-radius:12px}
+
+  .card-side-actions{gap:10px}
+  .card-action-icon{width:32px;height:32px;font-size:.85rem}
+}
+
+/* Très petits écrans */
+@media(max-width:380px){
+  .tb-search{display:none}
+}
+
+/* ── Overlay sidebar mobile ── */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199}
+.sidebar-overlay.visible{display:block}
+</style>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<header class="topbar">
+  <div class="tb-brand">
+    <svg class="tb-logo" viewBox="0 0 42 42" fill="none">
+      <circle cx="21" cy="21" r="20" stroke="#6bff6b" stroke-width="1.5" fill="rgba(107,255,107,.06)"/>
+      <rect x="17" y="11" width="8" height="20" rx="2.5" fill="#6bff6b"/>
+      <rect x="11" y="17" width="20" height="8" rx="2.5" fill="#6bff6b"/>
+    </svg>
+    <div class="tb-name">Secours <span>Abalo</span></div>
+  </div>
+  <div class="tb-search" id="tbSearch">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" id="searchInput" placeholder="Rechercher…" oninput="filterContent()">
+  </div>
+  <div class="tb-actions">
+    <button class="tba-btn" id="searchToggle" onclick="toggleSearchMobile()" title="Rechercher" style="display:none"><i class="fa-solid fa-magnifying-glass"></i></button>
+    <button class="tba-btn" onclick="toggleSidebar()" title="Menu"><i class="fa-solid fa-bars"></i></button>
+    <button class="tba-btn" title="Notifications"><i class="fa-solid fa-bell"></i><div class="tba-notif"></div></button>
+  </div>
+</header>
+
+<!-- ══ OVERLAY SIDEBAR ══ -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar" id="sidebar">
+  <nav class="sb-nav">
+    <div class="sb-section">Navigation</div>
+    <button class="sb-item" onclick="window.location.href='admin.html'"><i class="fa-solid fa-gauge-high"></i> Dashboard</button>
+    <button class="sb-item active" onclick="setTab('all');closeSidebar()"><i class="fa-solid fa-th-large"></i> Galerie</button>
+    <button class="sb-item" onclick="setTab('images');closeSidebar()"><i class="fa-solid fa-images"></i> Images</button>
+    <button class="sb-item" onclick="setTab('videos');closeSidebar()"><i class="fa-solid fa-video"></i> Vidéos</button>
+
+    <div class="sb-section">Découvrir</div>
+    <button class="sb-item" onclick="filterByTag('Ambulances');closeSidebar()"><i class="fa-solid fa-ambulance"></i> Ambulances</button>
+    <button class="sb-item" onclick="filterByTag('Équipe');closeSidebar()"><i class="fa-solid fa-user-doctor"></i> Équipe</button>
+    <button class="sb-item" onclick="filterByTag('Interventions');closeSidebar()"><i class="fa-solid fa-heart-pulse"></i> Interventions</button>
+    <button class="sb-item" onclick="filterByTag('Formation');closeSidebar()"><i class="fa-solid fa-graduation-cap"></i> Formation</button>
+    <button class="sb-item" onclick="filterByTag('Équipements');closeSidebar()"><i class="fa-solid fa-stethoscope"></i> Équipements</button>
+
+    <div class="sb-divider"></div>
+    <div class="sb-section">Tendances</div>
+    <button class="sb-item" onclick="sortBy('likes');closeSidebar()"><i class="fa-solid fa-fire" style="color:var(--red)"></i> Plus likés</button>
+    <button class="sb-item" onclick="sortBy('views');closeSidebar()"><i class="fa-solid fa-eye" style="color:var(--blue)"></i> Plus vus</button>
+    <button class="sb-item" onclick="sortBy('comments');closeSidebar()"><i class="fa-solid fa-comment" style="color:var(--g)"></i> Plus commentés</button>
+    <button class="sb-item" onclick="sortBy('recent');closeSidebar()"><i class="fa-solid fa-clock-rotate-left"></i> Plus récents</button>
+  </nav>
+  <div class="sb-stats">
+    <div class="sb-stat">
+      <div class="sb-stat-label">Total médias</div>
+      <div class="sb-stat-val" id="stat-total">0</div>
+    </div>
+    <div class="sb-stat">
+      <div class="sb-stat-label">Total likes</div>
+      <div class="sb-stat-val" id="stat-likes">0</div>
+    </div>
+    <div class="sb-stat">
+      <div class="sb-stat-label">Total vues</div>
+      <div class="sb-stat-val" id="stat-views">0</div>
+    </div>
+  </div>
+</aside>
+
+<!-- ══ CONTENU ══ -->
+<div class="layout">
+  <main class="main-content" id="mainContent">
+    <!-- TABS -->
+    <div class="tabs-bar">
+      <button class="tab-btn active" id="tab-all" onclick="setTab('all')"><i class="fa-solid fa-th-large"></i> Tout <span class="tc" id="count-all">0</span></button>
+      <button class="tab-btn" id="tab-images" onclick="setTab('images')"><i class="fa-regular fa-image"></i> Photos <span class="tc" id="count-images">0</span></button>
+      <button class="tab-btn" id="tab-videos" onclick="setTab('videos')"><i class="fa-solid fa-video"></i> Vidéos <span class="tc" id="count-videos">0</span></button>
+      <button class="tab-btn" id="tab-trending" onclick="setTab('trending')"><i class="fa-solid fa-fire" style="color:var(--red)"></i> Trending</button>
+      <button class="tab-btn" id="tab-saved" onclick="setTab('saved')"><i class="fa-solid fa-bookmark" style="color:var(--yellow)"></i> Sauvés</button>
+      <div class="sort-bar">
+        <select class="sort-select" id="sortSelect" onchange="sortBySelect()">
+          <option value="recent">Récents</option>
+          <option value="likes">Likés</option>
+          <option value="views">Vus</option>
+          <option value="comments">Commentés</option>
+        </select>
+        <div class="view-toggle">
+          <button class="view-btn active" id="viewGrid" onclick="setView('grid')" title="Grille"><i class="fa-solid fa-th-large"></i></button>
+          <button class="view-btn" id="viewList" onclick="setView('list')" title="Liste"><i class="fa-solid fa-list"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEED -->
+    <div class="feed">
+      <div id="feedGrid" class="feed-grid">
+        <div class="loader"><div class="loader-dots"><div class="loader-dot"></div><div class="loader-dot"></div><div class="loader-dot"></div></div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ══ BOTTOM NAV MOBILE ══ -->
+<nav class="bottomnav" id="bottomnav">
+  <button class="bn-item active" id="bn-all" onclick="setTabMobile('all','bn-all')">
+    <i class="fa-solid fa-th-large"></i>Tout
+  </button>
+  <button class="bn-item" id="bn-images" onclick="setTabMobile('images','bn-images')">
+    <i class="fa-regular fa-image"></i>Photos
+  </button>
+  <button class="bn-item" id="bn-videos" onclick="setTabMobile('videos','bn-videos')">
+    <i class="fa-solid fa-video"></i>Vidéos
+  </button>
+  <button class="bn-item" id="bn-trending" onclick="setTabMobile('trending','bn-trending')">
+    <i class="fa-solid fa-fire"></i>Trending
+  </button>
+  <button class="bn-item" id="bn-saved" onclick="setTabMobile('saved','bn-saved')">
+    <i class="fa-solid fa-bookmark"></i>Sauvés
+  </button>
+</nav>
+
+<!-- ══ MODAL MEDIA PLEIN ÉCRAN ══ -->
+<div class="media-modal" id="mediaModal">
+  <div class="modal-layout">
+    <div class="modal-media" id="modalMedia">
+      <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+      <button class="modal-nav prev" id="modalPrev" onclick="navigateModal(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+      <button class="modal-nav next" id="modalNext" onclick="navigateModal(1)"><i class="fa-solid fa-chevron-right"></i></button>
+      <img id="modalImg" src="" alt="" style="display:none">
+      <video id="modalVideo" controls style="display:none" autoplay></video>
+      <div class="modal-video-controls" id="videoControls">
+        <div class="mvc-progress" id="mvcProgress" onclick="seekVideo(event)">
+          <div class="mvc-progress-fill" id="mvcFill"></div>
+        </div>
+        <div class="mvc-row">
+          <button class="mvc-btn" id="playPauseBtn" onclick="togglePlayPause()"><i class="fa-solid fa-pause"></i></button>
+          <span class="mvc-time" id="mvcTime">0:00 / 0:00</span>
+          <div class="mvc-vol">
+            <button class="mvc-btn" onclick="toggleMute()"><i class="fa-solid fa-volume-high" id="volIcon"></i></button>
+            <input type="range" class="mvc-vol-slider" id="volSlider" min="0" max="1" step="0.05" value="1" oninput="setVolume(this.value)">
+          </div>
+          <button class="mvc-btn mvc-fullscreen" onclick="toggleFullscreen()"><i class="fa-solid fa-expand"></i></button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-sidebar" id="modalSidebar">
+      <div class="ms-header">
+        <div class="ms-author">
+          <div class="ms-avatar" id="msAvatar">SA</div>
+          <div class="ms-author-info">
+            <h4 id="msAuthorName">Secours Abalo</h4>
+            <p id="msAuthorRole">Administration</p>
+          </div>
+          <button class="ms-follow-btn" id="msFollowBtn" onclick="toggleFollow(this)">Suivre</button>
+        </div>
+        <div class="ms-title" id="msTitle">—</div>
+        <div class="ms-desc" id="msDesc">—</div>
+        <div class="ms-tags" id="msTags"></div>
+      </div>
+      <div class="ms-stats">
+        <button class="ms-stat-btn" id="msLikeBtn" onclick="toggleLikeModal()">
+          <div class="ms-stat-icon like"><i class="fa-solid fa-heart"></i></div>
+          <span class="ms-stat-count" id="msLikeCount">0</span>
+        </button>
+        <button class="ms-stat-btn" onclick="document.querySelector('.ms-input').focus()">
+          <div class="ms-stat-icon comment"><i class="fa-solid fa-comment"></i></div>
+          <span class="ms-stat-count" id="msCommentCount">0</span>
+        </button>
+        <button class="ms-stat-btn" onclick="openShare(currentMediaItem)">
+          <div class="ms-stat-icon share"><i class="fa-solid fa-share"></i></div>
+          <span class="ms-stat-count" id="msShareCount">0</span>
+        </button>
+        <button class="ms-stat-btn" id="msSaveBtn" onclick="toggleSaveModal()">
+          <div class="ms-stat-icon save"><i class="fa-solid fa-bookmark"></i></div>
+          <span class="ms-stat-count" id="msSaveCount">0</span>
+        </button>
+        <button class="ms-stat-btn" onclick="downloadMedia()">
+          <div class="ms-stat-icon download"><i class="fa-solid fa-download"></i></div>
+          <span class="ms-stat-count">DL</span>
+        </button>
+      </div>
+      <div class="ms-comments" id="msComments">
+        <div class="ms-comments-title">Commentaires</div>
+        <div id="msCommentsList"></div>
+      </div>
+      <div class="ms-input-area">
+        <div class="ms-input-row">
+          <textarea class="ms-input" id="msCommentInput" placeholder="Ajouter un commentaire…" rows="1" onkeydown="handleCommentKey(event)"></textarea>
+          <button class="ms-send-btn" onclick="submitComment()"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+        <div class="ms-emoji-row">
+          <button class="ms-emoji" onclick="insertEmoji('❤️')">❤️</button>
+          <button class="ms-emoji" onclick="insertEmoji('👏')">👏</button>
+          <button class="ms-emoji" onclick="insertEmoji('🙌')">🙌</button>
+          <button class="ms-emoji" onclick="insertEmoji('🔥')">🔥</button>
+          <button class="ms-emoji" onclick="insertEmoji('💪')">💪</button>
+          <button class="ms-emoji" onclick="insertEmoji('🚑')">🚑</button>
+          <button class="ms-emoji" onclick="insertEmoji('👍')">👍</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL PARTAGE ══ -->
+<div class="share-modal" id="shareModal">
+  <div class="share-box">
+    <div class="share-title"><i class="fa-solid fa-share-nodes" style="color:var(--g);margin-right:8px"></i>Partager ce média</div>
+    <div class="share-link-row">
+      <input type="text" class="share-link-input" id="shareLinkInput" readonly>
+      <button class="share-copy-btn" onclick="copyShareLink()"><i class="fa-solid fa-copy"></i> Copier</button>
+    </div>
+    <div class="share-platforms">
+      <div class="share-platform" onclick="shareTo('whatsapp')">
+        <div class="sp-icon" style="background:#25D366"><i class="fa-brands fa-whatsapp"></i></div>
+        <span class="sp-label">WhatsApp</span>
+      </div>
+      <div class="share-platform" onclick="shareTo('facebook')">
+        <div class="sp-icon" style="background:#1877F2"><i class="fa-brands fa-facebook-f"></i></div>
+        <span class="sp-label">Facebook</span>
+      </div>
+      <div class="share-platform" onclick="shareTo('twitter')">
+        <div class="sp-icon" style="background:#000"><i class="fa-brands fa-x-twitter"></i></div>
+        <span class="sp-label">X</span>
+      </div>
+      <div class="share-platform" onclick="shareTo('telegram')">
+        <div class="sp-icon" style="background:#0088CC"><i class="fa-brands fa-telegram"></i></div>
+        <span class="sp-label">Telegram</span>
+      </div>
+      <div class="share-platform" onclick="copyShareLink()">
+        <div class="sp-icon" style="background:var(--sf2);border:1px solid var(--border)"><i class="fa-solid fa-link" style="color:var(--g)"></i></div>
+        <span class="sp-label">Copier</span>
+      </div>
+    </div>
+    <button class="share-close-btn" onclick="closeShare()">Fermer</button>
+  </div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ─── CONFIG API ─────────────────────────────
+const API = "http://localhost:8026";
+
+async function apiFetch(path, options = {}) {
+  // const token = localStorage.getItem("sa_token");
+  const token = localStorage.getItem('sa_token') || sessionStorage.getItem('sa_token');
+  const headers = { ...(options.headers || {}) };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  if (options.body && !(options.body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
+  const res = await fetch(API + path, { ...options, headers });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || `Erreur ${res.status}`);
+  }
+  return res.status === 204 ? null : res.json();
+}
+
+// ─── ÉTAT LOCAL ─────────────────────────────
+let allMedia        = [];
+let filteredMedia   = [];
+let currentTab      = "all";
+let currentView     = "grid";
+let currentSort     = "recent";
+let currentModalIdx = -1;
+let currentMediaItem = null;
+let savedItems  = new Set(JSON.parse(localStorage.getItem("sa_saved") || "[]"));
+let likedItems  = new Set(JSON.parse(localStorage.getItem("sa_liked") || "[]"));
+let uploadType  = "image";
+let selectedFile = null;
+let currentTagFilter = null;
+const commentsDB = {};
+
+// ─── CHARGEMENT INITIAL ──────────────────────
+window.addEventListener("DOMContentLoaded", async () => {
+  handleResponsive();
+  await loadAllMedia();
+});
+
+window.addEventListener("resize", handleResponsive);
+
+function handleResponsive() {
+  const isMobile = window.innerWidth <= 380;
+  const searchEl = document.getElementById("tbSearch");
+  const searchToggle = document.getElementById("searchToggle");
+  if (isMobile) {
+    searchEl.style.display = "none";
+    searchToggle.style.display = "flex";
+  } else {
+    searchEl.style.display = "flex";
+    searchToggle.style.display = "none";
+  }
+}
+
+function toggleSearchMobile() {
+  const searchEl = document.getElementById("tbSearch");
+  const isVisible = searchEl.style.display !== "none" && searchEl.style.display !== "";
+  if (isVisible) {
+    searchEl.style.display = "none";
+  } else {
+    searchEl.style.display = "flex";
+    searchEl.style.position = "fixed";
+    searchEl.style.top = "8px";
+    searchEl.style.left = "10px";
+    searchEl.style.right = "90px";
+    searchEl.style.maxWidth = "none";
+    searchEl.style.zIndex = "400";
+    document.getElementById("searchInput").focus();
+  }
+}
+
+async function loadAllMedia() {
+  showLoader();
+  try {
+    const [imagesResp, videosResp] = await Promise.all([
+      apiFetch("/media/images"),
+      apiFetch("/media/videos"),
+    ]);
+
+    const images = (imagesResp || []).map(item => ({
+      ...item, mediaType:"image",
+      likes: Math.floor(Math.random()*500)+10,
+      views: Math.floor(Math.random()*5000)+100,
+      shares: Math.floor(Math.random()*100)+5,
+      trending: Math.random()>.75,
+      tags: item.categorie ? [item.categorie] : [],
+      author: "Secours Abalo", authorRole: "Administration",
+    }));
+
+    const videos = (videosResp || []).map(item => ({
+      ...item, mediaType:"video",
+      likes: Math.floor(Math.random()*1000)+50,
+      views: Math.floor(Math.random()*15000)+500,
+      shares: Math.floor(Math.random()*300)+20,
+      trending: Math.random()>.7,
+      tags: item.categorie ? [item.categorie] : [],
+      author: "Secours Abalo", authorRole: "Opérations",
+    }));
+
+    if (images.length === 0 && videos.length === 0) {
+      allMedia = getDemoMedia();
+    } else {
+      allMedia = [...images, ...videos].sort((a,b) => new Date(b.created_at)-new Date(a.created_at));
+    }
+
+    updateCounts();
+    updateSidebarStats();
+    applyFilters();
+  } catch (err) {
+    console.warn("API non disponible, démo:", err.message);
+    allMedia = getDemoMedia();
+    updateCounts();
+    updateSidebarStats();
+    applyFilters();
+  }
+}
+
+function getDemoMedia() {
+  const now = new Date().toISOString();
+  return [
+    { id:"d1", titre:"Ambulance en mission – Lomé", description:"Notre ambulance MA-01 en intervention rapide à Tokoin.", url:"https://images.unsplash.com/photo-1584432810601-6c7f27d2362b?w=800&auto=format&fit=crop&q=70", mediaType:"image", categorie:"Ambulances", tags:["Ambulances","Urgence"], likes:342, views:4820, shares:87, trending:true, created_at:now, author:"Secours Abalo", authorRole:"Administration" },
+    { id:"d2", titre:"Formation secouristes 2026", description:"Nos équipes en formation aux dernières techniques de réanimation cardio-pulmonaire.", url:"https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&auto=format&fit=crop&q=70", mediaType:"image", categorie:"Formation", tags:["Formation","Équipe"], likes:218, views:3100, shares:54, trending:false, created_at:now, author:"Abaya Komi", authorRole:"Directeur Technique" },
+    { id:"d3", titre:"Équipements médicaux certifiés", description:"Notre stock de matériel médical homologué : défibrillateurs, oxygène, perfusions.", url:"https://images.unsplash.com/photo-1612776572997-76cc42e058c3?w=800&auto=format&fit=crop&q=70", mediaType:"image", categorie:"Équipements", tags:["Équipements","Médical"], likes:156, views:2340, shares:31, trending:false, created_at:now, author:"Secours Abalo", authorRole:"Logistique" },
+    { id:"d4", titre:"Intervention – Accident moto Kégué", description:"Prise en charge d'urgence suite à un accident de moto rue de Kégué. Patient stabilisé en 8 min.", url:"https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=800&auto=format&fit=crop&q=70", mediaType:"image", categorie:"Interventions", tags:["Interventions","Urgence"], likes:521, views:7890, shares:143, trending:true, created_at:now, author:"Équipe MA-02", authorRole:"Secouristes" },
+    { id:"d5", titre:"Notre équipe de secouristes", description:"35 secouristes certifiés, disponibles 24h/24 pour intervenir sur Lomé.", url:"https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=800&auto=format&fit=crop&q=70", mediaType:"image", categorie:"Équipe", tags:["Équipe","Secouristes"], likes:289, views:4200, shares:67, trending:false, created_at:now, author:"Julien Abalo", authorRole:"Fondateur" },
+    { id:"d6", titre:"Transport médicalisé CHU Sylvanus", description:"Transfert d'un patient depuis Adidogomé vers le CHU Sylvanus en conditions optimales.", url:"https://images.unsplash.com/photo-1587745416684-47953f16f02f?w=800&auto=format&fit=crop&q=70", mediaType:"video", categorie:"Interventions", tags:["Interventions","Transport"], url_source:"https://www.youtube.com/watch?v=dQw4w9WgXcQ", duree:"3:24", likes:445, views:6700, shares:112, trending:true, created_at:now, author:"Secours Abalo", authorRole:"Opérations" },
+    { id:"d7", titre:"Soins d'urgence à bord", description:"Infirmière prodiguant des soins de première urgence pendant le transport.", url:"https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=800&auto=format&fit=crop&q=70", mediaType:"image", categorie:"Interventions", tags:["Interventions","Soins"], likes:387, views:5120, shares:95, trending:false, created_at:now, author:"Ama T.", authorRole:"Infirmière" },
+    { id:"d8", titre:"Convention entreprise – Komlan SARL", description:"Signature de convention de couverture sanitaire pour 45 employés.", url:"https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&auto=format&fit=crop&q=70", mediaType:"video", categorie:"Témoignages", tags:["Témoignages","Entreprise"], url_source:"https://www.youtube.com/watch?v=dQw4w9WgXcQ", duree:"2:18", likes:198, views:3450, shares:48, trending:false, created_at:now, author:"Secours Abalo", authorRole:"Partenariats" },
+    { id:"d9", titre:"Journée Mondiale des Premiers Secours", description:"Secours Abalo célèbre la JMPS avec des ateliers publics gratuits à Adidogomé.", url:"https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop&q=70", mediaType:"image", categorie:"Formation", tags:["Formation","Communauté"], likes:612, views:9800, shares:234, trending:true, created_at:now, author:"Direction", authorRole:"Événements" },
+    { id:"d10", titre:"Nuit d'intervention – Bè Klikamé", description:"Intervention nocturne pour une crise cardiaque. Équipe mobilisée en 4 minutes.", url:"https://images.unsplash.com/photo-1619734086067-24bf8889ea7d?w=800&auto=format&fit=crop&q=70", mediaType:"image", categorie:"Interventions", tags:["Interventions","Nuit"], likes:473, views:7200, shares:128, trending:true, created_at:now, author:"Équipe MA-01", authorRole:"Secouristes" },
+    { id:"d11", titre:"Guide RCP vidéo – Arrêt cardiaque", description:"Tutoriel complet de réanimation cardio-pulmonaire pour le grand public.", url:"https://images.unsplash.com/photo-1613977257592-4871e5fcd7c4?w=800&auto=format&fit=crop&q=70", mediaType:"video", categorie:"Formation", tags:["Formation","RCP","Tutoriel"], url_source:"https://www.youtube.com/watch?v=dQw4w9WgXcQ", duree:"5:42", likes:892, views:14300, shares:412, trending:true, created_at:now, author:"Dr. Agbodjan", authorRole:"Médecin" },
+    { id:"d12", titre:"Salle de contrôle – Dispatch", description:"Notre centre d'appel et de dispatch, opérationnel 24h/24 pour coordonner les interventions.", url:"https://images.unsplash.com/photo-1551190822-a9333d879b1f?w=800&auto=format&fit=crop&q=70", mediaType:"image", categorie:"Équipe", tags:["Équipe","Dispatch"], likes:267, views:3890, shares:73, trending:false, created_at:now, author:"Secours Abalo", authorRole:"Dispatch" },
+  ];
+}
+
+// ─── FILTRES ET AFFICHAGE ────────────────────
+function applyFilters() {
+  let result = [...allMedia];
+  if (currentTab === "images")   result = result.filter(m => m.mediaType === "image");
+  if (currentTab === "videos")   result = result.filter(m => m.mediaType === "video");
+  if (currentTab === "trending") result = result.filter(m => m.trending);
+  if (currentTab === "saved")    result = result.filter(m => savedItems.has(m.id));
+  if (currentTagFilter) result = result.filter(m => m.tags?.includes(currentTagFilter) || m.categorie === currentTagFilter);
+
+  const q = document.getElementById("searchInput")?.value?.toLowerCase() || "";
+  if (q) result = result.filter(m =>
+    m.titre?.toLowerCase().includes(q) ||
+    m.description?.toLowerCase().includes(q) ||
+    m.categorie?.toLowerCase().includes(q) ||
+    m.tags?.some(t => t.toLowerCase().includes(q)) ||
+    m.author?.toLowerCase().includes(q)
+  );
+
+  switch(currentSort) {
+    case "likes":    result.sort((a,b) => b.likes-a.likes); break;
+    case "views":    result.sort((a,b) => b.views-a.views); break;
+    case "comments": result.sort((a,b) => (commentsDB[b.id]?.length||0)-(commentsDB[a.id]?.length||0)); break;
+    case "recent":   result.sort((a,b) => new Date(b.created_at)-new Date(a.created_at)); break;
+  }
+
+  filteredMedia = result;
+  renderFeed();
+}
+
+function renderFeed() {
+  const grid = document.getElementById("feedGrid");
+  if (filteredMedia.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+      <i class="fa-solid fa-photo-film"></i>
+      <h3>Aucun média trouvé</h3>
+      <p>Modifiez vos filtres pour explorer la galerie.</p>
+    </div>`;
+    return;
+  }
+  if (currentView === "grid") {
+    grid.className = "feed-grid";
+    grid.innerHTML = filteredMedia.map((m, i) => buildGridCard(m, i)).join("");
+  } else {
+    grid.className = "feed-grid list-view";
+    grid.innerHTML = filteredMedia.map((m, i) => buildListCard(m, i)).join("");
+  }
+  // Lancer l'autoplay vidéo via IntersectionObserver
+  requestAnimationFrame(initVideoAutoplay);
+}
+
+// ─── AUTOPLAY VIDÉO TIKTOK (IntersectionObserver) ────
+let videoObserver = null;
+function initVideoAutoplay() {
+  // Arrêter les anciennes vidéos
+  document.querySelectorAll("video.card-video").forEach(v => { v.pause(); });
+  if (videoObserver) videoObserver.disconnect();
+
+  videoObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const video = entry.target;
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+        video.play().catch(()=>{});
+        // Pause icon overlay
+        const card = video.closest(".media-card");
+        if (card) card.querySelector(".card-play-center")?.style && (card.querySelector(".card-play-center").style.opacity = "0");
+      } else {
+        video.pause();
+        const card = video.closest(".media-card");
+        if (card) card.querySelector(".card-play-center")?.style && (card.querySelector(".card-play-center").style.opacity = "1");
+      }
+    });
+  }, { threshold: 0.6 });
+
+  document.querySelectorAll("video.card-video").forEach(v => videoObserver.observe(v));
+}
+
+function buildGridCard(m, idx) {
+  const isLiked = likedItems.has(m.id);
+  const isSaved = savedItems.has(m.id);
+  const isVideo = m.mediaType === "video";
+  const thumb   = m.url || "https://images.unsplash.com/photo-1584432810601-6c7f27d2362b?w=600&auto=format&fit=crop&q=60";
+  const tags    = (m.tags||[]).slice(0,2).map(t=>`<span class="card-thumb-tag">#${t}</span>`).join("");
+  const delay   = `animation-delay:${idx*0.045}s`;
+  const comments = commentsDB[m.id]?.length || 0;
+  // Pour les vidéos on embed un <video> muted autoplay loop pour l'autoplay inline
+  const videoSrc = m.url_source || m.url || "";
+  const mediaEl = isVideo
+    ? `<video class="card-video" src="${videoSrc}" muted loop playsinline preload="none"
+         style="width:100%;height:100%;object-fit:cover;display:block;pointer-events:none"
+         poster="${thumb}"></video>`
+    : `<img src="${thumb}" alt="${m.titre}" loading="lazy"
+         onerror="this.src='https://images.unsplash.com/photo-1584432810601-6c7f27d2362b?w=400&auto=format&fit=crop&q=50'">`;
+
+  return `<div class="media-card" style="${delay}" onclick="openModal(${idx})">
+    <div class="card-thumb">
+      ${mediaEl}
+      <div class="card-overlay-gradient"></div>
+
+      <!-- Badge type + trending -->
+      <div class="card-type-badge ${isVideo?"video":""}">
+        <i class="fa-solid fa-${isVideo?"video":"image"}"></i> ${isVideo?"Vidéo":"Photo"}
+      </div>
+      ${m.trending ? `<div class="card-trending"><i class="fa-solid fa-fire"></i> HOT</div>` : ""}
+      <div class="card-play-center" style="${isVideo?"":"display:none"}"><i class="fa-solid fa-play"></i></div>
+      ${isVideo && m.duree ? `<div class="card-duration">${m.duree}</div>` : ""}
+
+      <!-- Infos en bas style TikTok -->
+      <div class="card-thumb-info">
+        <div class="card-thumb-author">
+          <div class="card-thumb-avatar">${(m.author||"SA").slice(0,2).toUpperCase()}</div>
+          <span class="card-thumb-author-name">${m.author||"Secours Abalo"}</span>
+        </div>
+        <div class="card-thumb-title">${m.titre}</div>
+        ${tags ? `<div class="card-thumb-tags">${tags}</div>` : ""}
+      </div>
+
+      <!-- Actions latérales TikTok -->
+      <div class="card-side-actions" onclick="event.stopPropagation()">
+        <button class="card-action-btn ${isLiked?"liked":""}" onclick="toggleLike('${m.id}',this)">
+          <div class="card-action-icon">
+            <i class="fa-${isLiked?"solid":"regular"} fa-heart"></i>
+          </div>
+          <span class="card-action-count">${fmt(m.likes)}</span>
+        </button>
+        <button class="card-action-btn" onclick="openModal(${idx});setTimeout(()=>document.querySelector('.ms-input')?.focus(),400)">
+          <div class="card-action-icon"><i class="fa-regular fa-comment"></i></div>
+          <span class="card-action-count">${fmt(comments)}</span>
+        </button>
+        <button class="card-action-btn" onclick="openShare(filteredMedia[${idx}])">
+          <div class="card-action-icon"><i class="fa-solid fa-share"></i></div>
+          <span class="card-action-count">${fmt(m.shares)}</span>
+        </button>
+        <button class="card-action-btn ${isSaved?"saved":""}" onclick="toggleSave('${m.id}',this)">
+          <div class="card-action-icon"><i class="fa-${isSaved?"solid":"regular"} fa-bookmark"></i></div>
+        </button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildListCard(m, idx) {
+  const isLiked  = likedItems.has(m.id);
+  const isSaved  = savedItems.has(m.id);
+  const isVideo  = m.mediaType === "video";
+  const thumb    = m.url || "https://images.unsplash.com/photo-1584432810601-6c7f27d2362b?w=400&q=60";
+  const comments = commentsDB[m.id]?.length || 0;
+  const delay    = `animation-delay:${idx*0.045}s`;
+
+  return `<div class="list-card" style="${delay}">
+    <div class="list-thumb" onclick="openModal(${idx})">
+      <img src="${thumb}" alt="${m.titre}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584432810601-6c7f27d2362b?w=300&q=50'">
+      ${isVideo ? `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.35)"><div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.9rem"><i class="fa-solid fa-play"></i></div></div>` : ""}
+      <div class="card-type-badge ${isVideo?"video":""}" style="font-size:.5rem"><i class="fa-solid fa-${isVideo?"video":"image"}"></i></div>
+      ${isVideo&&m.duree?`<div class="card-duration" style="font-size:.55rem">${m.duree}</div>`:""}
+    </div>
+    <div class="list-body">
+      <div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">
+          <div class="card-thumb-avatar" style="width:20px;height:20px;font-size:.5rem">${(m.author||"SA").slice(0,2).toUpperCase()}</div>
+          <span style="font-size:.68rem;font-weight:600;color:var(--wh)">${m.author||"Secours Abalo"}</span>
+          ${m.trending ? `<span style="margin-left:auto;background:var(--red);color:#fff;font-size:.5rem;padding:2px 5px;border-radius:10px;font-weight:700">🔥 HOT</span>` : ""}
+        </div>
+        <div class="card-title" onclick="openModal(${idx})">${m.titre}</div>
+        ${m.description ? `<div class="card-desc">${m.description}</div>` : ""}
+        <div class="card-tags">${(m.tags||[]).slice(0,3).map(t=>`<span class="card-tag">#${t}</span>`).join("")}</div>
+      </div>
+      <div>
+        <div class="list-stats">
+          <span class="list-stat" style="${isLiked?"color:var(--red)":""}"><i class="fa-${isLiked?"solid":"regular"} fa-heart"></i> ${fmt(m.likes)}</span>
+          <span class="list-stat"><i class="fa-regular fa-comment"></i> ${fmt(comments)}</span>
+          <span class="list-stat"><i class="fa-solid fa-eye"></i> ${fmt(m.views)}</span>
+        </div>
+        <div class="list-btns">
+          <button class="list-btn" onclick="openModal(${idx})"><i class="fa-solid fa-expand"></i> Voir</button>
+          <button class="list-btn" onclick="openShare(filteredMedia[${idx}])" style="background:rgba(77,184,255,.1);border-color:rgba(77,184,255,.25);color:var(--blue)"><i class="fa-solid fa-share"></i></button>
+          <button class="list-btn" onclick="toggleSave('${m.id}',this)" style="${isSaved?"background:rgba(255,215,0,.15);border-color:rgba(255,215,0,.3);color:var(--yellow)":""}"><i class="fa-${isSaved?"solid":"regular"} fa-bookmark"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function showLoader() {
+  document.getElementById("feedGrid").innerHTML = `<div class="loader" style="grid-column:1/-1"><div class="loader-dots"><div class="loader-dot"></div><div class="loader-dot"></div><div class="loader-dot"></div></div></div>`;
+}
+
+// ─── MODAL ───────────────────────────────────
+function openModal(idx) {
+  currentModalIdx = idx;
+  currentMediaItem = filteredMedia[idx];
+  if (!currentMediaItem) return;
+  populateModal(currentMediaItem);
+  document.getElementById("mediaModal").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function populateModal(m) {
+  const isVideo = m.mediaType === "video";
+  const modalImg   = document.getElementById("modalImg");
+  const modalVideo = document.getElementById("modalVideo");
+  const controls   = document.getElementById("videoControls");
+
+  if (isVideo) {
+    modalImg.style.display = "none";
+    modalVideo.style.display = "block";
+    modalVideo.src = m.url_source || m.url || "";
+    controls.classList.add("visible");
+    modalVideo.addEventListener("timeupdate", updateVideoProgress);
+  } else {
+    modalVideo.style.display = "none"; modalVideo.src = ""; modalVideo.pause();
+    modalImg.style.display = "block"; modalImg.src = m.url || "";
+    controls.classList.remove("visible");
+  }
+
+  document.getElementById("msTitle").textContent     = m.titre || "—";
+  document.getElementById("msDesc").textContent      = m.description || "";
+  document.getElementById("msAuthorName").textContent = m.author || "Secours Abalo";
+  document.getElementById("msAuthorRole").textContent = m.authorRole || "";
+  document.getElementById("msAvatar").textContent    = (m.author || "SA").slice(0,2).toUpperCase();
+  document.getElementById("msTags").innerHTML = (m.tags||[]).map(t=>`<span class="ms-tag">#${t}</span>`).join("");
+
+  const isLiked = likedItems.has(m.id);
+  const isSaved = savedItems.has(m.id);
+  document.getElementById("msLikeCount").textContent    = fmt(m.likes);
+  document.getElementById("msShareCount").textContent   = fmt(m.shares);
+  document.getElementById("msCommentCount").textContent = commentsDB[m.id]?.length || 0;
+  document.getElementById("msSaveCount").textContent    = isSaved ? "Sauvé" : "Sauv.";
+  document.getElementById("msLikeBtn").classList.toggle("liked", isLiked);
+  document.getElementById("msSaveBtn").classList.toggle("saved", isSaved);
+
+  document.getElementById("modalPrev").style.display = currentModalIdx > 0 ? "flex" : "none";
+  document.getElementById("modalNext").style.display = currentModalIdx < filteredMedia.length-1 ? "flex" : "none";
+  renderComments(m.id);
+}
+
+function closeModal() {
+  document.getElementById("mediaModal").classList.remove("open");
+  document.body.style.overflow = "";
+  const v = document.getElementById("modalVideo");
+  v.pause(); v.src = "";
+  currentMediaItem = null;
+}
+
+function navigateModal(dir) {
+  const newIdx = currentModalIdx + dir;
+  if (newIdx >= 0 && newIdx < filteredMedia.length) openModal(newIdx);
+}
+
+document.addEventListener("keydown", e => {
+  if (!document.getElementById("mediaModal").classList.contains("open")) return;
+  if (e.key === "Escape") closeModal();
+  if (e.key === "ArrowRight") navigateModal(1);
+  if (e.key === "ArrowLeft")  navigateModal(-1);
+});
+
+// Swipe tactile sur le modal
+let touchStartX = 0;
+document.getElementById("mediaModal").addEventListener("touchstart", e => { touchStartX = e.touches[0].clientX; }, {passive:true});
+document.getElementById("mediaModal").addEventListener("touchend", e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 60) navigateModal(dx < 0 ? 1 : -1);
+}, {passive:true});
+
+// ─── VIDÉO CONTRÔLES ─────────────────────────
+function updateVideoProgress() {
+  const v = document.getElementById("modalVideo");
+  if (!v.duration) return;
+  const pct = (v.currentTime/v.duration)*100;
+  document.getElementById("mvcFill").style.width = pct+"%";
+  document.getElementById("mvcTime").textContent = `${fmtTime(v.currentTime)} / ${fmtTime(v.duration)}`;
+}
+function seekVideo(e) {
+  const v = document.getElementById("modalVideo");
+  const rect = e.currentTarget.getBoundingClientRect();
+  v.currentTime = ((e.clientX-rect.left)/rect.width)*v.duration;
+}
+function togglePlayPause() {
+  const v = document.getElementById("modalVideo");
+  const btn = document.getElementById("playPauseBtn");
+  if (v.paused) { v.play(); btn.innerHTML='<i class="fa-solid fa-pause"></i>'; }
+  else { v.pause(); btn.innerHTML='<i class="fa-solid fa-play"></i>'; }
+}
+function toggleMute() {
+  const v = document.getElementById("modalVideo");
+  v.muted = !v.muted;
+  document.getElementById("volIcon").className = v.muted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
+}
+function setVolume(val) { document.getElementById("modalVideo").volume = parseFloat(val); }
+function toggleFullscreen() {
+  const m = document.getElementById("modalMedia");
+  if (!document.fullscreenElement) m.requestFullscreen();
+  else document.exitFullscreen();
+}
+function fmtTime(s) {
+  const m = Math.floor(s/60), sec = Math.floor(s%60);
+  return `${m}:${sec.toString().padStart(2,"0")}`;
+}
+
+// ─── LIKES & SAUVEGARDES ─────────────────────
+function toggleLike(id, btn) {
+  const m = allMedia.find(x => x.id === id);
+  if (!m) return;
+  if (likedItems.has(id)) {
+    likedItems.delete(id); m.likes = Math.max(0,m.likes-1);
+    btn?.classList.remove("liked");
+    const icon = btn?.querySelector("i"); if(icon) icon.className="fa-regular fa-heart";
+  } else {
+    likedItems.add(id); m.likes++;
+    btn?.classList.add("liked");
+    const icon = btn?.querySelector("i"); if(icon) icon.className="fa-solid fa-heart";
+    showToast("success","Aimé ❤️",`"${m.titre.slice(0,28)}…"`);
+  }
+  localStorage.setItem("sa_liked",JSON.stringify([...likedItems]));
+  if (currentMediaItem?.id === id) {
+    document.getElementById("msLikeCount").textContent = fmt(m.likes);
+    document.getElementById("msLikeBtn").classList.toggle("liked", likedItems.has(id));
+  }
+  const count = btn?.querySelector(".card-action-count");
+  if (count) count.textContent = fmt(m.likes);
+  updateSidebarStats();
+}
+
+function toggleSave(id, btn) {
+  const m = allMedia.find(x => x.id === id);
+  if (!m) return;
+  if (savedItems.has(id)) {
+    savedItems.delete(id); btn?.classList.remove("saved");
+    showToast("info","Retiré","Média retiré de vos sauvegardes.");
+  } else {
+    savedItems.add(id); btn?.classList.add("saved");
+    showToast("success","Sauvegardé ⭐",`"${m.titre.slice(0,28)}" ajouté.`);
+  }
+  localStorage.setItem("sa_saved",JSON.stringify([...savedItems]));
+  if (currentMediaItem?.id === id) {
+    document.getElementById("msSaveBtn").classList.toggle("saved", savedItems.has(id));
+    document.getElementById("msSaveCount").textContent = savedItems.has(id) ? "Sauvé" : "Sauv.";
+  }
+}
+
+function toggleLikeModal() { if(!currentMediaItem) return; toggleLike(currentMediaItem.id, document.getElementById("msLikeBtn")); }
+function toggleSaveModal() { if(!currentMediaItem) return; toggleSave(currentMediaItem.id, document.getElementById("msSaveBtn")); }
+
+function toggleFollow(btn) {
+  const isF = btn.classList.contains("following");
+  if (isF) { btn.classList.remove("following"); btn.textContent="Suivre"; showToast("info","Non suivi","Vous ne suivez plus cet auteur."); }
+  else { btn.classList.add("following"); btn.textContent="✓ Suivi"; showToast("success","Suivi ✓","Vous suivez cet auteur."); }
+}
+
+// ─── COMMENTAIRES ────────────────────────────
+const sampleComments = [
+  { author:"Yawa K.", text:"Excellent travail de l'équipe ! 🙌", time:"Il y a 2h", likes:12 },
+  { author:"Sénamé D.", text:"Impressionnant ! 🚑🔥", time:"Il y a 3h", likes:8 },
+  { author:"Komlan A.", text:"Merci à toute l'équipe Secours Abalo 👏", time:"Il y a 5h", likes:24 },
+];
+
+function renderComments(id) {
+  if (!commentsDB[id]) commentsDB[id] = [...sampleComments.slice(0,Math.floor(Math.random()*3)+1).map(c=>({...c}))];
+  const list = document.getElementById("msCommentsList");
+  const comments = commentsDB[id];
+  if (!comments.length) {
+    list.innerHTML = `<div class="no-comments"><i class="fa-regular fa-comment"></i>Pas encore de commentaires.</div>`;
+    return;
+  }
+  list.innerHTML = comments.map((c,i) => `
+    <div class="comment">
+      <div class="comment-avatar">${c.author.slice(0,2).toUpperCase()}</div>
+      <div class="comment-content">
+        <div class="comment-author">${c.author}</div>
+        <div class="comment-text">${c.text}</div>
+        <div class="comment-time">${c.time}</div>
+        <div class="comment-actions">
+          <button class="comment-like-btn ${c.userLiked?"liked":""}" onclick="likeComment('${id}',${i},this)">
+            <i class="fa-${c.userLiked?"solid":"regular"} fa-heart"></i> ${c.likes}
+          </button>
+          <button class="comment-reply-btn" onclick="replyTo('${c.author}')">Répondre</button>
+        </div>
+      </div>
+    </div>`).join("");
+  document.getElementById("msCommentCount").textContent = comments.length;
+}
+
+function likeComment(mediaId, idx, btn) {
+  const c = commentsDB[mediaId]?.[idx];
+  if (!c) return;
+  c.userLiked = !c.userLiked; c.likes += c.userLiked ? 1 : -1;
+  btn.classList.toggle("liked", c.userLiked);
+  btn.innerHTML = `<i class="fa-${c.userLiked?"solid":"regular"} fa-heart"></i> ${c.likes}`;
+}
+function replyTo(author) {
+  const input = document.getElementById("msCommentInput");
+  input.value = `@${author} `;
+  input.focus();
+}
+function submitComment() {
+  const input = document.getElementById("msCommentInput");
+  const text = input.value.trim();
+  if (!text || !currentMediaItem) return;
+  const id = currentMediaItem.id;
+  if (!commentsDB[id]) commentsDB[id] = [];
+  commentsDB[id].unshift({ author:"Vous", text, time:"À l'instant", likes:0 });
+  input.value = "";
+  renderComments(id);
+  showToast("success","Commentaire publié","Votre commentaire est en ligne.");
+}
+function handleCommentKey(e) { if (e.key==="Enter"&&!e.shiftKey) { e.preventDefault(); submitComment(); } }
+function insertEmoji(emoji) {
+  const input = document.getElementById("msCommentInput");
+  const pos = input.selectionStart;
+  input.value = input.value.slice(0,pos)+emoji+input.value.slice(pos);
+  input.selectionStart = input.selectionEnd = pos+emoji.length;
+  input.focus();
+}
+function downloadMedia() {
+  if (!currentMediaItem) return;
+  const url = currentMediaItem.url || currentMediaItem.url_source || "";
+  if (url) { const a = document.createElement("a"); a.href=url; a.download=(currentMediaItem.titre||"media")+".jpg"; a.target="_blank"; a.click(); }
+  showToast("success","Téléchargement","Média enregistré.");
+}
+
+// ─── PARTAGE ─────────────────────────────────
+let shareTarget = null;
+function openShare(m) {
+  shareTarget = m;
+  document.getElementById("shareLinkInput").value = `${window.location.href.split("?")[0]}?id=${m?.id||""}`;
+  document.getElementById("shareModal").classList.add("open");
+}
+function closeShare() { document.getElementById("shareModal").classList.remove("open"); }
+function copyShareLink() {
+  const input = document.getElementById("shareLinkInput");
+  navigator.clipboard?.writeText(input.value).then(()=>showToast("success","Copié !","Lien copié."))
+    .catch(()=>{ input.select(); document.execCommand("copy"); showToast("success","Copié !","Lien copié."); });
+  if (shareTarget) shareTarget.shares++;
+}
+function shareTo(platform) {
+  const url = encodeURIComponent(document.getElementById("shareLinkInput").value);
+  const text = encodeURIComponent(`Découvrez ce média de Secours Abalo : ${shareTarget?.titre||""}`);
+  const urls = {
+    whatsapp:`https://wa.me/?text=${text}%20${url}`,
+    facebook:`https://www.facebook.com/sharer/sharer.php?u=${url}`,
+    twitter:`https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+    telegram:`https://t.me/share/url?url=${url}&text=${text}`,
+  };
+  window.open(urls[platform],"_blank");
+  closeShare();
+  if (shareTarget) shareTarget.shares++;
+}
+
+// ─── TABS & FILTRES ──────────────────────────
+function setTab(tab) {
+  currentTab = tab; currentTagFilter = null;
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("tab-"+tab)?.classList.add("active");
+  applyFilters();
+}
+
+function setTabMobile(tab, btnId) {
+  setTab(tab);
+  document.querySelectorAll(".bn-item").forEach(b=>b.classList.remove("active"));
+  document.getElementById(btnId)?.classList.add("active");
+}
+
+function filterByTag(tag) {
+  currentTagFilter = currentTagFilter===tag ? null : tag;
+  currentTab = "all";
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("tab-all")?.classList.add("active");
+  applyFilters();
+  if (currentTagFilter) showToast("info","Filtre actif",`Tag : #${tag}`);
+}
+function filterContent() { applyFilters(); }
+function setView(view) {
+  currentView = view;
+  document.querySelectorAll(".view-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById("view"+(view==="grid"?"Grid":"List")).classList.add("active");
+  applyFilters();
+}
+function sortBy(s) { currentSort=s; document.getElementById("sortSelect").value=s; applyFilters(); }
+function sortBySelect() { currentSort=document.getElementById("sortSelect").value; applyFilters(); }
+
+// ─── SIDEBAR MOBILE ──────────────────────────
+function toggleSidebar() {
+  const sb = document.getElementById("sidebar");
+  const ov = document.getElementById("sidebarOverlay");
+  const isOpen = sb.classList.contains("open");
+  sb.classList.toggle("open");
+  ov.classList.toggle("visible", !isOpen);
+}
+function closeSidebar() {
+  document.getElementById("sidebar").classList.remove("open");
+  document.getElementById("sidebarOverlay").classList.remove("visible");
+}
+
+// ─── COMPTEURS ───────────────────────────────
+function updateCounts() {
+  const imgs = allMedia.filter(m=>m.mediaType==="image").length;
+  const vids = allMedia.filter(m=>m.mediaType==="video").length;
+  document.getElementById("count-all").textContent    = allMedia.length;
+  document.getElementById("count-images").textContent = imgs;
+  document.getElementById("count-videos").textContent = vids;
+}
+function updateSidebarStats() {
+  const totalLikes = allMedia.reduce((a,m)=>a+(m.likes||0),0);
+  const totalViews = allMedia.reduce((a,m)=>a+(m.views||0),0);
+  document.getElementById("stat-total").textContent = allMedia.length;
+  document.getElementById("stat-likes").textContent = fmt(totalLikes);
+  document.getElementById("stat-views").textContent = fmt(totalViews);
+}
+
+// ─── UTILITAIRES ─────────────────────────────
+function fmt(n) {
+  if (n>=1000000) return (n/1000000).toFixed(1)+"M";
+  if (n>=1000)    return (n/1000).toFixed(1)+"k";
+  return String(n||0);
+}
+let toastCount = 0;
+function showToast(type, title, msg) {
+  const id = ++toastCount;
+  const container = document.getElementById("toastContainer");
+  const icons = {success:"fa-circle-check",error:"fa-circle-xmark",info:"fa-circle-info",warn:"fa-triangle-exclamation"};
+  const div = document.createElement("div");
+  div.className = `toast ${type}`;
+  div.innerHTML = `<i class="fa-solid ${icons[type]||icons.info}"></i><div class="toast-text"><h4>${title}</h4><p>${msg}</p></div>`;
+  container.appendChild(div);
+  setTimeout(()=>{ div.classList.add("removing"); setTimeout(()=>div.remove(),300); }, 3500);
+}
+</script>
+</body>
+</html>
